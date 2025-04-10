@@ -532,6 +532,37 @@ class SetDoorPasscodesResponse:
 
 
 @dataclass
+class GetAntiPassbackResponse:
+    '''
+    Container class for the decoded response from a get-antipassback request.
+
+       Fields:
+          controller   (uint32)  Controller serial number.
+          antipassback (uint8)   Anti-passback mode
+                                 - 0: disabled
+                                 - 1: (1:2);(3:4)
+                                 - 2: (1,3):(2,4)
+                                 - 3: 1:(2,3)
+                                 - 4: 1:(2,3,4)
+    '''
+    controller: int
+    antipassback: int
+
+
+@dataclass
+class SetAntiPassbackResponse:
+    '''
+    Container class for the decoded response from a set-antipassback request.
+
+       Fields:
+          controller (uint32)  Controller serial number.
+          ok         (bool)    Succeeded/failed
+    '''
+    controller: int
+    ok: bool
+
+
+@dataclass
 class RestoreDefaultParametersResponse:
     '''
     Container class for the decoded response from a restore-default-parameters request.

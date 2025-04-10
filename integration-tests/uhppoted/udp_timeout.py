@@ -464,7 +464,7 @@ class TestUDPWithTimeout(unittest.TestCase):
 
     def test_activate_keypads(self):
         '''
-        Tests the activate-keypads function with a timeout
+        Tests the activate-keypads function with a timeout.
         '''
         controller = (CONTROLLER, DEST_ADDR)
         reader1 = True
@@ -477,7 +477,7 @@ class TestUDPWithTimeout(unittest.TestCase):
 
     def test_set_door_passcodes(self):
         '''
-        Tests the set-door-passcodes function with a timeout
+        Tests the set-door-passcodes function with a timeout.
         '''
         controller = (CONTROLLER, DEST_ADDR)
         door = 3
@@ -488,6 +488,27 @@ class TestUDPWithTimeout(unittest.TestCase):
 
         self.u.set_door_passcodes(controller, door, passcode1,  passcode2, passcode3, passcode4)
         self.assertRaises(socket.timeout, self.u.set_door_passcodes, controller, door, passcode1,  passcode2, passcode3, passcode4, timeout=TIMEOUT)
+
+    def test_get_antipassback(self):
+        '''
+        Tests the get_antipassback function with a timeout.
+        '''
+        controller = (CONTROLLER, DEST_ADDR)
+
+        self.u.get_antipassback(controller)
+        self.assertRaises(socket.timeout, self.u.get_antipassback, controller, timeout=TIMEOUT)
+
+    def test_set_antipassback(self):
+        '''
+        Tests the set_antipassback function with a timeout
+        '''
+        controller = (CONTROLLER, DEST_ADDR)
+        antipassback = 2
+
+        response = self.u.set_antipassback(controller, antipassback)
+
+        self.u.set_antipassback(controller, antipassback)
+        self.assertRaises(socket.timeout, self.u.set_antipassback, controller, antipassback, timeout=TIMEOUT)
 
     def test_restore_default_parameters(self):
         '''

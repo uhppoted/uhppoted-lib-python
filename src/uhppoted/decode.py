@@ -41,8 +41,12 @@ from .structs import SetInterlockResponse
 from .structs import ActivateKeypadsResponse
 from .structs import SetDoorPasscodesResponse
 from .structs import RestoreDefaultParametersResponse
+from .structs import GetAntiPassbackResponse
+from .structs import SetAntiPassbackResponse
 from .structs import Event
 from .structs import PIN
+
+from . import codec
 
 
 def get_controller_response(packet):
@@ -62,11 +66,10 @@ def get_controller_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x94:
+    if packet[1] != codec.GET_CONTROLLER:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return GetControllerResponse(
@@ -97,11 +100,10 @@ def get_time_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x32:
+    if packet[1] != codec.GET_TIME:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return GetTimeResponse(
@@ -127,11 +129,10 @@ def set_time_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x30:
+    if packet[1] != codec.SET_TIME:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return SetTimeResponse(
@@ -157,11 +158,10 @@ def get_status_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x20:
+    if packet[1] != codec.GET_STATUS:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     event_index = unpack_uint32(packet, 8)
@@ -240,11 +240,10 @@ def get_listener_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x92:
+    if packet[1] != codec.GET_LISTENER:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return GetListenerResponse(
@@ -272,11 +271,10 @@ def set_listener_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x90:
+    if packet[1] != codec.SET_LISTENER:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return SetListenerResponse(
@@ -302,11 +300,10 @@ def get_door_control_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x82:
+    if packet[1] != codec.GET_DOOR:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return GetDoorControlResponse(
@@ -334,11 +331,10 @@ def set_door_control_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x80:
+    if packet[1] != codec.SET_DOOR:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return SetDoorControlResponse(
@@ -366,11 +362,10 @@ def open_door_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x40:
+    if packet[1] != codec.OPEN_DOOR:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return OpenDoorResponse(
@@ -396,11 +391,10 @@ def get_cards_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x58:
+    if packet[1] != codec.GET_CARDS:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return GetCardsResponse(
@@ -426,11 +420,10 @@ def get_card_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x5a:
+    if packet[1] != codec.GET_CARD:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return GetCardResponse(
@@ -463,11 +456,10 @@ def get_card_by_index_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x5c:
+    if packet[1] != codec.GET_CARD_AT_INDEX:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return GetCardByIndexResponse(
@@ -500,11 +492,10 @@ def put_card_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x50:
+    if packet[1] != codec.PUT_CARD:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return PutCardResponse(
@@ -530,11 +521,10 @@ def delete_card_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x52:
+    if packet[1] != codec.DELETE_CARD:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return DeleteCardResponse(
@@ -560,11 +550,10 @@ def delete_all_cards_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x54:
+    if packet[1] != codec.DELETE_ALL_CARDS:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return DeleteAllCardsResponse(
@@ -590,11 +579,10 @@ def get_event_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0xb0:
+    if packet[1] != codec.GET_EVENT:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return GetEventResponse(
@@ -627,11 +615,10 @@ def get_event_index_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0xb4:
+    if packet[1] != codec.GET_EVENT_INDEX:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return GetEventIndexResponse(
@@ -657,11 +644,10 @@ def set_event_index_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0xb2:
+    if packet[1] != codec.SET_EVENT_INDEX:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return SetEventIndexResponse(
@@ -687,11 +673,10 @@ def record_special_events_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x8e:
+    if packet[1] != codec.RECORD_SPECIAL_EVENTS:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return RecordSpecialEventsResponse(
@@ -717,11 +702,10 @@ def get_time_profile_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x98:
+    if packet[1] != codec.GET_TIME_PROFILE:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return GetTimeProfileResponse(
@@ -763,11 +747,10 @@ def set_time_profile_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x88:
+    if packet[1] != codec.SET_TIME_PROFILE:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return SetTimeProfileResponse(
@@ -793,11 +776,10 @@ def delete_all_time_profiles_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x8a:
+    if packet[1] != codec.CLEAR_TIME_PROFILES:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return DeleteAllTimeProfilesResponse(
@@ -823,11 +805,10 @@ def add_task_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0xa8:
+    if packet[1] != codec.ADD_TASK:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return AddTaskResponse(
@@ -853,11 +834,10 @@ def refresh_tasklist_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0xac:
+    if packet[1] != codec.REFRESH_TASKLIST:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return RefreshTasklistResponse(
@@ -883,11 +863,10 @@ def clear_tasklist_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0xa6:
+    if packet[1] != codec.CLEAR_TASKLIST:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return ClearTasklistResponse(
@@ -913,11 +892,10 @@ def set_pc_control_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0xa0:
+    if packet[1] != codec.SET_PC_CONTROL:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return SetPcControlResponse(
@@ -943,11 +921,10 @@ def set_interlock_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0xa2:
+    if packet[1] != codec.SET_INTERLOCK:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return SetInterlockResponse(
@@ -973,11 +950,10 @@ def activate_keypads_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0xa4:
+    if packet[1] != codec.ACTIVATE_KEYPADS:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return ActivateKeypadsResponse(
@@ -1003,17 +979,71 @@ def set_door_passcodes_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x8c:
+    if packet[1] != codec.SET_DOOR_PASSCODES:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return SetDoorPasscodesResponse(
         unpack_uint32(packet, 4),
         unpack_bool(packet, 8),
     )
+
+
+def get_antipassback_response(packet):
+    '''
+    Decodes a get-antipassback response.
+
+        Parameters:
+            packet  (bytearray)  64 byte UDP packet.
+
+        Returns:
+            GetAntiPassbackResponse initialised from the UDP packet.
+
+        Raises:
+            ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
+                       the incorrect message type.
+    '''
+    if len(packet) != 64:
+        raise ValueError(f'invalid reply packet length ({len(packet)})')
+
+    if packet[0] != codec.SOM:
+        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+
+    if packet[1] != codec.GET_ANTIPASSBACK:
+        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+
+    return GetAntiPassbackResponse(
+        unpack_uint32(packet, 4),
+        unpack_uint8(packet, 8),
+    )
+
+
+def set_antipassback_response(packet):
+    '''
+    Decodes a set-antipassback response.
+
+        Parameters:
+            packet  (bytearray)  64 byte UDP packet.
+
+        Returns:
+            SetAntiPassbackResponse initialised from the UDP packet.
+
+        Raises:
+            ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
+                       the incorrect message type.
+    '''
+    if len(packet) != 64:
+        raise ValueError(f'invalid reply packet length ({len(packet)})')
+
+    if packet[0] != codec.SOM:
+        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+
+    if packet[1] != codec.SET_ANTIPASSBACK:
+        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+
+    return SetAntiPassbackResponse(unpack_uint32(packet, 4), unpack_bool(packet, 8))
 
 
 def restore_default_parameters_response(packet):
@@ -1033,11 +1063,10 @@ def restore_default_parameters_response(packet):
     if len(packet) != 64:
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
-    # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM:
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0xc8:
+    if packet[1] != codec.RESTORE_DEFAULT_PARAMETERS:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     return RestoreDefaultParametersResponse(
@@ -1048,7 +1077,7 @@ def restore_default_parameters_response(packet):
 
 def event(packet):
     '''
-    Decodes an event packet response.
+    Decodes an event packet.
 
         Parameters:
             packet  (bytearray)  64 byte UDP packet.
@@ -1064,10 +1093,10 @@ def event(packet):
         raise ValueError(f'invalid reply packet length ({len(packet)})')
 
     # Ref. v6.62 firmware event
-    if packet[0] != 0x17 and (packet[0] != 0x19 or packet[1] != 0x20):
+    if packet[0] != codec.SOM and (packet[0] != codec.SOM_v6_62 or packet[1] != codec.LISTEN_EVENT):
         raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
 
-    if packet[1] != 0x20:
+    if packet[1] != codec.LISTEN_EVENT:
         raise ValueError(f'invalid reply function code ({packet[1]:02x})')
 
     # yapf: disable

@@ -505,6 +505,25 @@ class TestTCPWithTimeout(unittest.TestCase):
             passcode1,  passcode2, passcode3, passcode4, 
             timeout=TIMEOUT)
 
+    def test_get_antipassback(self):
+        '''
+        Tests the get_antipassback function with a timeout.
+        '''
+        controller = (CONTROLLER,DEST_ADDR,'tcp')
+
+        self.u.get_antipassback(controller)
+        self.assertRaises(socket.timeout, self.u.get_antipassback, controller, timeout=TIMEOUT)
+
+    def test_set_antipassback(self):
+        '''
+        Tests the set_antipassback function with a timeout.
+        '''
+        controller = (CONTROLLER,DEST_ADDR,'tcp')
+        antipassback = 2
+
+        self.u.get_antipassback(controller, antipassback)
+        self.assertRaises(socket.timeout, self.u.set_antipassback, controller, antipassback, timeout=TIMEOUT)
+
     def test_restore_default_parameters(self):
         '''
         Tests the restore-default-parameters function with a timeout

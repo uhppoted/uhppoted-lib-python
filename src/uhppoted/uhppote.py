@@ -1112,6 +1112,75 @@ class Uhppote:
 
         return None
 
+    def get_antipassback(self, controller, timeout=2.5):
+        '''
+        Retrieves the anti-passback mode for an access controller.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               GetAntiPassbackResponse  Response from access controller to the get-antipassback request.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.get_antipassback_request(id)
+        reply = self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.get_antipassback_response(reply)
+
+        return None
+
+    def set_antipassback(self, controller, antipassback, timeout=2.5):
+        '''
+        Retrieves the anti-passback mode for an access controller.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               antipassback (uint8) Anti-passback mode:
+                                    - 0: disabled
+                                    - 1: (1:2);(3:4)
+                                    - 2: (1,3):(2,4)
+                                    - 3: 1:(2,3)
+                                    - 4: 1:(2,3,4)
+
+               timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               GetAntiPassbackResponse  Response from access controller to the get-antipassback request.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.set_antipassback_request(id, antipassback)
+        reply = self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.set_antipassback_response(reply)
+
+        return None
+
     def restore_default_parameters(self, controller, timeout=2.5):
         '''
         Resets a controller to the manufacturer default configuratio, protocol='udp'n.

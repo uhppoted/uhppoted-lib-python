@@ -432,12 +432,12 @@ set_interlock(controller, interlock)
 
 controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
 interlock   uint8         controller door interlock mode
-                          0: no interlock
-                          1: doors 1&2
-                          2: doors 3&4
-                          3: doors 1&2,3&4
-                          4: doors 1&2&3
-                          8: doors 1&2&3&4
+                          - 0: no interlock
+                          - 1: doors 1&2
+                          - 2: doors 3&4
+                          - 3: doors 1&2,3&4
+                          - 4: doors 1&2&3
+                          - 8: doors 1&2&3&4
 
 
 Raises an Exception if the call failed for any reason.
@@ -467,6 +467,38 @@ passcode1   uint32        supervisor passcode 1 [0..999999] (0 is 'no code')
 passcode2   uint32        supervisor passcode 2 [0..999999] (0 is 'no code')
 passcode3   uint32        supervisor passcode 3 [0..999999] (0 is 'no code')
 passcode4   uint32        supervisor passcode 4 [0..999999] (0 is 'no code')
+
+
+Raises an Exception if the call failed for any reason.
+```
+
+### `get_antipassback`
+
+Retrieves the anti-passback mode from the controller.
+
+```
+get_antipassback(controller)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+
+
+Raises an Exception if the call failed for any reason.
+```
+
+### `set_antipassback`
+
+Sets the controller anti-passback mode.
+
+```
+set_antipassback(controller, antipassback)
+
+controller    uint32|tuple  controller serial number or (id, address, protocol) tuple
+antipassback  uint8         anti-passback mode:
+                            - 0: disabled
+                            - 1: (1:2);(3:4)
+                            - 2: (1,3);(2,4)
+                            - 3: 1:(2,3)
+                            - 4: 1:(2,3,4)
 
 
 Raises an Exception if the call failed for any reason.
@@ -1058,6 +1090,35 @@ Container class for the decoded response to a set-door-passcodes request.
         controller  (uint32)  Controller serial number.
         ok          (bool)    Succeeded/failed.
 ```
+@dataclass
+class SetDoorPasscodesResponse:
+    controller: int
+    ok: bool
+```
+
+### `GetAntiPassbackResponse`
+
+Container class for the decoded response to a get-antipassback request.
+
+    Fields:
+        controller   (uint32)  Controller serial number.
+        antipassback (uint8)   Anti-passback mode:
+                               - 0: disabled
+                               - 1: (1:2);(3:4)
+                               - 2: (1,3):(2,4)
+                               - 3: 1:(2,3)
+                               - 4: 1:(2,3,4)
+```
+
+### `SetAntiPassbackResponse`
+
+Container class for the decoded response to a set-antipassback request.
+
+    Fields:
+        controller  (uint32)  Controller serial number.
+        ok          (bool)    Succeeded/failed.
+```
+
 @dataclass
 class SetDoorPasscodesResponse:
     controller: int

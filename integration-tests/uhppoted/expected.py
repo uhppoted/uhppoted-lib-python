@@ -195,6 +195,14 @@ SetDoorPasscodesResponse = structs.SetDoorPasscodesResponse(
     controller=405419896, 
     ok=True)
 
+GetAntiPassbackResponse = structs.GetAntiPassbackResponse(
+    controller=405419896, 
+    antipassback=2)
+
+SetAntiPassbackResponse = structs.SetAntiPassbackResponse(
+    controller=405419896, 
+    ok=True)
+
 RestoreDefaultParametersResponse = structs.RestoreDefaultParametersResponse(
     controller=405419896, 
     reset=True) 

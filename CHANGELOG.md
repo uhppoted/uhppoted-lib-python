@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+1. `get/set-antipassback` API function to get/set the anti-passback mode for a controller.
+
 
 ## [0.8.10](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.8.10) - 2025-01-29
 

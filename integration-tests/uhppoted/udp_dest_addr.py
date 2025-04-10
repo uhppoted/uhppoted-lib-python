@@ -464,6 +464,25 @@ class TestUDPWithDestAddr(unittest.TestCase):
 
         self.assertEqual(response, SetDoorPasscodesResponse)
 
+    def test_get_antipassback(self):
+        '''
+        Tests the get_antipassback function with a valid dest_addr.
+        '''
+        controller = (CONTROLLER, DEST_ADDR)
+        response = self.u.get_antipassback(controller)
+
+        self.assertEqual(response, GetAntiPassbackResponse)
+
+    def test_get_antipassback(self):
+        '''
+        Tests the set_antipassback function with a valid dest_addr.
+        '''
+        controller = (CONTROLLER, DEST_ADDR)
+        antipassback = 2
+        response = self.u.set_antipassback(controller, antipassback)
+
+        self.assertEqual(response, SetAntiPassbackResponse)
+
     def test_restore_default_parameters(self):
         '''
         Tests the restore-default-parameters function with a valid dest_addr.

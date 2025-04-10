@@ -176,6 +176,14 @@ set-door-passcodes: build
 	export UHPPOTED_ENV=DEV && $(CMD) set-door-passcodes
 	export UHPPOTED_ENV=DEV && $(TCP) set-door-passcodes
 
+get-antipassback: build
+	export UHPPOTED_ENV=DEV && $(CMD) get-antipassback
+	export UHPPOTED_ENV=DEV && $(TCP) get-antipassback
+
+set-antipassback: build
+	export UHPPOTED_ENV=DEV && $(CMD) set-antipassback # 405419896 '(1,3):(2,4)'
+	export UHPPOTED_ENV=DEV && $(TCP) set-antipassback # 405419896 '(1,3):(2,4)'
+
 restore-default-parameters: build
 	export UHPPOTED_ENV=DEV && $(CMD) restore-default-parameters
 	export UHPPOTED_ENV=DEV && $(TCP) restore-default-parameters

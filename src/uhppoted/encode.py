@@ -11,6 +11,8 @@ Encodes a UHPPOTE access controller request as a 64 byte UDP packet:
 import datetime
 import struct
 
+from . import codec
+
 
 def get_controller_request(controller):
     '''
@@ -24,8 +26,8 @@ def get_controller_request(controller):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x94
+    packet[0] = codec.SOM
+    packet[1] = codec.GET_CONTROLLER
 
     pack_uint32(controller, packet, 4)
 
@@ -47,8 +49,8 @@ def set_ip_request(controller, address, netmask, gateway):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x96
+    packet[0] = codec.SOM
+    packet[1] = codec.SET_IPv4
 
     pack_uint32(controller, packet, 4)
     pack_IPv4(address, packet, 8)
@@ -71,8 +73,8 @@ def get_time_request(controller):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x32
+    packet[0] = codec.SOM
+    packet[1] = codec.GET_TIME
 
     pack_uint32(controller, packet, 4)
 
@@ -92,8 +94,8 @@ def set_time_request(controller, datetime):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x30
+    packet[0] = codec.SOM
+    packet[1] = codec.SET_TIME
 
     pack_uint32(controller, packet, 4)
     pack_datetime(datetime, packet, 8)
@@ -113,8 +115,8 @@ def get_status_request(controller):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x20
+    packet[0] = codec.SOM
+    packet[1] = codec.GET_STATUS
 
     pack_uint32(controller, packet, 4)
 
@@ -133,8 +135,8 @@ def get_listener_request(controller):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x92
+    packet[0] = codec.SOM
+    packet[1] = codec.GET_LISTENER
 
     pack_uint32(controller, packet, 4)
 
@@ -156,8 +158,8 @@ def set_listener_request(controller, address, port, interval=0):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x90
+    packet[0] = codec.SOM
+    packet[1] = codec.SET_LISTENER
 
     pack_uint32(controller, packet, 4)
     pack_IPv4(address, packet, 8)
@@ -180,8 +182,8 @@ def get_door_control_request(controller, door):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x82
+    packet[0] = codec.SOM
+    packet[1] = codec.GET_DOOR
 
     pack_uint32(controller, packet, 4)
     pack_uint8(door, packet, 8)
@@ -204,8 +206,8 @@ def set_door_control_request(controller, door, mode, delay):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x80
+    packet[0] = codec.SOM
+    packet[1] = codec.SET_DOOR
 
     pack_uint32(controller, packet, 4)
     pack_uint8(door, packet, 8)
@@ -228,8 +230,8 @@ def open_door_request(controller, door):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x40
+    packet[0] = codec.SOM
+    packet[1] = codec.OPEN_DOOR
 
     pack_uint32(controller, packet, 4)
     pack_uint8(door, packet, 8)
@@ -249,8 +251,8 @@ def get_cards_request(controller):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x58
+    packet[0] = codec.SOM
+    packet[1] = codec.GET_CARDS
 
     pack_uint32(controller, packet, 4)
 
@@ -270,8 +272,8 @@ def get_card_request(controller, card_number):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x5a
+    packet[0] = codec.SOM
+    packet[1] = codec.GET_CARD
 
     pack_uint32(controller, packet, 4)
     pack_uint32(card_number, packet, 8)
@@ -292,8 +294,8 @@ def get_card_by_index_request(controller, card_index):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x5c
+    packet[0] = codec.SOM
+    packet[1] = codec.GET_CARD_AT_INDEX
 
     pack_uint32(controller, packet, 4)
     pack_uint32(card_index, packet, 8)
@@ -321,8 +323,8 @@ def put_card_request(controller, card_number, start_date, end_date, door_1, door
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x50
+    packet[0] = codec.SOM
+    packet[1] = codec.PUT_CARD
 
     pack_uint32(controller, packet, 4)
     pack_uint32(card_number, packet, 8)
@@ -350,8 +352,8 @@ def delete_card_request(controller, card_number):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x52
+    packet[0] = codec.SOM
+    packet[1] = codec.DELETE_CARD
 
     pack_uint32(controller, packet, 4)
     pack_uint32(card_number, packet, 8)
@@ -371,8 +373,8 @@ def delete_cards_request(controller):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x54
+    packet[0] = codec.SOM
+    packet[1] = codec.DELETE_ALL_CARDS
 
     pack_uint32(controller, packet, 4)
     pack_uint32(0x55aaaa55, packet, 8)
@@ -393,8 +395,8 @@ def get_event_request(controller, event_index):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0xb0
+    packet[0] = codec.SOM
+    packet[1] = codec.GET_EVENT
 
     pack_uint32(controller, packet, 4)
     pack_uint32(event_index, packet, 8)
@@ -414,8 +416,8 @@ def get_event_index_request(controller):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0xb4
+    packet[0] = codec.SOM
+    packet[1] = codec.GET_EVENT_INDEX
 
     pack_uint32(controller, packet, 4)
 
@@ -435,8 +437,8 @@ def set_event_index_request(controller, event_index):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0xb2
+    packet[0] = codec.SOM
+    packet[1] = codec.SET_EVENT_INDEX
 
     pack_uint32(controller, packet, 4)
     pack_uint32(event_index, packet, 8)
@@ -458,8 +460,8 @@ def record_special_events_request(controller, enable):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x8e
+    packet[0] = codec.SOM
+    packet[1] = codec.RECORD_SPECIAL_EVENTS
 
     pack_uint32(controller, packet, 4)
     pack_bool(enable, packet, 8)
@@ -480,8 +482,8 @@ def get_time_profile_request(controller, profile_id):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x98
+    packet[0] = codec.SOM
+    packet[1] = codec.GET_TIME_PROFILE
 
     pack_uint32(controller, packet, 4)
     pack_uint8(profile_id, packet, 8)
@@ -520,8 +522,8 @@ def set_time_profile_request(controller, profile_id, start_date, end_date, monda
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x88
+    packet[0] = codec.SOM
+    packet[1] = codec.SET_TIME_PROFILE
 
     pack_uint32(controller, packet, 4)
     pack_uint8(profile_id, packet, 8)
@@ -582,8 +584,8 @@ def delete_all_time_profiles_request(controller):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x8a
+    packet[0] = codec.SOM
+    packet[1] = codec.CLEAR_TIME_PROFILES
 
     pack_uint32(controller, packet, 4)
     pack_uint32(0x55aaaa55, packet, 8)
@@ -630,8 +632,8 @@ def add_task_request(controller, start_date, end_date, monday, tuesday, wednesda
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0xa8
+    packet[0] = codec.SOM
+    packet[1] = codec.ADD_TASK
 
     pack_uint32(controller, packet, 4)
     pack_date(start_date, packet, 8)
@@ -663,8 +665,8 @@ def refresh_tasklist_request(controller):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0xac
+    packet[0] = codec.SOM
+    packet[1] = codec.REFRESH_TASKLIST
 
     pack_uint32(controller, packet, 4)
     pack_uint32(0x55aaaa55, packet, 8)
@@ -684,8 +686,8 @@ def clear_tasklist_request(controller):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0xa6
+    packet[0] = codec.SOM
+    packet[1] = codec.CLEAR_TASKLIST
 
     pack_uint32(controller, packet, 4)
     pack_uint32(0x55aaaa55, packet, 8)
@@ -706,8 +708,8 @@ def set_pc_control_request(controller, enable):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0xa0
+    packet[0] = codec.SOM
+    packet[1] = codec.SET_PC_CONTROL
 
     pack_uint32(controller, packet, 4)
     pack_uint32(0x55aaaa55, packet, 8)
@@ -735,8 +737,8 @@ def set_interlock_request(controller, interlock):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0xa2
+    packet[0] = codec.SOM
+    packet[1] = codec.SET_INTERLOCK
 
     pack_uint32(controller, packet, 4)
     pack_uint8(interlock, packet, 8)
@@ -760,8 +762,8 @@ def activate_keypads_request(controller, reader1, reader2, reader3, reader4):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0xa4
+    packet[0] = codec.SOM
+    packet[1] = codec.ACTIVATE_KEYPADS
 
     pack_uint32(controller, packet, 4)
     pack_bool(reader1, packet, 8)
@@ -789,8 +791,8 @@ def set_door_passcodes_request(device_id, door, passcode1, passcode2, passcode3,
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0x8c
+    packet[0] = codec.SOM
+    packet[1] = codec.SET_DOOR_PASSCODES
 
     pack_uint32(device_id, packet, 4)
     pack_uint8(door, packet, 8)
@@ -798,6 +800,53 @@ def set_door_passcodes_request(device_id, door, passcode1, passcode2, passcode3,
     pack_uint32(passcode2, packet, 16)
     pack_uint32(passcode3, packet, 20)
     pack_uint32(passcode4, packet, 24)
+
+    return packet
+
+
+def get_antipassback_request(controller):
+    '''
+    Encodes a get-antipassback request.
+
+        Parameters:
+            controller (uint32)  Controller serial number.
+
+        Returns:
+            64 byte UDP packet.
+    '''
+    packet = bytearray(64)
+
+    packet[0] = codec.SOM
+    packet[1] = codec.GET_ANTIPASSBACK
+
+    pack_uint32(controller, packet, 4)
+
+    return packet
+
+
+def set_antipassback_request(controller, antipassback):
+    '''
+    Encodes a set-antipassback request.
+
+        Parameters:
+            controller   (uint32)  Controller serial number.
+            antipassback (uint8)   Anti-passback mode:
+                                   - 0: disabled
+                                   - 1: (1:2);(3:4)
+                                   - 2: (1,3):(2,4)
+                                   - 3: 1:(2,3)
+                                   - 4: 1:(2,3,4)
+
+        Returns:
+            64 byte UDP packet.
+    '''
+    packet = bytearray(64)
+
+    packet[0] = codec.SOM
+    packet[1] = codec.SET_ANTIPASSBACK
+
+    pack_uint32(controller, packet, 4)
+    pack_uint8(antipassback, packet, 8)
 
     return packet
 
@@ -814,8 +863,8 @@ def restore_default_parameters_request(controller):
     '''
     packet = bytearray(64)
 
-    packet[0] = 0x17
-    packet[1] = 0xc8
+    packet[0] = codec.SOM
+    packet[1] = codec.RESTORE_DEFAULT_PARAMETERS
 
     pack_uint32(controller, packet, 4)
     pack_uint32(0x55aaaa55, packet, 8)

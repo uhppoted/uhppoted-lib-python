@@ -20,6 +20,7 @@ CARD_INDEX = 3
 EVENT_INDEX = 37
 TIME_PROFILE_ID = 29
 AUTO_SEND = 15
+ANTIPASSBACK = 2
 
 ADDRESS = ipaddress.IPv4Address('192.168.1.100')
 NETMASK = ipaddress.IPv4Address('255.255.255.0')
@@ -60,6 +61,8 @@ def commands():
         'set-interlock': set_interlock,
         'activate-keypads': activate_keypads,
         'set-door-passcodes': set_door_passcodes,
+        'get-antipassback': get_antipassback,
+        'set-antipassback': set_antipassback,
         'restore-default-parameters': restore_default_parameters,
         'listen': listen,
     }
@@ -381,6 +384,19 @@ def set_door_passcodes(u, dest, timeout, args, protocol='udp'):
     passcode4 = 54321
 
     return u.set_door_passcodes(controller, door, passcode1, passcode2, passcode3, passcode4, timeout=timeout)
+
+
+def get_antipassback(u, dest, timeout, args, protocol='udp'):
+    controller = (CONTROLLER, dest, protocol)
+
+    return u.get_antipassback(controller, timeout=timeout)
+
+
+def set_antipassback(u, dest, timeout, args, protocol='udp'):
+    controller = (CONTROLLER, dest, protocol)
+    antipassback = ANTIPASSBACK
+
+    return u.set_antipassback(controller, antipassback, timeout=timeout)
 
 
 def restore_default_parameters(u, dest, timeout, args, protocol='udp'):
