@@ -120,41 +120,41 @@ pprint(record.__dict__, indent=2, width=1)
 
 **API**:
 
-- [`get_controllers`](#get-controllers)
-- [`get_controller`](#get-controller)
-- [`set_address`](#set-address)
-- [`get_status`](#get-status)
-- [`get_time`](#get-time)
-- [`set_time`](#set-time)
-- [`get_listener`](#get-listener)
-- [`set_listener`](#set-listener)
-- [`get_door_control`](#get-door-control)
-- [`set_door_control`](#set-door-control)
-- [`open_door`](#open-door)
-- [`get_cards`](#get-cards)
-- [`get_card`](#get-card)
-- [`get_card_by_index`](#get-card-by-index)
-- [`put_card`](#put-card)
-- [`delete_card`](#delete-card)
-- [`delete_cards`](#delete-cards)
-- [`get_event_index`](#get-event-index)
-- [`set_event_index`](#set-event-index)
-- [`get_event`](#get-event)
-- [`record_special_events`](#record-special-events)
-- [`get_time_profile`](#get-time-profile)
-- [`set_time_profile`](#set-time-profile)
-- [`clear_time_profiles`](#clear-time-profiles)
-- [`add_task`](#add-task)
-- [`refresh_tasklist`](#refresh-tasklist)
-- [`clear_tasklist`](#clear-tasklist)
-- [`set_pc_control`](#set-pc-control)
-- [`set_interlock`](#set-interlock)
-- [`activate_keypads`](#activate-keypads)
-- [`set_door_passcodes`](#set-door-passcodes)
-- [`get_antipassback`](#get-antipassback)
-- [`set_antipassback`](#set-antipassback)
-- [`restore_default_parameters`](#restore-default-parameters)
-- [`listen`](#listen)
+_ [`get_controllers`](#get_controllers)
+_ [`get_controller`](#get_controller)
+_ [`set_address`](#set_address)
+_ [`get_status`](#get_status)
+_ [`get_time`](#get_time)
+_ [`set_time`](#set_time)
+_ [`get_listener`](#get_listener)
+_ [`set_listener`](#set_listener)
+_ [`get_door_control`](#get_door_control)
+_ [`set_door_control`](#set_door_control)
+_ [`open_door`](#open_door)
+_ [`get_cards`](#get_cards)
+_ [`get_card`](#get_card)
+_ [`get_card_by_index`](#get_card_by_index)
+_ [`put_card`](#put_card)
+_ [`delete_card`](#delete_card)
+_ [`delete_cards`](#delete_cards)
+_ [`get_event_index`](#get_event_index)
+_ [`set_event_index`](#set_event_index)
+_ [`get_event`](#get_event)
+_ [`record_special_events`](#record_special_events)
+_ [`get_time_profile`](#get_time_profile)
+_ [`set_time_profile`](#set_time_profile)
+_ [`clear_time_profiles`](#clear_time_profiles)
+_ [`add_task`](#add_task)
+_ [`refresh_tasklist`](#refresh_tasklist)
+_ [`clear_tasklist`](#clear_tasklist)
+_ [`set_pc_control`](#set_pc_control)
+_ [`set_interlock`](#set_interlock)
+_ [`activate_keypads`](#activate_keypads)
+_ [`set_door_passcodes`](#set_door_passcodes)
+_ [`get_antipassback`](#get_antipassback)
+_ [`set_antipassback`](#set_antipassback)
+_ [`restore_default_parameters`](#restore_default_parameters)
+_ [`listen`](#listen)
 
 ### `get_controllers`
 ```
@@ -1147,6 +1147,11 @@ Container class for the decoded response to a get-antipassback request.
                                - 3: 1:(2,3)
                                - 4: 1:(2,3,4)
 ```
+@dataclass
+class GetAntiPassbackResponse:
+    controller: int
+    antipassback: int
+```
 
 ### `SetAntiPassbackResponse`
 
@@ -1156,9 +1161,8 @@ Container class for the decoded response to a set-antipassback request.
         controller  (uint32)  Controller serial number.
         ok          (bool)    Succeeded/failed.
 ```
-
 @dataclass
-class SetDoorPasscodesResponse:
+class SetAntiPassbackResponse:
     controller: int
     ok: bool
 ```
