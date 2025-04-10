@@ -118,6 +118,44 @@ pprint(record.__dict__, indent=2, width=1)
    Defaults to 2.5s.
 ```
 
+**API**:
+
+- [`get_controllers`](#get-controllers)
+- [`get_controller`](#get-controller)
+- [`set_address`](#set-address)
+- [`get_status`](#get-status)
+- [`get_time`](#get-time)
+- [`set_time`](#set-time)
+- [`get_listener`](#get-listener)
+- [`set_listener`](#set-listener)
+- [`get_door_control`](#get-door-control)
+- [`set_door_control`](#set-door-control)
+- [`open_door`](#open-door)
+- [`get_cards`](#get-cards)
+- [`get_card`](#get-card)
+- [`get_card_by_index`](#get-card-by-index)
+- [`put_card`](#put-card)
+- [`delete_card`](#delete-card)
+- [`delete_cards`](#delete-cards)
+- [`get_event_index`](#get-event-index)
+- [`set_event_index`](#set-event-index)
+- [`get_event`](#get-event)
+- [`record_special_events`](#record-special-events)
+- [`get_time_profile`](#get-time-profile)
+- [`set_time_profile`](#set-time-profile)
+- [`clear_time_profiles`](#clear-time-profiles)
+- [`add_task`](#add-task)
+- [`refresh_tasklist`](#refresh-tasklist)
+- [`clear_tasklist`](#clear-tasklist)
+- [`set_pc_control`](#set-pc-control)
+- [`set_interlock`](#set-interlock)
+- [`activate_keypads`](#activate-keypads)
+- [`set_door_passcodes`](#set-door-passcodes)
+- [`get_antipassback`](#get-antipassback)
+- [`set_antipassback`](#set-antipassback)
+- [`restore_default_parameters`](#restore-default-parameters)
+- [`listen`](#listen)
+
 ### `get_controllers`
 ```
 get_controllers()
@@ -1195,3 +1233,4 @@ class Event:
     system_error: int
     special_info: int
     sequence_no: int
+```
