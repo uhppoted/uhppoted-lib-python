@@ -118,7 +118,7 @@ pprint(record.__dict__, indent=2, width=1)
    Defaults to 2.5s.
 ```
 
-**API**:
+**API**
 
 - [`get_controllers`](#get_controllers)
 - [`get_controller`](#get_controller)

@@ -8,8 +8,7 @@
       - [x] CHANGELOG
       - [x] README
 
-- [ ] `argparse` args for examples
-      - https://docs.python.org/3/library/argparse.html#parents
+- [x] `argparse` args for examples
 
 - [ ] Use site-specific configuration to run examples locally
       - https://docs.python.org/3/library/site.html
