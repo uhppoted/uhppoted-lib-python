@@ -28,6 +28,7 @@ EVENT_INDEX = 29
 TIME_PROFILE = 29
 NO_TIMEOUT = struct.pack('ll', 0, 0)  # (infinite)
 
+
 def handle(sock, bind, debug):
     '''
     Replies to received UDP packets with the matching response.
@@ -39,7 +40,7 @@ def handle(sock, bind, debug):
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, never)
 
         while True:
-            (message,addr) = sock.recvfrom(1024)
+            (message, addr) = sock.recvfrom(1024)
             if len(message) == 64:
                 if debug:
                     dump(message)
@@ -52,7 +53,9 @@ def handle(sock, bind, debug):
     finally:
         sock.close()
 
+
 class TestUDPWithDestAddr(unittest.TestCase):
+
     @classmethod
     def setUpClass(clazz):
         bind = '0.0.0.0'
@@ -62,7 +65,7 @@ class TestUDPWithDestAddr(unittest.TestCase):
 
         clazz.u = uhppote.Uhppote(bind, broadcast, listen, debug)
         clazz._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
-        clazz._thread = threading.Thread(target = handle, args = (clazz._sock,('127.0.0.1', 54321), False))
+        clazz._thread = threading.Thread(target=handle, args=(clazz._sock, ('127.0.0.1', 54321), False))
 
         clazz._thread.start()
         time.sleep(1)
@@ -231,8 +234,8 @@ class TestUDPWithDestAddr(unittest.TestCase):
         '''
         controller = (CONTROLLER, DEST_ADDR)
         card = 123456789
-        start = datetime.date(2023,1,1)
-        end = datetime.date(2025,12,31)
+        start = datetime.date(2023, 1, 1)
+        end = datetime.date(2025, 12, 31)
         door1 = 1
         door2 = 0
         door3 = 29
@@ -318,8 +321,8 @@ class TestUDPWithDestAddr(unittest.TestCase):
         '''
         controller = (CONTROLLER, DEST_ADDR)
         profile_id = TIME_PROFILE
-        start_date = datetime.date(2021,1,1)
-        end_date = datetime.date(2021,12,31)
+        start_date = datetime.date(2021, 1, 1)
+        end_date = datetime.date(2021, 12, 31)
         monday = True
         tuesday = False
         wednesday = True
@@ -327,33 +330,18 @@ class TestUDPWithDestAddr(unittest.TestCase):
         friday = True
         saturday = False
         sunday = False
-        segment_1_start = datetime.time(8,30)
-        segment_1_end = datetime.time(11,45)
-        segment_2_start = datetime.time(13,15)
-        segment_2_end = datetime.time(17,25)
+        segment_1_start = datetime.time(8, 30)
+        segment_1_end = datetime.time(11, 45)
+        segment_2_start = datetime.time(13, 15)
+        segment_2_end = datetime.time(17, 25)
         segment_3_start = None
         segment_3_end = None
         linked_profile_id = 3
 
-        response = self.u.set_time_profile(
-            controller,
-            profile_id,
-            start_date,
-            end_date,
-            monday,
-            tuesday,
-            wednesday,
-            thursday,
-            friday,
-            saturday,
-            sunday,
-            segment_1_start,
-            segment_1_end,
-            segment_2_start,
-            segment_2_end,
-            segment_3_start,
-            segment_3_end,
-            linked_profile_id)
+        response = self.u.set_time_profile(controller, profile_id, start_date, end_date, monday, tuesday, wednesday,
+                                           thursday, friday, saturday, sunday, segment_1_start, segment_1_end,
+                                           segment_2_start, segment_2_end, segment_3_start, segment_3_end,
+                                           linked_profile_id)
 
         self.assertEqual(response, SetTimeProfileResponse)
 
@@ -371,8 +359,8 @@ class TestUDPWithDestAddr(unittest.TestCase):
         Tests the add-task function with a valid dest_addr.
         '''
         controller = (CONTROLLER, DEST_ADDR)
-        start_date = datetime.date(2021,1,1)
-        end_date = datetime.date(2021,12,31)
+        start_date = datetime.date(2021, 1, 1)
+        end_date = datetime.date(2021, 12, 31)
         monday = True
         tuesday = False
         wednesday = True
@@ -380,19 +368,13 @@ class TestUDPWithDestAddr(unittest.TestCase):
         friday = True
         saturday = False
         sunday = False
-        start_time = datetime.time(8,30)
+        start_time = datetime.time(8, 30)
         door = 3
         task_type = 4
         more_cards = 17
 
-        response = self.u.add_task(
-            controller,
-            start_date, end_date, 
-            monday, tuesday, wednesday, thursday, friday, saturday, sunday,
-            start_time, 
-            door, 
-            task_type, 
-            more_cards)
+        response = self.u.add_task(controller, start_date, end_date, monday, tuesday, wednesday, thursday, friday,
+                                   saturday, sunday, start_time, door, task_type, more_cards)
 
         self.assertEqual(response, AddTaskResponse)
 
@@ -460,7 +442,7 @@ class TestUDPWithDestAddr(unittest.TestCase):
         passcode3 = 999999
         passcode4 = 54321
 
-        response = self.u.set_door_passcodes(controller, door, passcode1,  passcode2, passcode3, passcode4)
+        response = self.u.set_door_passcodes(controller, door, passcode1, passcode2, passcode3, passcode4)
 
         self.assertEqual(response, SetDoorPasscodesResponse)
 

@@ -20,13 +20,14 @@ from uhppoted.net import dump
 from .stub import messages
 from .expected import *
 
-DEST_ADDR='127.0.0.1:12345'
+DEST_ADDR = '127.0.0.1:12345'
 CONTROLLER = 405419896
 CARD = 8165538
 CARD_INDEX = 2
 EVENT_INDEX = 29
 TIME_PROFILE = 29
 NO_TIMEOUT = struct.pack('ll', 0, 0)  # (infinite)
+
 
 def handle(sock, bind, debug):
     '''
@@ -40,7 +41,7 @@ def handle(sock, bind, debug):
 
     try:
         while True:
-            (connection,addr) = sock.accept()
+            (connection, addr) = sock.accept()
             try:
                 connection.settimeout(0.5)
                 message = connection.recv(1024)
@@ -54,13 +55,15 @@ def handle(sock, bind, debug):
                             break
 
             except Exception as x:
-                print('WARN',x)
+                print('WARN', x)
             finally:
                 connection.close()
     except Exception as xx:
         pass
 
+
 class TestUhppoteWithTCP(unittest.TestCase):
+
     @classmethod
     def setUpClass(clazz):
         bind = '0.0.0.0'
@@ -70,11 +73,10 @@ class TestUhppoteWithTCP(unittest.TestCase):
 
         clazz.u = uhppote.Uhppote(bind, broadcast, listen, debug)
         clazz._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
-        clazz._thread = threading.Thread(target = handle, args = (clazz._sock,('', 12345), False))
+        clazz._thread = threading.Thread(target=handle, args=(clazz._sock, ('', 12345), False))
 
         clazz._thread.start()
         time.sleep(1)
-
 
     @classmethod
     def tearDownClass(clazz):
@@ -231,8 +233,8 @@ class TestUhppoteWithTCP(unittest.TestCase):
         '''
         controller = (CONTROLLER, DEST_ADDR, 'tcp')
         card = 123456789
-        start = datetime.date(2023,1,1)
-        end = datetime.date(2025,12,31)
+        start = datetime.date(2023, 1, 1)
+        end = datetime.date(2025, 12, 31)
         door1 = 1
         door2 = 0
         door3 = 29
@@ -317,8 +319,8 @@ class TestUhppoteWithTCP(unittest.TestCase):
         '''
         controller = (CONTROLLER, DEST_ADDR, 'tcp')
         profile_id = TIME_PROFILE
-        start_date = datetime.date(2021,1,1)
-        end_date = datetime.date(2021,12,31)
+        start_date = datetime.date(2021, 1, 1)
+        end_date = datetime.date(2021, 12, 31)
         monday = True
         tuesday = False
         wednesday = True
@@ -326,33 +328,18 @@ class TestUhppoteWithTCP(unittest.TestCase):
         friday = True
         saturday = False
         sunday = False
-        segment_1_start = datetime.time(8,30)
-        segment_1_end = datetime.time(11,45)
-        segment_2_start = datetime.time(13,15)
-        segment_2_end = datetime.time(17,25)
+        segment_1_start = datetime.time(8, 30)
+        segment_1_end = datetime.time(11, 45)
+        segment_2_start = datetime.time(13, 15)
+        segment_2_end = datetime.time(17, 25)
         segment_3_start = None
         segment_3_end = None
         linked_profile_id = 3
 
-        response = self.u.set_time_profile(
-            controller,
-            profile_id,
-            start_date,
-            end_date,
-            monday,
-            tuesday,
-            wednesday,
-            thursday,
-            friday,
-            saturday,
-            sunday,
-            segment_1_start,
-            segment_1_end,
-            segment_2_start,
-            segment_2_end,
-            segment_3_start,
-            segment_3_end,
-            linked_profile_id)
+        response = self.u.set_time_profile(controller, profile_id, start_date, end_date, monday, tuesday, wednesday,
+                                           thursday, friday, saturday, sunday, segment_1_start, segment_1_end,
+                                           segment_2_start, segment_2_end, segment_3_start, segment_3_end,
+                                           linked_profile_id)
 
         self.assertEqual(response, SetTimeProfileResponse)
 
@@ -370,8 +357,8 @@ class TestUhppoteWithTCP(unittest.TestCase):
         Tests the add-task function with defaults.
         '''
         controller = (CONTROLLER, DEST_ADDR, 'tcp')
-        start_date = datetime.date(2021,1,1)
-        end_date = datetime.date(2021,12,31)
+        start_date = datetime.date(2021, 1, 1)
+        end_date = datetime.date(2021, 12, 31)
         monday = True
         tuesday = False
         wednesday = True
@@ -379,19 +366,13 @@ class TestUhppoteWithTCP(unittest.TestCase):
         friday = True
         saturday = False
         sunday = False
-        start_time = datetime.time(8,30)
+        start_time = datetime.time(8, 30)
         door = 3
         task_type = 4
         more_cards = 17
 
-        response = self.u.add_task(
-            controller,
-            start_date, end_date, 
-            monday, tuesday, wednesday, thursday, friday, saturday, sunday,
-            start_time, 
-            door, 
-            task_type, 
-            more_cards)
+        response = self.u.add_task(controller, start_date, end_date, monday, tuesday, wednesday, thursday, friday,
+                                   saturday, sunday, start_time, door, task_type, more_cards)
 
         self.assertEqual(response, AddTaskResponse)
 
@@ -458,13 +439,7 @@ class TestUhppoteWithTCP(unittest.TestCase):
         passcode3 = 999999
         passcode4 = 54321
 
-        response = self.u.set_door_passcodes(
-            controller, 
-            door, 
-            passcode1,  
-            passcode2, 
-            passcode3, 
-            passcode4)
+        response = self.u.set_door_passcodes(controller, door, passcode1, passcode2, passcode3, passcode4)
 
         self.assertEqual(response, SetDoorPasscodesResponse)
 

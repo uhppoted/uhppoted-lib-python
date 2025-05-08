@@ -29,6 +29,7 @@ EVENT_INDEX = 29
 TIME_PROFILE = 29
 NO_TIMEOUT = struct.pack('ll', 0, 0)  # (infinite)
 
+
 def handle(sock, bind, debug):
     '''
     Replies to received UDP packets with the matching response after 0.5s delay.
@@ -40,7 +41,7 @@ def handle(sock, bind, debug):
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, never)
 
         while True:
-            (message,addr) = sock.recvfrom(1024)
+            (message, addr) = sock.recvfrom(1024)
             if len(message) == 64:
                 if debug:
                     dump(message)
@@ -54,7 +55,9 @@ def handle(sock, bind, debug):
     finally:
         sock.close()
 
+
 class TestUDPWithTimeout(unittest.TestCase):
+
     @classmethod
     def setUpClass(clazz):
         bind = '0.0.0.0'
@@ -64,7 +67,7 @@ class TestUDPWithTimeout(unittest.TestCase):
 
         clazz.u = uhppote.Uhppote(bind, broadcast, listen, debug)
         clazz._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
-        clazz._thread = threading.Thread(target = handle, args = (clazz._sock,('127.0.0.1', 54321), False))
+        clazz._thread = threading.Thread(target=handle, args=(clazz._sock, ('127.0.0.1', 54321), False))
 
         clazz._thread.start()
         time.sleep(1)
@@ -95,7 +98,7 @@ class TestUDPWithTimeout(unittest.TestCase):
         controller = (CONTROLLER, DEST_ADDR)
 
         self.u.get_controller(controller)
-        self.assertRaises(socket.timeout, self.u.get_controller,controller, timeout=TIMEOUT)
+        self.assertRaises(socket.timeout, self.u.get_controller, controller, timeout=TIMEOUT)
 
     def test_set_ip(self):
         '''
@@ -125,7 +128,7 @@ class TestUDPWithTimeout(unittest.TestCase):
         time = datetime.datetime(2021, 5, 28, 14, 56, 14)
 
         self.u.set_time(controller, time)
-        self.assertRaises(socket.timeout, self.u.set_time,controller, time,  timeout=TIMEOUT)
+        self.assertRaises(socket.timeout, self.u.set_time, controller, time, timeout=TIMEOUT)
 
     def test_get_status(self):
         '''
@@ -135,7 +138,7 @@ class TestUDPWithTimeout(unittest.TestCase):
 
         self.u.get_status(controller)
         self.assertRaises(socket.timeout, self.u.get_status, controller, timeout=TIMEOUT)
-        
+
     def test_get_listener(self):
         '''
         Tests the get-listener function with a timeout.
@@ -143,7 +146,7 @@ class TestUDPWithTimeout(unittest.TestCase):
         controller = (CONTROLLER, DEST_ADDR)
 
         self.u.get_listener(controller)
-        self.assertRaises(socket.timeout, self.u.get_listener,controller, timeout=TIMEOUT)
+        self.assertRaises(socket.timeout, self.u.get_listener, controller, timeout=TIMEOUT)
 
     def test_set_listener(self):
         '''
@@ -155,7 +158,7 @@ class TestUDPWithTimeout(unittest.TestCase):
         interval = 15
 
         self.u.set_listener(controller, address, port, interval)
-        self.assertRaises(socket.timeout, self.u.set_listener, controller, address, port,timeout=TIMEOUT)
+        self.assertRaises(socket.timeout, self.u.set_listener, controller, address, port, timeout=TIMEOUT)
 
     def test_get_door_control(self):
         '''
@@ -165,7 +168,7 @@ class TestUDPWithTimeout(unittest.TestCase):
         door = 3
 
         self.u.get_door_control(controller, door)
-        self.assertRaises(socket.timeout, self.u.get_door_control, controller, door,  timeout=TIMEOUT)
+        self.assertRaises(socket.timeout, self.u.get_door_control, controller, door, timeout=TIMEOUT)
 
     def test_set_door_control(self):
         '''
@@ -177,7 +180,7 @@ class TestUDPWithTimeout(unittest.TestCase):
         mode = 2
 
         self.u.set_door_control(controller, door, mode, delay)
-        self.assertRaises(socket.timeout, self.u.set_door_control, controller, door, mode, delay,  timeout=TIMEOUT)
+        self.assertRaises(socket.timeout, self.u.set_door_control, controller, door, mode, delay, timeout=TIMEOUT)
 
     def test_open_door(self):
         '''
@@ -206,7 +209,7 @@ class TestUDPWithTimeout(unittest.TestCase):
         controller = (CONTROLLER, DEST_ADDR)
 
         self.u.get_cards(controller)
-        self.assertRaises(socket.timeout, self.u.get_cards, controller,  timeout=TIMEOUT)
+        self.assertRaises(socket.timeout, self.u.get_cards, controller, timeout=TIMEOUT)
 
     def test_get_card(self):
         '''
@@ -234,8 +237,8 @@ class TestUDPWithTimeout(unittest.TestCase):
         '''
         controller = (CONTROLLER, DEST_ADDR)
         card = 123456789
-        start = datetime.date(2023,1,1)
-        end = datetime.date(2025,12,31)
+        start = datetime.date(2023, 1, 1)
+        end = datetime.date(2025, 12, 31)
         door1 = 1
         door2 = 0
         door3 = 29
@@ -243,7 +246,18 @@ class TestUDPWithTimeout(unittest.TestCase):
         PIN = 7531
 
         self.u.put_card(controller, card, start, end, door1, door2, door3, door4, PIN)
-        self.assertRaises(socket.timeout, self.u.put_card, controller, card, start, end, door1, door2, door3, door4, PIN, timeout=TIMEOUT)
+        self.assertRaises(socket.timeout,
+                          self.u.put_card,
+                          controller,
+                          card,
+                          start,
+                          end,
+                          door1,
+                          door2,
+                          door3,
+                          door4,
+                          PIN,
+                          timeout=TIMEOUT)
 
     def test_delete_card(self):
         '''
@@ -262,7 +276,7 @@ class TestUDPWithTimeout(unittest.TestCase):
         controller = (CONTROLLER, DEST_ADDR)
 
         self.u.delete_all_cards(controller)
-        self.assertRaises(socket.timeout, self.u.delete_all_cards, controller,  timeout=TIMEOUT)
+        self.assertRaises(socket.timeout, self.u.delete_all_cards, controller, timeout=TIMEOUT)
 
     def test_get_event(self):
         '''
@@ -281,7 +295,7 @@ class TestUDPWithTimeout(unittest.TestCase):
         controller = (CONTROLLER, DEST_ADDR)
 
         self.u.get_event_index(controller)
-        self.assertRaises(socket.timeout, self.u.get_event_index, controller,timeout=TIMEOUT)
+        self.assertRaises(socket.timeout, self.u.get_event_index, controller, timeout=TIMEOUT)
 
     def test_set_event_index(self):
         '''
@@ -319,8 +333,8 @@ class TestUDPWithTimeout(unittest.TestCase):
         '''
         controller = (CONTROLLER, DEST_ADDR)
         profile_id = TIME_PROFILE
-        start_date = datetime.date(2021,1,1)
-        end_date = datetime.date(2021,12,31)
+        start_date = datetime.date(2021, 1, 1)
+        end_date = datetime.date(2021, 12, 31)
         monday = True
         tuesday = False
         wednesday = True
@@ -328,54 +342,39 @@ class TestUDPWithTimeout(unittest.TestCase):
         friday = True
         saturday = False
         sunday = False
-        segment_1_start = datetime.time(8,30)
-        segment_1_end = datetime.time(11,45)
-        segment_2_start = datetime.time(13,15)
-        segment_2_end = datetime.time(17,25)
+        segment_1_start = datetime.time(8, 30)
+        segment_1_end = datetime.time(11, 45)
+        segment_2_start = datetime.time(13, 15)
+        segment_2_end = datetime.time(17, 25)
         segment_3_start = None
         segment_3_end = None
         linked_profile_id = 3
 
-        self.u.set_time_profile(
-            controller,
-            profile_id,
-            start_date,
-            end_date,
-            monday,
-            tuesday,
-            wednesday,
-            thursday,
-            friday,
-            saturday,
-            sunday,
-            segment_1_start,
-            segment_1_end,
-            segment_2_start,
-            segment_2_end,
-            segment_3_start,
-            segment_3_end,
-            linked_profile_id)
+        self.u.set_time_profile(controller, profile_id, start_date, end_date, monday, tuesday, wednesday, thursday,
+                                friday, saturday, sunday, segment_1_start, segment_1_end, segment_2_start,
+                                segment_2_end, segment_3_start, segment_3_end, linked_profile_id)
 
-        self.assertRaises(socket.timeout, self.u.set_time_profile,
-            controller,
-            profile_id,
-            start_date,
-            end_date,
-            monday,
-            tuesday,
-            wednesday,
-            thursday,
-            friday,
-            saturday,
-            sunday,
-            segment_1_start,
-            segment_1_end,
-            segment_2_start,
-            segment_2_end,
-            segment_3_start,
-            segment_3_end,
-            linked_profile_id,
-            timeout=TIMEOUT)
+        self.assertRaises(socket.timeout,
+                          self.u.set_time_profile,
+                          controller,
+                          profile_id,
+                          start_date,
+                          end_date,
+                          monday,
+                          tuesday,
+                          wednesday,
+                          thursday,
+                          friday,
+                          saturday,
+                          sunday,
+                          segment_1_start,
+                          segment_1_end,
+                          segment_2_start,
+                          segment_2_end,
+                          segment_3_start,
+                          segment_3_end,
+                          linked_profile_id,
+                          timeout=TIMEOUT)
 
     def test_delete_all_time_profiles(self):
         '''
@@ -391,8 +390,8 @@ class TestUDPWithTimeout(unittest.TestCase):
         Tests the add-task function with a timeout
         '''
         controller = (CONTROLLER, DEST_ADDR)
-        start_date = datetime.date(2021,1,1)
-        end_date = datetime.date(2021,12,31)
+        start_date = datetime.date(2021, 1, 1)
+        end_date = datetime.date(2021, 12, 31)
         monday = True
         tuesday = False
         wednesday = True
@@ -400,29 +399,31 @@ class TestUDPWithTimeout(unittest.TestCase):
         friday = True
         saturday = False
         sunday = False
-        start_time = datetime.time(8,30)
+        start_time = datetime.time(8, 30)
         door = 3
         task_type = 4
         more_cards = 17
 
-        self.u.add_task(
-            controller,
-            start_date, end_date, 
-            monday, tuesday, wednesday, thursday, friday, saturday, sunday,
-            start_time, 
-            door, 
-            task_type, 
-            more_cards)
+        self.u.add_task(controller, start_date, end_date, monday, tuesday, wednesday, thursday, friday, saturday,
+                        sunday, start_time, door, task_type, more_cards)
 
-        self.assertRaises(socket.timeout, self.u.add_task,
-            controller,
-            start_date, end_date, 
-            monday, tuesday, wednesday, thursday, friday, saturday, sunday,
-            start_time, 
-            door, 
-            task_type, 
-            more_cards,
-            timeout=TIMEOUT)
+        self.assertRaises(socket.timeout,
+                          self.u.add_task,
+                          controller,
+                          start_date,
+                          end_date,
+                          monday,
+                          tuesday,
+                          wednesday,
+                          thursday,
+                          friday,
+                          saturday,
+                          sunday,
+                          start_time,
+                          door,
+                          task_type,
+                          more_cards,
+                          timeout=TIMEOUT)
 
     def test_refresh_tasklist(self):
         '''
@@ -431,7 +432,7 @@ class TestUDPWithTimeout(unittest.TestCase):
         controller = (CONTROLLER, DEST_ADDR)
 
         self.u.refresh_tasklist(controller)
-        self.assertRaises(socket.timeout, self.u.refresh_tasklist, controller,  timeout=TIMEOUT)
+        self.assertRaises(socket.timeout, self.u.refresh_tasklist, controller, timeout=TIMEOUT)
 
     def test_clear_tasklist(self):
         '''
@@ -473,7 +474,14 @@ class TestUDPWithTimeout(unittest.TestCase):
         reader4 = True
 
         self.u.activate_keypads(controller, reader1, reader2, reader3, reader4)
-        self.assertRaises(socket.timeout, self.u.activate_keypads, controller, reader1, reader2, reader3, reader4, timeout=TIMEOUT)
+        self.assertRaises(socket.timeout,
+                          self.u.activate_keypads,
+                          controller,
+                          reader1,
+                          reader2,
+                          reader3,
+                          reader4,
+                          timeout=TIMEOUT)
 
     def test_set_door_passcodes(self):
         '''
@@ -486,8 +494,16 @@ class TestUDPWithTimeout(unittest.TestCase):
         passcode3 = 999999
         passcode4 = 54321
 
-        self.u.set_door_passcodes(controller, door, passcode1,  passcode2, passcode3, passcode4)
-        self.assertRaises(socket.timeout, self.u.set_door_passcodes, controller, door, passcode1,  passcode2, passcode3, passcode4, timeout=TIMEOUT)
+        self.u.set_door_passcodes(controller, door, passcode1, passcode2, passcode3, passcode4)
+        self.assertRaises(socket.timeout,
+                          self.u.set_door_passcodes,
+                          controller,
+                          door,
+                          passcode1,
+                          passcode2,
+                          passcode3,
+                          passcode4,
+                          timeout=TIMEOUT)
 
     def test_get_antipassback(self):
         '''
@@ -517,6 +533,4 @@ class TestUDPWithTimeout(unittest.TestCase):
         controller = (CONTROLLER, DEST_ADDR)
 
         self.u.restore_default_parameters(controller)
-        self.assertRaises(socket.timeout, self.u.restore_default_parameters, controller,timeout=TIMEOUT)
-
-
+        self.assertRaises(socket.timeout, self.u.restore_default_parameters, controller, timeout=TIMEOUT)
