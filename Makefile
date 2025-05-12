@@ -1,7 +1,8 @@
 DIST ?= development
 CMD   = cd examples/cli && python3 main.py --debug --bind 192.168.1.100 --broadcast 192.168.1.255 --listen 192.168.1.100:60001
-ASYNC = cd examples/async && python3 main.py --debug --bind 192.168.1.100 --broadcast 192.168.1.255 --listen 192.168.1.100:60001
 TCP   = cd examples/cli && python3 main.py --debug --tcp --dest 192.168.1.100
+ASYNC = cd examples/async && python3 main.py --debug --bind 192.168.1.100 --broadcast 192.168.1.255 --listen 192.168.1.100:60001
+ASYNC_TCP = cd examples/async && python3 main.py --debug --tcp --dest 192.168.1.100
 
 CONTROLLER ?= 405419896
 
@@ -49,8 +50,10 @@ publish: release
 	python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-#	export UHPPOTED_ENV=DEV && $(ASYNC) get-controller --controller $(CONTROLLER)
-	python3 -m unittest integration-tests/uhppoted/async_*.py 
+	# python3 -m unittest integration-tests/uhppoted/async_*.py 
+	# export UHPPOTED_ENV=DEV && $(ASYNC)                         get-controller --controller $(CONTROLLER)
+	# export UHPPOTED_ENV=DEV && $(ASYNC_TCP)                     get-controller --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP)  --bind 192.168.1.100 get-controller --controller $(CONTROLLER)
 
 usage: build
 	$(CMD)
@@ -66,7 +69,8 @@ get-controller: build
 	export UHPPOTED_ENV=DEV && $(TCP) get-controller --controller $(CONTROLLER)
 
 get-controller-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-controller --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC)     get-controller --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-controller --controller $(CONTROLLER)
 
 set-ip: build
 	export UHPPOTED_ENV=DEV && $(CMD) set-ip --controller $(CONTROLLER)

@@ -101,9 +101,7 @@ class UhppoteAsync:
             Raises:
                Exception  If request could not be sent or the access controller failed to respond.
         '''
-        # if protocol == 'tcp' and dest_addr != None:
-        #     return self._tcp.send(request, dest_addr, timeout)
-        # else:
-        #     return self._udp.send(request, dest_addr=dest_addr, timeout=timeout)
-
-        return await self._udp.send(request, dest_addr=dest_addr, timeout=timeout)
+        if protocol == 'tcp' and dest_addr != None:
+            return await self._tcp.send(request, dest_addr, timeout)
+        else:
+            return await self._udp.send(request, dest_addr=dest_addr, timeout=timeout)

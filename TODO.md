@@ -6,7 +6,7 @@
 - [ ] async functions (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/4)
       - [x] UDP broadcast
       - [x] connected UDP sockets
-      - [ ] TCP
+      - [x] TCP
       - [ ] integration tests
       - [ ] examples
       - (?) pylint
