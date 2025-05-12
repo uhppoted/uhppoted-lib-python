@@ -1,7 +1,7 @@
 '''
-UHPPOTE async function tests.
+UHPPOTE UDP async function tests.
 
-End-to-end tests for the uhppote functions.
+End-to-end tests for the uhppote functions over a connected UDP socket.
 '''
 
 import unittest
@@ -20,6 +20,7 @@ from uhppoted.net import dump
 from .stub import messages
 from .expected import *
 
+DEST_ADDR = '127.0.0.1:54321'
 CONTROLLER = 405419896
 CARD = 8165538
 CARD_INDEX = 2
@@ -69,7 +70,7 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
 
         clazz.u = uhppote.UhppoteAsync(bind, broadcast, listen, debug)
         clazz._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
-        clazz._thread = threading.Thread(target=handle, args=(clazz._sock, ('0.0.0.0', 60000), False))
+        clazz._thread = threading.Thread(target=handle, args=(clazz._sock, ('0.0.0.0', 54321), False))
 
         clazz._thread.start()
         time.sleep(1)
@@ -79,11 +80,11 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         clazz._sock.close()
         clazz._sock = None
 
-    async def test_get_all_controllers(self):
+    async def test_get_controller(self):
         '''
-        Tests the get-all-controllers function with defaults.
+        Tests the get-controller function with a valid dest_addr.
         '''
-        controller = CONTROLLER
-        response = await self.u.get_all_controllers()
+        controller = (CONTROLLER, DEST_ADDR)
+        response = await self.u.get_controller(controller)
 
-        self.assertEqual(response, GetControllersResponse)
+        self.assertEqual(response, GetControllerResponse)

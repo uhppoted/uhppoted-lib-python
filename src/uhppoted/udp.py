@@ -74,7 +74,7 @@ class UDP:
     def send(self, request, dest_addr=None, timeout=2.5):
         '''
         Binds to the bind address from the constructor and then broadcasts a UDP request to the broadcast,
-        and then waits 5 seconds for a reply from the destination access controllers.
+        and then waits 'timeout' seconds for a reply from the destination access controllers.
 
             Parameters:
                request   (bytearray)  64 byte request packet.
@@ -99,7 +99,7 @@ class UDP:
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, net.WRITE_TIMEOUT)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, net.READ_TIMEOUT)
 
-            if dest_addr == None:
+            if dest_addr is None:
                 sock.sendto(request, self._broadcast)
             else:
                 addr = net.resolve(f'{dest_addr}')

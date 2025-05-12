@@ -101,6 +101,7 @@ def dump(packet):
         Returns:
             None.
     '''
+    print('\r')
     for i in range(0, 4):
         offset = i * 16
         u = packet[offset:offset + 8]

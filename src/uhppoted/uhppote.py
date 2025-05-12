@@ -1249,7 +1249,6 @@ class Uhppote:
             Raises:
                Exception  If request could not be sent or the access controller failed to respond.
         '''
-
         if protocol == 'tcp' and dest_addr != None:
             return self._tcp.send(request, dest_addr, timeout)
         else:

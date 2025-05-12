@@ -42,13 +42,37 @@ class BroadcastProtocol(asyncio.Protocol):
         await asyncio.sleep(timeout)
         return self._replies
 
-    # async def run(self, timeout):
-    #     try:
-    #         await asyncio.wait_for(self._done, timeout)
-    #     except asyncio.TimeoutError:
-    #         self.timeout()
-    #
-    #     return self._replies
+
+class SendToProtocol(asyncio.Protocol):
+
+    def __init__(self, request, dest, debug=False):
+        self._transport = None
+        self._request = request
+        self._dest = dest
+        self._debug = debug
+        self._done = asyncio.get_event_loop().create_future()
+
+    def connection_made(self, transport):
+        self._transport = transport
+        self._transport.sendto(self._request, self._dest)
+
+    def datagram_received(self, packet, addr):
+        if len(packet) == 64 and not self._done.done():
+            if self._debug:
+                net.dump(packet)
+            self._done.set_result(packet)
+
+    def connection_lost(self, exc):
+        if exc is not None:
+            self._done.set_exception(ConnectionResetError())
+
+    async def run(self, timeout):
+        try:
+            return await asyncio.wait_for(self._done, timeout)
+        except asyncio.TimeoutError:
+            raise TimeoutError('UDP request timeout')
+        except ConnectionResetError:
+            raise ConnectionResetError('UDP connection reset')
 
 
 class UDPAsync:
@@ -80,8 +104,8 @@ class UDPAsync:
     async def broadcast(self, request, timeout=2.5):
         '''
         Binds to the bind address from the constructor and then broadcasts a UDP request to the broadcast
-        address from the constructor and then waits 'timeout' seconds for the replies from any reponding access 
-        controllers.
+        address from the constructor and then waits 'timeout' seconds for the replies from any reponding
+        access controllers.
 
             Parameters:
                request  (bytearray)  64 byte request packet.
@@ -101,6 +125,48 @@ class UDPAsync:
             lambda: BroadcastProtocol(request, self._broadcast, self._debug),
             local_addr=self._bind,
             allow_broadcast=True)
+
+        try:
+            return await protocol.run(timeout)
+        finally:
+            transport.close()
+
+    async def send(self, request, dest_addr=None, timeout=2.5):
+        '''
+        Binds to the bind address from the constructor and then broadcasts a UDP request to the broadcast,
+        and then waits 'timeout seconds for a reply from the destination access controllers.
+
+            Parameters:
+               request   (bytearray)  64 byte request packet.
+               dest_addr (string)     Optional IPv4 address:port of the controller. Defaults to port 60000
+                                      if dest_addr does not include a port.
+               timeout   (float)      Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               Received response packet (if any) or None (for set-ip request).
+
+            Raises:
+               Error  For any socket related errors.
+        '''
+        self.dump(request)
+
+        loop = asyncio.get_running_loop()
+
+        if dest_addr is None:
+            transport, protocol = await loop.create_datagram_endpoint(
+                lambda: SendToProtocol(request, self._broadcast, self._debug),
+                local_addr=self._bind,
+                allow_broadcast=True)
+        else:
+            addr = net.resolve(f'{dest_addr}')
+            transport, protocol = await loop.create_datagram_endpoint(
+                lambda: SendToProtocol(request, addr, self._debug),
+                local_addr=self._bind,
+                remote_addr=addr,
+                allow_broadcast=True)
+
+        # if request[1] == 0x96:
+        #     return None
 
         try:
             return await protocol.run(timeout)

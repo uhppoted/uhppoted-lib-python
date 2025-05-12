@@ -1,7 +1,7 @@
 '''
-UHPPOTE function tests.
+UHPPOTE UDP function tests.
 
-End-to-end tests for the uhppote functions.
+End-to-end tests for the uhppote functions over a connected UDP socket.
 '''
 
 import unittest

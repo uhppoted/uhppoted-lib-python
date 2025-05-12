@@ -5,6 +5,8 @@ import datetime
 import pprint
 import sys
 import pathlib
+import itertools
+import contextlib
 
 if os.environ['UHPPOTED_ENV'] == 'DEV':
     root = pathlib.Path(__file__).resolve().parents[2]
@@ -69,8 +71,10 @@ def commands():
     }
 
 async def windmill():
-    print(f'... waiting')
-    await asyncio.sleep(0.25)
+    frames = ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏']
+    for frame in itertools.cycle(frames):
+        print(f'\r{frame} ...', end='', flush=True)
+        await asyncio.sleep(0.1)
 
 async def exec(f, args):
     bind = args.bind
@@ -91,7 +95,12 @@ async def exec(f, args):
     task1 = asyncio.create_task(f(u, dest, timeout, args, protocol=protocol))
     task2 = asyncio.create_task(windmill())
 
-    response,_ = await asyncio.gather(task1, task2)
+    response = await task1
+    with contextlib.suppress(asyncio.CancelledError):
+        task2.cancel()
+        await task2
+    
+    print('\rok    \n')
 
     if response != None:
         if type(response).__name__ == 'list':
