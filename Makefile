@@ -50,9 +50,9 @@ publish: release
 	python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
+#	export UHPPOTED_ENV=DEV && $(ASYNC)     get-time --controller $(CONTROLLER)
+#	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-time --controller $(CONTROLLER)
 	python3 -m unittest integration-tests/uhppoted/async_*.py 
-	# export UHPPOTED_ENV=DEV && $(ASYNC)     set-ip --controller $(CONTROLLER)
-	# export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-ip --controller $(CONTROLLER)
 
 usage: build
 	$(CMD)
@@ -83,33 +83,65 @@ get-status: build
 	export UHPPOTED_ENV=DEV && $(CMD) get-status --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) get-status --controller $(CONTROLLER)
 
+get-status-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     get-status --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-status --controller $(CONTROLLER)
+
 get-time: build
 	export UHPPOTED_ENV=DEV && $(CMD) get-time --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) get-time --controller $(CONTROLLER)
+
+get-time-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     get-time --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-time --controller $(CONTROLLER)
 
 set-time: build
 	export UHPPOTED_ENV=DEV && $(CMD) set-time --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) set-time --controller $(CONTROLLER)
 
+set-time-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     set-time --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-time --controller $(CONTROLLER)
+
 get-listener: build
 	export UHPPOTED_ENV=DEV && $(CMD) get-listener --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) get-listener --controller $(CONTROLLER)
+
+get-listener-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     get-listener --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-listener --controller $(CONTROLLER)
 
 set-listener: build
 	export UHPPOTED_ENV=DEV && $(CMD) set-listener --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) set-listener --controller $(CONTROLLER)
 
+set-listener-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     set-listener --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-listener --controller $(CONTROLLER)
+
 get-door-control: build
 	export UHPPOTED_ENV=DEV && $(CMD) get-door-control --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) get-door-control --controller $(CONTROLLER)
+
+get-door-control-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     get-door-control --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-door-control --controller $(CONTROLLER)
 
 set-door-control: build
 	export UHPPOTED_ENV=DEV && $(CMD) set-door-control --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) set-door-control --controller $(CONTROLLER)
 
+set-door-control-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     set-door-control --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-door-control --controller $(CONTROLLER)
+
 open-door: build
 	export UHPPOTED_ENV=DEV && $(CMD) open-door --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) open-door --controller $(CONTROLLER)
+
+open-door-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     open-door --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) open-door --controller $(CONTROLLER)
 
 get-cards: build
 	export UHPPOTED_ENV=DEV && $(CMD) get-cards --controller $(CONTROLLER)

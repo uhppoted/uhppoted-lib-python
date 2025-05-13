@@ -117,6 +117,264 @@ class UhppoteAsync:
 
         return True
 
+    async def get_time(self, controller, timeout=2.5):
+        '''
+        Retrieves the access controller current date/time.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               GetTimeResponse  Controller current date/time.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.get_time_request(id)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.get_time_response(reply)
+
+        return None
+
+    async def set_time(self, controller, datetime, timeout=2.5):
+        '''
+        Sets the access controller current date/time.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               datetime   (dateime)  Date/time to set.
+               timeout    (float)    Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               SetTimeResponse  Controller current date/time.
+
+            Raises:
+               Exception  If the datetime format cannot be encoded or the response from the 
+                          access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.set_time_request(id, datetime)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.set_time_response(reply)
+
+        return None
+
+    async def get_status(self, controller, timeout=2.5):
+        '''
+        Retrieves the current status of an access controller.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               GetStatusResponse  Current controller status.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.get_status_request(id)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.get_status_response(reply)
+
+        return None
+
+    async def get_listener(self, controller, timeout=2.5):
+        '''
+        Retrieves the configured event listener address:port from an access controller.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               GetListenerResponse  Current controller event listener UDP address and port.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.get_listener_request(id)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.get_listener_response(reply)
+
+        return None
+
+    async def set_listener(self, controller, address, port, interval=0, timeout=2.5):
+        '''
+        Sets an access controller event listener IPv4 address and port.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               address    (IPv4Address)  IPv4 address of event listener.
+               port       (uint16)       UDP port of event listener.
+               interval   (uint8)        Auto-send interval (seconds). Defaults t0 0 (disabled).
+               timeout    (float)        Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               SetListenerResponse  Success/fail response from controller.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.set_listener_request(id, address, port, interval)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.set_listener_response(reply)
+
+        return None
+
+    async def get_door_control(self, controller, door, timeout=2.5):
+        '''
+        Gets the door delay and control mode for an access controller door.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               door       (uint8)   Door [1..4]
+               timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               GetDoorControlResponse  Door delay and control mode.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.get_door_control_request(id, door)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.get_door_control_response(reply)
+
+        return None
+
+    async def set_door_control(self, controller, door, mode, delay, timeout=2.5):
+        '''
+        Sets the door delay and control mode for an access controller door.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               door       (uint8)   Door [1..4]
+               mode       (uint8)   Control mode (1: normally open, 2: normally closed, 3: controlled)
+               delay      (uint8)   Door unlock duration (seconds)
+               timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               SetDoorControlResponse  Door delay and control mode.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.set_door_control_request(id, door, mode, delay)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.set_door_control_response(reply)
+
+        return None
+
+    async def open_door(self, controller, door, timeout=2.5):
+        '''
+        Remotely opens a door controlled by an access controller.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               door       (uint8)   Door [1..4]
+               timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               OpenDoorResponse  Door open success/fail response.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.open_door_request(id, door)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.open_door_response(reply)
+
+        return None
+
     async def _send(self, request, dest_addr, timeout, protocol):
         '''
         Internal HAL to use either TCP or UDP to send a request to a controller and return the response.

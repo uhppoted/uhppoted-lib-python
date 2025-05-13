@@ -101,3 +101,103 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         response = await self.u.set_ip(controller, address, netmask, gateway)
 
         self.assertEqual(response, SetIPResponse)
+
+    async def test_get_time(self):
+        '''
+        Tests the get-time function with a valid dest_addr.
+        '''
+        controller = (CONTROLLER, DEST_ADDR)
+        response = await self.u.get_time(controller)
+
+        self.assertEqual(response, GetTimeResponse)
+
+    async def test_set_time(self):
+        '''
+        Tests the set-time function with a valid dest_addr.
+        '''
+        controller = (CONTROLLER, DEST_ADDR)
+        time = datetime.datetime(2021, 5, 28, 14, 56, 14)
+
+        response = await self.u.set_time(controller, time)
+
+        self.assertEqual(response, SetTimeResponse)
+
+    async def test_get_status(self):
+        '''
+        Tests the get-status function with a valid dest_addr.
+        '''
+        controller = (CONTROLLER, DEST_ADDR)
+        response = await self.u.get_status(controller)
+
+        self.assertEqual(response, GetStatusResponse)
+
+    async def test_get_listener(self):
+        '''
+        Tests the get-listener function with a valid dest_addr.
+        '''
+        controller = (CONTROLLER, DEST_ADDR)
+        dest = DEST_ADDR
+
+        response = await self.u.get_listener(controller)
+
+        self.assertEqual(response, GetListenerResponse)
+
+    async def test_set_listener(self):
+        '''
+        Tests the set-listener function with a valid dest_addr.
+        '''
+        controller = (CONTROLLER, DEST_ADDR)
+        address = IPv4Address('192.168.1.100')
+        port = 60001
+        interval = 15
+
+        response = await self.u.set_listener(controller, address, port, interval)
+
+        self.assertEqual(response, SetListenerResponse)
+
+    async def test_set_listener_without_interval(self):
+        '''
+        Tests the set-listener function with a valid dest_addr.
+        '''
+        controller = (CONTROLLER, DEST_ADDR)
+        address = IPv4Address('192.168.1.100')
+        port = 60001
+
+        response = await self.u.set_listener(controller, address, port)
+
+        self.assertEqual(response, SetListenerResponse)
+
+    async def test_get_door_control(self):
+        '''
+        Tests the get-door-control function with a valid dest_addr.
+        '''
+        controller = (CONTROLLER, DEST_ADDR)
+        door = 3
+
+        response = await self.u.get_door_control(controller, door)
+
+        self.assertEqual(response, GetDoorControlResponse)
+
+    async def test_set_door_control(self):
+        '''
+        Tests the set-door-control function with a valid dest_addr.
+        '''
+        controller = (CONTROLLER, DEST_ADDR)
+        door = 3
+        delay = 4
+        mode = 2
+
+        response = await self.u.set_door_control(controller, door, mode, delay)
+
+        self.assertEqual(response, SetDoorControlResponse)
+
+    async def test_open_door(self):
+        '''
+        Tests the open-door function with a valid dest_addr.
+        '''
+        controller = (CONTROLLER, DEST_ADDR)
+        door = 3
+
+        response = await self.u.open_door(controller, door)
+
+        self.assertEqual(response, OpenDoorResponse)
