@@ -86,6 +86,37 @@ class UhppoteAsync:
 
         return None
 
+    async def set_ip(self, controller, address, netmask, gateway, timeout=2.5):
+        '''
+        Sets the controller IPv4 address, netmask and gateway address.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               address    (IPv4Address)  Controller IPv4 address.
+               netmask    (IPv4Address)  Controller IPv4 subnet mask.
+               gateway    (IPv4Address)  Controller IPv4 gateway address.
+               timeout    (float)        Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               True  For (probably) internal reasons the access controller does not respond to this command.
+
+            Raises:
+               Exception  If the request failed for any reason.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.set_ip_request(id, address, netmask, gateway)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        return True
+
     async def _send(self, request, dest_addr, timeout, protocol):
         '''
         Internal HAL to use either TCP or UDP to send a request to a controller and return the response.

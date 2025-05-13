@@ -27,6 +27,8 @@ class SendProtocol(asyncio.Protocol):
     def connection_made(self, transport):
         self._transport = transport
         self._transport.write(self._request)
+        if self._request[1] == 0x96:
+            self._done.set_result(None)
 
     def data_received(self, data):
         self._buffer.extend(data)
@@ -50,11 +52,11 @@ class SendProtocol(asyncio.Protocol):
         try:
             return await asyncio.wait_for(self._done, timeout)
         except asyncio.TimeoutError:
-            raise TimeoutError('UDP request timeout')
+            raise TimeoutError('TCP request timeout')
         except ConnectionResetError:
-            raise ConnectionResetError('UDP connection reset')
+            raise ConnectionResetError('TCP connection reset')
         except EOFError:
-            raise EOFError('UDP connection closed')
+            raise EOFError('TCP connection closed')
 
 
 class TCPAsync:
@@ -109,9 +111,6 @@ class TCPAsync:
 
         # FIXME sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-        # FIXME if request[1] == 0x96:
-        #         return None
-
         try:
             return await protocol.run(timeout)
         finally:
@@ -123,7 +122,7 @@ class TCPAsync:
         constructor.
 
             Parameters:
-               packet  (bytearray)  64 byte UDP packet.
+               packet  (bytearray)  64 byte TCP packet.
 
             Returns:
                None.

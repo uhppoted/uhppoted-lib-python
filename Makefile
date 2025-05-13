@@ -50,10 +50,9 @@ publish: release
 	python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-	# python3 -m unittest integration-tests/uhppoted/async_*.py 
-	# export UHPPOTED_ENV=DEV && $(ASYNC)                         get-controller --controller $(CONTROLLER)
-	# export UHPPOTED_ENV=DEV && $(ASYNC_TCP)                     get-controller --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP)  --bind 192.168.1.100 get-controller --controller $(CONTROLLER)
+	python3 -m unittest integration-tests/uhppoted/async_*.py 
+	# export UHPPOTED_ENV=DEV && $(ASYNC)     set-ip --controller $(CONTROLLER)
+	# export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-ip --controller $(CONTROLLER)
 
 usage: build
 	$(CMD)
@@ -75,6 +74,10 @@ get-controller-async: build
 set-ip: build
 	export UHPPOTED_ENV=DEV && $(CMD) set-ip --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) set-ip --controller $(CONTROLLER)
+
+set-ip-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     set-ip --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-ip --controller $(CONTROLLER)
 
 get-status: build
 	export UHPPOTED_ENV=DEV && $(CMD) get-status --controller $(CONTROLLER)

@@ -109,7 +109,7 @@ class Uhppote:
                True  For (probably) internal reasons the access controller does not respond to this command.
 
             Raises:
-               Exception  If the response from the access controller cannot be decoded.
+               Exception  If the request failed for any reason.
         '''
         (id, addr, protocol) = disambiguate(controller)
         request = encode.set_ip_request(id, address, netmask, gateway)

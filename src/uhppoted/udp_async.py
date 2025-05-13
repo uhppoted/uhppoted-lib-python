@@ -55,6 +55,8 @@ class SendToProtocol(asyncio.Protocol):
     def connection_made(self, transport):
         self._transport = transport
         self._transport.sendto(self._request, self._dest)
+        if self._request[1] == 0x96:
+            self._done.set_result(None)
 
     def datagram_received(self, packet, addr):
         if len(packet) == 64 and not self._done.done():
@@ -164,9 +166,6 @@ class UDPAsync:
                 local_addr=self._bind,
                 remote_addr=addr,
                 allow_broadcast=True)
-
-        # if request[1] == 0x96:
-        #     return None
 
         try:
             return await protocol.run(timeout)

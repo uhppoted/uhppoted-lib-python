@@ -7,8 +7,11 @@
       - [x] UDP broadcast
       - [x] connected UDP sockets
       - [x] TCP
+      - [x] FIXME: if request[1] == 0x96 return None
+      - [ ] FIXME: sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
       - [ ] integration tests
       - [ ] examples
+      - (?) integration tests in github workflow
       - (?) pylint
       - (?) ruff
       - (?) maybe replace yapf with black

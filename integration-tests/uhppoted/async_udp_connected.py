@@ -88,3 +88,16 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         response = await self.u.get_controller(controller)
 
         self.assertEqual(response, GetControllerResponse)
+
+    async def test_set_ip(self):
+        '''
+        Tests the set-ip function with a valid dest_addr.
+        '''
+        controller = (CONTROLLER, DEST_ADDR)
+        address = IPv4Address('192.168.1.100')
+        netmask = IPv4Address('255.255.255.0')
+        gateway = IPv4Address('192.168.1.1')
+
+        response = await self.u.set_ip(controller, address, netmask, gateway)
+
+        self.assertEqual(response, SetIPResponse)
