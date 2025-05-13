@@ -375,6 +375,208 @@ class UhppoteAsync:
 
         return None
 
+    async def get_cards(self, controller, timeout=2.5):
+        '''
+        Retrieves the number of cards stored in the access controller.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               GetCardsResponse  Number of cards stored locally in controller.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.get_cards_request(id)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.get_cards_response(reply)
+
+        return None
+
+    async def get_card(self, controller, card_number, timeout=2.5):
+        '''
+        Retrieves the card access record for a card number from the access controller.
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
+                                             to 'udp'.
+
+               card_number (uint32)  Access card number.
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               GetCardResponse  Card information associated with the card number.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.get_card_request(id, card_number)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.get_card_response(reply)
+
+        return None
+
+    async def get_card_by_index(self, controller, card_index, timeout=2.5):
+        '''
+        Retrieves the card access record for a card record from the access controller.
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               index       (uint32)  Controller card list record number.
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               GetCardByIndexResponse  Card information associated with the card number.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.get_card_by_index_request(id, card_index)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.get_card_by_index_response(reply)
+
+        return None
+
+    async def put_card(self,
+                       controller,
+                       card_number,
+                       start_date,
+                       end_date,
+                       door_1,
+                       door_2,
+                       door_3,
+                       door_4,
+                       pin,
+                       timeout=2.5):
+        '''
+        Adds (or updates) a card record stored on the access controller.
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               card_number (uint32)  Access card number.
+               start_date  (date)    Card 'valid from' date (YYYYMMDD).
+               end_date    (date)    Card 'valid until' date (YYYYMMDD).
+               door_1      (uint8)   Card access permissions for door 1 (0: none, 1: all, 2-254: time profile ID)
+               door_2      (uint8)   Card access permissions for door 2 (0: none, 1: all, 2-254: time profile ID)
+               door_3      (uint8)   Card access permissions for door 3 (0: none, 1: all, 2-254: time profile ID)
+               door_4      (uint8)   Card access permissions for door 4 (0: none, 1: all, 2-254: time profile ID)
+               pin         (uint24)  Card access keypad PIN code (0 for none)
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               PutCardResponse  Card record add/update success/fail.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.put_card_request(id, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.put_card_response(reply)
+
+        return None
+
+    async def delete_card(self, controller, card_number, timeout=2.5):
+        '''
+        Deletes the card record from the access controller.
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               card_number (uint32)  Access card number to delete.
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               DeleteCardResponse  Card record delete success/fail.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.delete_card_request(id, card_number)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.delete_card_response(reply)
+
+        return None
+
+    async def delete_all_cards(self, controller, timeout=2.5):
+        '''
+        Deletes all card records stored on the access controller.
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               DeleteAllCardsResponse  Clear card records success/fail.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.delete_cards_request(id)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.delete_all_cards_response(reply)
+
+        return None
+
     async def _send(self, request, dest_addr, timeout, protocol):
         '''
         Internal HAL to use either TCP or UDP to send a request to a controller and return the response.

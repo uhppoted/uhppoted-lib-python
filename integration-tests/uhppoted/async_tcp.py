@@ -197,3 +197,69 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         response = await self.u.open_door(controller, door)
 
         self.assertEqual(response, OpenDoorResponse)
+
+    async def test_get_cards(self):
+        '''
+        Tests the get-cards function with defaults.
+        '''
+        controller = (CONTROLLER, DEST_ADDR, 'tcp')
+        response = await self.u.get_cards(controller)
+
+        self.assertEqual(response, GetCardsResponse)
+
+    async def test_get_card(self):
+        '''
+        Tests the get-card function with defaults.
+        '''
+        controller = (CONTROLLER, DEST_ADDR, 'tcp')
+        card = CARD
+        response = await self.u.get_card(controller, card)
+
+        self.assertEqual(response, GetCardResponse)
+
+    async def test_get_card_by_index(self):
+        '''
+        Tests the get-card-by-index function with defaults.
+        '''
+        controller = (CONTROLLER, DEST_ADDR, 'tcp')
+        index = CARD_INDEX
+        response = await self.u.get_card_by_index(controller, index)
+
+        self.assertEqual(response, GetCardByIndexResponse)
+
+    async def test_put_card(self):
+        '''
+        Tests the put-card function with defaults.
+        '''
+        controller = (CONTROLLER, DEST_ADDR, 'tcp')
+        card = 123456789
+        start = datetime.date(2023, 1, 1)
+        end = datetime.date(2025, 12, 31)
+        door1 = 1
+        door2 = 0
+        door3 = 29
+        door4 = 1
+        PIN = 7531
+
+        response = await self.u.put_card(controller, card, start, end, door1, door2, door3, door4, PIN)
+
+        self.assertEqual(response, PutCardResponse)
+
+    async def test_delete_card(self):
+        '''
+        Tests the delete-card function with defaults.
+        '''
+        controller = (CONTROLLER, DEST_ADDR, 'tcp')
+        card = CARD
+        response = await self.u.delete_card(controller, card)
+
+        self.assertEqual(response, DeleteCardResponse)
+
+    async def test_delete_all_cards(self):
+        '''
+        Tests the delete-all-cards function with defaults.
+        '''
+        controller = (CONTROLLER, DEST_ADDR, 'tcp')
+        response = await self.u.delete_all_cards(controller)
+
+        self.assertEqual(response, DeleteAllCardsResponse)

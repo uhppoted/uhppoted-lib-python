@@ -193,22 +193,22 @@ def get_cards(u, dest, timeout, args, protocol='udp'):
     return u.get_cards(controller, timeout=timeout)
 
 
-def get_card(u, dest, timeout, args, protocol='udp'):
+async def get_card(u, dest, timeout, args, protocol='udp'):
     controller = (CONTROLLER, dest, protocol)
-    card = CARD
+    card = args.card
 
-    response = u.get_card(controller, card, timeout=timeout)
+    response = await u.get_card(controller, card, timeout=timeout)
     if response.card_number == 0:
         raise ValueError(f'card {card} not found')
 
     return response
 
 
-def get_card_by_index(u, dest, timeout, args, protocol='udp'):
+async def get_card_by_index(u, dest, timeout, args, protocol='udp'):
     controller = (CONTROLLER, dest, protocol)
-    index = CARD_INDEX
+    index = args.index
 
-    response = u.get_card_by_index(controller, index, timeout=timeout)
+    response = await u.get_card_by_index(controller, index, timeout=timeout)
     if response.card_number == 0:
         raise ValueError(f'card @ index {index} not found')
     elif response.card_number == 0xffffffff:
@@ -233,7 +233,7 @@ def put_card(u, dest, timeout, args, protocol='udp'):
 
 def delete_card(u, dest, timeout, args, protocol='udp'):
     controller = (CONTROLLER, dest, protocol)
-    card = CARD
+    card = args.card
 
     return u.delete_card(controller, card, timeout=timeout)
 

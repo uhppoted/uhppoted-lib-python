@@ -179,7 +179,7 @@ def get_cards(u, dest, timeout, args, protocol='udp'):
 
 def get_card(u, dest, timeout, args, protocol='udp'):
     controller = (CONTROLLER, dest, protocol)
-    card = CARD
+    card = args.card
 
     response = u.get_card(controller, card, timeout=timeout)
     if response.card_number == 0:
@@ -190,7 +190,7 @@ def get_card(u, dest, timeout, args, protocol='udp'):
 
 def get_card_by_index(u, dest, timeout, args, protocol='udp'):
     controller = (CONTROLLER, dest, protocol)
-    index = CARD_INDEX
+    index = args.index
 
     response = u.get_card_by_index(controller, index, timeout=timeout)
     if response.card_number == 0:
@@ -217,7 +217,7 @@ def put_card(u, dest, timeout, args, protocol='udp'):
 
 def delete_card(u, dest, timeout, args, protocol='udp'):
     controller = (CONTROLLER, dest, protocol)
-    card = CARD
+    card = args.card
 
     return u.delete_card(controller, card, timeout=timeout)
 

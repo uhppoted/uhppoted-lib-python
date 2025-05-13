@@ -7,14 +7,15 @@
       - [x] UDP broadcast
       - [x] connected UDP sockets
       - [x] TCP
+      - [ ] listen
       - [x] FIXME: if request[1] == 0x96 return None
       - [ ] FIXME: sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
       - [ ] integration tests
-      - [ ] examples
-      - (?) integration tests in github workflow
+      - [x] examples
       - (?) pylint
       - (?) ruff
       - (?) maybe replace yapf with black
+      - (?) integration tests in github workflow
       - https://lucas-six.github.io/python-cookbook/recipes/core/udp_client_asyncio.html
       - https://docs.python.org/3/library/asyncio-protocol.html#udp-echo-client
 

@@ -98,10 +98,12 @@ def parse_args():
     # ... get-card
     get_card = parsers['get-card']
     get_card.add_argument('--controller', type=int, help='controller serial number, e.g. 405419896')
+    get_card.add_argument('--card', type=int, help='card number, e.g. 10058400')
 
     # ... get-card-by-index
     get_card_by_index = parsers['get-card-by-index']
     get_card_by_index.add_argument('--controller', type=int, help='controller serial number, e.g. 405419896')
+    get_card_by_index.add_argument('--index', type=int, help='card index, e.g. 17')
 
     # ... put-card
     put_card = parsers['put-card']
@@ -110,6 +112,7 @@ def parse_args():
     # ... delete-card
     delete_card = parsers['delete-card']
     delete_card.add_argument('--controller', type=int, help='controller serial number, e.g. 405419896')
+    delete_card.add_argument('--card', type=int, help='card number, e.g. 10058400')
 
     # ... delete-all-cards
     delete_all_cards = parsers['delete-all-cards']

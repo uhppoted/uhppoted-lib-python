@@ -5,6 +5,7 @@ ASYNC = cd examples/async && python3 main.py --debug --bind 192.168.1.100 --broa
 ASYNC_TCP = cd examples/async && python3 main.py --debug --tcp --dest 192.168.1.100
 
 CONTROLLER ?= 405419896
+CARD ?= 1058400
 
 .DEFAULT_GOAL := debug
 .PHONY: update
@@ -147,25 +148,49 @@ get-cards: build
 	export UHPPOTED_ENV=DEV && $(CMD) get-cards --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) get-cards --controller $(CONTROLLER)
 
+get-cards-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     get-cards --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-cards --controller $(CONTROLLER)
+
 get-card: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-card --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) get-card --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-card --controller $(CONTROLLER) --card $(CARD)
+	export UHPPOTED_ENV=DEV && $(TCP) get-card --controller $(CONTROLLER) --card $(CARD)
+
+get-card-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     get-card --controller $(CONTROLLER) --card $(CARD)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-card --controller $(CONTROLLER) --card $(CARD)
 
 get-card-by-index: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-card-by-index $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) get-card-by-index $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-card-by-index --controller $(CONTROLLER) --index 3
+	export UHPPOTED_ENV=DEV && $(TCP) get-card-by-index --controller $(CONTROLLER) --index 3
+
+get-card-by-index-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     get-card-by-index --controller $(CONTROLLER) --index 3
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-card-by-index --controller $(CONTROLLER) --index 3
 
 put-card: build
-	export UHPPOTED_ENV=DEV && $(CMD) put-card $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) put-card $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) put-card --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(TCP) put-card --controller $(CONTROLLER)
+
+put-card-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     put-card --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) put-card --controller $(CONTROLLER)
 
 delete-card: build
-	export UHPPOTED_ENV=DEV && $(CMD) delete-card $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) delete-card $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) delete-card --controller $(CONTROLLER) --card $(CARD)
+	export UHPPOTED_ENV=DEV && $(TCP) delete-card --controller $(CONTROLLER) --card $(CARD)
+
+delete-card-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     delete-card --controller $(CONTROLLER) --card $(CARD)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) delete-card --controller $(CONTROLLER) --card $(CARD)
 
 delete-all-cards: build
-	export UHPPOTED_ENV=DEV && $(CMD) delete-all-cards $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) delete-all-cards $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) delete-all-cards --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(TCP) delete-all-cards --controller $(CONTROLLER)
+
+delete-all-cards-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     delete-all-cards --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) delete-all-cards --controller $(CONTROLLER)
 
 get-event-index: build
 	export UHPPOTED_ENV=DEV && $(CMD) get-event-index $(CONTROLLER)
