@@ -302,3 +302,94 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         response = await self.u.record_special_events(controller, enabled)
 
         self.assertEqual(response, RecordSpecialEventsResponse)
+
+    async def test_get_time_profile(self):
+        '''
+        Tests the get-time-profile function with defaults.
+        '''
+        controller = (CONTROLLER, DEST_ADDR, 'tcp')
+        profile = TIME_PROFILE
+        response = await self.u.get_time_profile(controller, profile)
+
+        self.assertEqual(response, GetTimeProfileResponse)
+
+    async def test_set_time_profile(self):
+        '''
+        Tests the set-time-profile function with defaults.
+        '''
+        controller = (CONTROLLER, DEST_ADDR, 'tcp')
+        profile_id = TIME_PROFILE
+        start_date = datetime.date(2021, 1, 1)
+        end_date = datetime.date(2021, 12, 31)
+        monday = True
+        tuesday = False
+        wednesday = True
+        thursday = False
+        friday = True
+        saturday = False
+        sunday = False
+        segment_1_start = datetime.time(8, 30)
+        segment_1_end = datetime.time(11, 45)
+        segment_2_start = datetime.time(13, 15)
+        segment_2_end = datetime.time(17, 25)
+        segment_3_start = None
+        segment_3_end = None
+        linked_profile_id = 3
+
+        response = await self.u.set_time_profile(controller, profile_id, start_date, end_date, monday, tuesday,
+                                                 wednesday, thursday, friday, saturday, sunday, segment_1_start,
+                                                 segment_1_end, segment_2_start, segment_2_end, segment_3_start,
+                                                 segment_3_end, linked_profile_id)
+
+        self.assertEqual(response, SetTimeProfileResponse)
+
+    async def test_delete_all_time_profiles(self):
+        '''
+        Tests the delete-all-time-profiles function with defaults.
+        '''
+        controller = (CONTROLLER, DEST_ADDR, 'tcp')
+        response = await self.u.delete_all_time_profiles(controller)
+
+        self.assertEqual(response, DeleteAllTimeProfilesResponse)
+
+    async def test_add_task(self):
+        '''
+        Tests the add-task function with defaults.
+        '''
+        controller = (CONTROLLER, DEST_ADDR, 'tcp')
+        start_date = datetime.date(2021, 1, 1)
+        end_date = datetime.date(2021, 12, 31)
+        monday = True
+        tuesday = False
+        wednesday = True
+        thursday = False
+        friday = True
+        saturday = False
+        sunday = False
+        start_time = datetime.time(8, 30)
+        door = 3
+        task_type = 4
+        more_cards = 17
+
+        response = await self.u.add_task(controller, start_date, end_date, monday, tuesday, wednesday, thursday, friday,
+                                         saturday, sunday, start_time, door, task_type, more_cards)
+
+        self.assertEqual(response, AddTaskResponse)
+
+    async def test_refresh_tasklist(self):
+        '''
+        Tests the refresh-tasklist function with defaults.
+        '''
+        controller = (CONTROLLER, DEST_ADDR, 'tcp')
+        response = await self.u.refresh_tasklist(controller)
+
+        self.assertEqual(response, RefreshTaskListResponse)
+
+    async def test_clear_tasklist(self):
+        '''
+        Tests the clear-tasklist function with defaults.
+        '''
+        controller = (CONTROLLER, DEST_ADDR, 'tcp')
+        response = await self.u.clear_tasklist(controller)
+
+        self.assertEqual(response, ClearTaskListResponse)

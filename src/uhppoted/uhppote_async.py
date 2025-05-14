@@ -708,6 +708,274 @@ class UhppoteAsync:
 
         return None
 
+    async def get_time_profile(self, controller, profile_id, timeout=2.5):
+        '''
+        Retrieves a time profile from an access conntroller.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               profile_id  (uint8)   Time profile ID [2..254] to retrieve.
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               GetTimeProfileResponse  Time profile information for the profile ID.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.get_time_profile_request(id, profile_id)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.get_time_profile_response(reply)
+
+        return None
+
+    async def set_time_profile(self,
+                               controller,
+                               profile_id,
+                               start_date,
+                               end_date,
+                               monday,
+                               tuesday,
+                               wednesday,
+                               thursday,
+                               friday,
+                               saturday,
+                               sunday,
+                               segment_1_start,
+                               segment_1_end,
+                               segment_2_start,
+                               segment_2_end,
+                               segment_3_start,
+                               segment_3_end,
+                               linked_profile_id,
+                               timeout=2.5):
+        '''
+        Creates (or updates) a time profile on an access conntroller.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               profile_id        (uint8)   Time profile ID [2..254] to retrieve.
+               start_date        (date)    Time profile 'valid from' date.
+               end_date          (date)    Time profile 'valid until' date.
+               monday            (bool)    Time profile enabled on Monday.
+               tuesday           (bool)    Time profile enabled on Tuesday.
+               wednesday         (bool)    Time profile enabled on Wednesday.
+               thursday          (bool)    Time profile enabled on Thursday.
+               friday            (bool)    Time profile enabled on Friday.
+               saturday          (bool)    Time profile enabled on Saturday.
+               sunday            (bool)    Time profile enabled on Sunday.
+               segment_1_start   (time)    Time profile segment 1 start time (HHmm).
+               segment_1_end     (time)    Time profile segment 1 end time (HHmm).
+               segment_2_start   (time)    Time profile segment 2 start time (HHmm).
+               segment_2_end     (time)    Time profile segment 2 end time (HHmm).
+               segment_3_start   (time)    Time profile segment 3 start time (HHmm).
+               segment_3_end     (time)    Time profile segment 3 end time (HHmm).
+               linked_profile_id (uint8)   Next profile ID in chain (0 if none).
+               timeout           (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               SetTimeProfileResponse  Set time profile success/fail response.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.set_time_profile_request(id, profile_id, start_date, end_date, monday, tuesday, wednesday,
+                                                  thursday, friday, saturday, sunday, segment_1_start, segment_1_end,
+                                                  segment_2_start, segment_2_end, segment_3_start, segment_3_end,
+                                                  linked_profile_id)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.set_time_profile_response(reply)
+
+        return None
+
+    async def delete_all_time_profiles(self, controller, timeout=2.5):
+        '''
+        Clears all time profiles from an access conntroller.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               DeleteAllTimeProfilesResponse  Clear time profiles success/fail response.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.delete_all_time_profiles_request(id)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.delete_all_time_profiles_response(reply)
+
+        return None
+
+    async def add_task(self,
+                       controller,
+                       start_date,
+                       end_date,
+                       monday,
+                       tuesday,
+                       wednesday,
+                       thursday,
+                       friday,
+                       saturday,
+                       sunday,
+                       start_time,
+                       door,
+                       task_type,
+                       more_cards,
+                       timeout=2.5):
+        '''
+        Creates a scheduled task on an access conntroller.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               start_date  (datetime)  Task 'valid from' date.
+               end_date    (datetime)  Task 'valid until' date.
+               monday      (bool)      Task enabled on Monday.
+               tuesday     (bool)      Task enabled on Tuesday.
+               wednesday   (bool)      Task enabled on Wednesday.
+               thursday    (bool)      Task enabled on Thursday.
+               friday      (bool)      Task enabled on Friday.
+               saturday    (bool)      Task enabled on Saturday.
+               sunday      (bool)      Task enabled on Sunday.
+               start_time  (time)      Task 'run at' time (HHmm).
+               door        (uint8)     Door [1..4] to which task is assigned.
+               task_type   (uint8)     Task type
+                                       0:  door controlled
+                                       1:  door unlocked
+                                       2:  door locked
+                                       3:  disable time profile
+                                       4:  enable time profile
+                                       5:  card, no password
+                                       6:  card, IN password
+                                       7:  card, password
+                                       8:  enable 'more cards'
+                                       9:  disable 'more cards'
+                                       10: trigger once
+                                       11: disable pushbutton
+                                       12: enable pushbutton
+               more_cards  (uint8)     Number of cards for the 'more cards' task.
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               AddTaskResponse  Add task success/fail response.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.add_task_request(id, start_date, end_date, monday, tuesday, wednesday, thursday, friday,
+                                          saturday, sunday, start_time, door, task_type, more_cards)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.add_task_response(reply)
+
+        return None
+
+    async def refresh_tasklist(self, controller, timeout=2.5):
+        '''
+        Updates the active tasklist to include tasks added by add_task.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               RefreshTasklistResponse  Refresh tasklist success/fail response.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.refresh_tasklist_request(id)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.refresh_tasklist_response(reply)
+
+        return None
+
+    async def clear_tasklist(self, controller, timeout=2.5):
+        '''
+        Clears all active and pending tasks.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               ClearTasklistResponse  Clear tasklist success/fail response.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.clear_tasklist_request(id)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.clear_tasklist_response(reply)
+
+        return None
+
     async def _send(self, request, dest_addr, timeout, protocol):
         '''
         Internal HAL to use either TCP or UDP to send a request to a controller and return the response.

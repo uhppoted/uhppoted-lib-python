@@ -217,64 +217,88 @@ set-event-index-async: build
 	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-event-index --controller $(CONTROLLER)
 
 record-special-events: build
-	export UHPPOTED_ENV=DEV && $(CMD) record-special-events $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) record-special-events $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) record-special-events --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(TCP) record-special-events --controller $(CONTROLLER)
 
 record-special-events-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     record-special-events $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) record-special-events $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC)     record-special-events --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) record-special-events --controller $(CONTROLLER)
 
 get-time-profile: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-time-profile $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) get-time-profile $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-time-profile --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(TCP) get-time-profile --controller $(CONTROLLER)
+
+get-time-profile-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     get-time-profile --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-time-profile --controller $(CONTROLLER)
 
 set-time-profile: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-time-profile $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) set-time-profile $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) set-time-profile --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(TCP) set-time-profile --controller $(CONTROLLER)
+
+set-time-profile-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     set-time-profile --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-time-profile --controller $(CONTROLLER)
 
 clear-time-profiles: build
-	export UHPPOTED_ENV=DEV && $(CMD) clear-time-profiles $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) clear-time-profiles $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) clear-time-profiles --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(TCP) clear-time-profiles --controller $(CONTROLLER)
+
+clear-time-profiles-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     clear-time-profiles --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) clear-time-profiles --controller $(CONTROLLER)
 
 add-task: build
-	export UHPPOTED_ENV=DEV && $(CMD) add-task $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) add-task $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) add-task --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(TCP) add-task --controller $(CONTROLLER)
+
+add-task-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     add-task --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) add-task --controller $(CONTROLLER)
 
 refresh-tasklist: build
-	export UHPPOTED_ENV=DEV && $(CMD) refresh-tasklist $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) refresh-tasklist $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) refresh-tasklist --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(TCP) refresh-tasklist --controller $(CONTROLLER)
+
+refresh-tasklist-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     refresh-tasklist --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) refresh-tasklist --controller $(CONTROLLER)
 
 clear-tasklist: build
-	export UHPPOTED_ENV=DEV && $(CMD) clear-tasklist $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) clear-tasklist $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) clear-tasklist --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(TCP) clear-tasklist --controller $(CONTROLLER)
+
+clear-tasklist-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     clear-tasklist --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) clear-tasklist --controller $(CONTROLLER)
 
 set-pc-control: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-pc-control $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) set-pc-control $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) set-pc-control --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(TCP) set-pc-control --controller $(CONTROLLER)
 
 set-interlock: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-interlock $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) set-interlock $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) set-interlock --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(TCP) set-interlock --controller $(CONTROLLER)
 
 activate-keypads: build
-	export UHPPOTED_ENV=DEV && $(CMD) activate-keypads $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) activate-keypads $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) activate-keypads --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(TCP) activate-keypads --controller $(CONTROLLER)
 
 set-door-passcodes: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-door-passcodes $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) set-door-passcodes $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) set-door-passcodes --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(TCP) set-door-passcodes --controller $(CONTROLLER)
 
 get-antipassback: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-antipassback $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) get-antipassback $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-antipassback --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(TCP) get-antipassback --controller $(CONTROLLER)
 
 set-antipassback: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-antipassback --controller $(CONTROLLER) --antipassback "(1,3):(2,4)"
-	export UHPPOTED_ENV=DEV && $(TCP) set-antipassback --controller $(CONTROLLER) --antipassback "(1,3):(2,4)"
+	export UHPPOTED_ENV=DEV && $(CMD) set-antipassback --controller --controller $(CONTROLLER) --antipassback "(1,3):(2,4)"
+	export UHPPOTED_ENV=DEV && $(TCP) set-antipassback --controller --controller $(CONTROLLER) --antipassback "(1,3):(2,4)"
 
 restore-default-parameters: build
-	export UHPPOTED_ENV=DEV && $(CMD) restore-default-parameters $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) restore-default-parameters $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) restore-default-parameters --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(TCP) restore-default-parameters --controller $(CONTROLLER)
 
 listen: build
 	export UHPPOTED_ENV=DEV && $(CMD) listen

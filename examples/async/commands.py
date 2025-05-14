@@ -277,10 +277,10 @@ def record_special_events(u, dest, timeout, args, protocol='udp'):
     return u.record_special_events(controller, enabled, timeout=timeout)
 
 
-def get_time_profile(u, dest, timeout, args, protocol='udp'):
+async def get_time_profile(u, dest, timeout, args, protocol='udp'):
     controller = (CONTROLLER, dest, protocol)
     profile_id = TIME_PROFILE_ID
-    response = u.get_time_profile(controller, profile_id, timeout=timeout)
+    response = await u.get_time_profile(controller, profile_id, timeout=timeout)
 
     if response.profile_id == 0:
         raise ValueError(f'time profile {profile_id} not defined')
