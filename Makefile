@@ -276,29 +276,57 @@ set-pc-control: build
 	export UHPPOTED_ENV=DEV && $(CMD) set-pc-control --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) set-pc-control --controller $(CONTROLLER)
 
+set-pc-control-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     set-pc-control --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-pc-control --controller $(CONTROLLER)
+
 set-interlock: build
 	export UHPPOTED_ENV=DEV && $(CMD) set-interlock --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) set-interlock --controller $(CONTROLLER)
+
+set-interlock-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     set-interlock --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-interlock --controller $(CONTROLLER)
 
 activate-keypads: build
 	export UHPPOTED_ENV=DEV && $(CMD) activate-keypads --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) activate-keypads --controller $(CONTROLLER)
 
+activate-keypads-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     activate-keypads --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) activate-keypads --controller $(CONTROLLER)
+
 set-door-passcodes: build
 	export UHPPOTED_ENV=DEV && $(CMD) set-door-passcodes --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) set-door-passcodes --controller $(CONTROLLER)
+
+set-door-passcodes-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     set-door-passcodes --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-door-passcodes --controller $(CONTROLLER)
 
 get-antipassback: build
 	export UHPPOTED_ENV=DEV && $(CMD) get-antipassback --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) get-antipassback --controller $(CONTROLLER)
 
+get-antipassback-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     get-antipassback --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-antipassback --controller $(CONTROLLER)
+
 set-antipassback: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-antipassback --controller --controller $(CONTROLLER) --antipassback "(1,3):(2,4)"
-	export UHPPOTED_ENV=DEV && $(TCP) set-antipassback --controller --controller $(CONTROLLER) --antipassback "(1,3):(2,4)"
+	export UHPPOTED_ENV=DEV && $(CMD) set-antipassback --controller $(CONTROLLER) --antipassback "(1,3):(2,4)"
+	export UHPPOTED_ENV=DEV && $(TCP) set-antipassback --controller $(CONTROLLER) --antipassback "(1,3):(2,4)"
+
+set-antipassback-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     set-antipassback --controller $(CONTROLLER) --antipassback "(1,3):(2,4)"
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-antipassback --controller $(CONTROLLER) --antipassback "(1,3):(2,4)"
 
 restore-default-parameters: build
 	export UHPPOTED_ENV=DEV && $(CMD) restore-default-parameters --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) restore-default-parameters --controller $(CONTROLLER)
+
+restore-default-parameters-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     restore-default-parameters --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) restore-default-parameters --controller $(CONTROLLER)
 
 listen: build
 	export UHPPOTED_ENV=DEV && $(CMD) listen

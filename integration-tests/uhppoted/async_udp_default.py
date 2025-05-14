@@ -418,3 +418,83 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         response = await self.u.clear_tasklist(controller)
 
         self.assertEqual(response, ClearTaskListResponse)
+
+    async def test_set_pc_control(self):
+        '''
+        Tests the set-pc-control function with defaults.
+        '''
+        controller = CONTROLLER
+        enable = True
+
+        response = await self.u.set_pc_control(controller, enable)
+
+        self.assertEqual(response, SetPCControlResponse)
+
+    async def test_set_interlock(self):
+        '''
+        Tests the set-interlock function with defaults.
+        '''
+        controller = CONTROLLER
+        interlock = 8
+
+        response = await self.u.set_interlock(controller, interlock)
+
+        self.assertEqual(response, SetInterlockResponse)
+
+    async def test_activate_keypads(self):
+        '''
+        Tests the activate-keypads function with defaults.
+        '''
+        controller = CONTROLLER
+        reader1 = True
+        reader2 = True
+        reader3 = False
+        reader4 = True
+
+        response = await self.u.activate_keypads(controller, reader1, reader2, reader3, reader4)
+
+        self.assertEqual(response, ActivateKeypadsResponse)
+
+    async def test_set_door_passcodes(self):
+        '''
+        Tests the set-door-passcodes function with defaults.
+        '''
+        controller = CONTROLLER
+        door = 3
+        passcode1 = 12345
+        passcode2 = 0
+        passcode3 = 999999
+        passcode4 = 54321
+
+        response = await self.u.set_door_passcodes(controller, door, passcode1, passcode2, passcode3, passcode4)
+
+        self.assertEqual(response, SetDoorPasscodesResponse)
+
+    async def test_get_antipassback(self):
+        '''
+        Tests the get_antipassback function with defaults.
+        '''
+        controller = CONTROLLER
+        response = await self.u.get_antipassback(controller)
+
+        self.assertEqual(response, GetAntiPassbackResponse)
+
+    async def test_set_antipassback(self):
+        '''
+        Tests the set_antipassback function with defaults.
+        '''
+        controller = CONTROLLER
+        antipassback = 2
+        response = await self.u.set_antipassback(controller, antipassback)
+
+        self.assertEqual(response, SetAntiPassbackResponse)
+
+    async def test_restore_default_parameters(self):
+        '''
+        Tests the restore-default-parameters function with defaults.
+        '''
+        controller = CONTROLLER
+
+        response = await self.u.restore_default_parameters(controller)
+
+        self.assertEqual(response, RestoreDefaultParametersResponse)

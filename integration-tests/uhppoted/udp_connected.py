@@ -455,7 +455,7 @@ class TestUDPWithDestAddr(unittest.TestCase):
 
         self.assertEqual(response, GetAntiPassbackResponse)
 
-    def test_get_antipassback(self):
+    def test_set_antipassback(self):
         '''
         Tests the set_antipassback function with a valid dest_addr.
         '''

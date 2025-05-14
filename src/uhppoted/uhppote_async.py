@@ -976,6 +976,251 @@ class UhppoteAsync:
 
         return None
 
+    async def set_pc_control(self, controller, enable, timeout=2.5):
+        '''
+        Defers access control decisions to a remote host. The remote host is expected to 
+        interact with the controller at least once every 30 seconds (typically by enabling
+        set_pc_control), failing which the access controller will fallback to the internal
+        access control list.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               enable      (bool)    Enables remote control of access.
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               SetPcControlResponse  Enable PC control success/fail response.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.set_pc_control_request(id, enable)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.set_pc_control_response(reply)
+
+        return None
+
+    async def set_interlock(self, controller, interlock, timeout=2.5):
+        '''
+        Sets the door interlock mode for an access controller.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               interlock   (uint8)   Door interlock mode:
+                                     0:  none
+                                     1:  doors 1 and 2 interlocked
+                                     2:  doors 2 and 3 interlocked
+                                     3:  doors 1 and 2 interlocked, doors 3 and 4 interlocked
+                                     4:  doors 1 and 2 and 3 interlocked
+                                     8:  doors 1 and 2 and 3 and 4 interlocked
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               SetInterlockResponse  Set interlock success/fail response.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.set_interlock_request(id, interlock)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.set_interlock_response(reply)
+
+        return None
+
+    async def activate_keypads(self, controller, reader1, reader2, reader3, reader4, timeout=2.5):
+        '''
+        Enables (or disables) the keypad associated with an access reader.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               reader1    (bool)    Enables/disable reader 1 access keypad
+               reader2    (bool)    Enables/disable reader 2 access keypad
+               reader3    (bool)    Enables/disable reader 3 access keypad
+               reader4    (bool)    Enables/disable reader 4 access keypad
+               timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               ActivateKeypadsResponse  Activate keypads success/fail response.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.activate_keypads_request(id, reader1, reader2, reader3, reader4)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.activate_keypads_response(reply)
+
+        return None
+
+    async def set_door_passcodes(self, controller, door, passcode1, passcode2, passcode3, passcode4, timeout=2.5):
+        '''
+        Sets up to four supervisor passcodes for a door. The passcodes override any other access 
+        restrictions and a valid passcode is in the range [0..999999], with 0 corresponding to 
+        'no code'.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               door       (uint8)   Door ID [1..4].
+               passcode1  (uint32)  Passcode [0..999999].
+               passcode2  (uint32)  Passcode [0..999999].
+               passcode3  (uint32)  Passcode [0..999999].
+               passcode4  (uint32)  Passcode [0..999999].
+               timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               SetDoorPasscodesResponse  Set door passcodes success/fail response.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.set_door_passcodes_request(id, door, passcode1, passcode2, passcode3, passcode4)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.set_door_passcodes_response(reply)
+
+        return None
+
+    async def get_antipassback(self, controller, timeout=2.5):
+        '''
+        Retrieves the anti-passback mode for an access controller.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               GetAntiPassbackResponse  Response from access controller to the get-antipassback request.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.get_antipassback_request(id)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.get_antipassback_response(reply)
+
+        return None
+
+    async def set_antipassback(self, controller, antipassback, timeout=2.5):
+        '''
+        Retrieves the anti-passback mode for an access controller.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               antipassback (uint8) Anti-passback mode:
+                                    - 0: disabled
+                                    - 1: (1:2);(3:4)
+                                    - 2: (1,3):(2,4)
+                                    - 3: 1:(2,3)
+                                    - 4: 1:(2,3,4)
+
+               timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               GetAntiPassbackResponse  Response from access controller to the get-antipassback request.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.set_antipassback_request(id, antipassback)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.set_antipassback_response(reply)
+
+        return None
+
+    async def restore_default_parameters(self, controller, timeout=2.5):
+        '''
+        Resets a controller to the manufacturer default configuratio, protocol='udp'n.
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               RestoreDefaultParametersResponse  Reset success/fail.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.restore_default_parameters_request(id)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.restore_default_parameters_response(reply)
+
+        return None
+
     async def _send(self, request, dest_addr, timeout, protocol):
         '''
         Internal HAL to use either TCP or UDP to send a request to a controller and return the response.
