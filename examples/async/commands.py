@@ -244,11 +244,11 @@ def delete_all_cards(u, dest, timeout, args, protocol='udp'):
     return u.delete_all_cards(controller, timeout=timeout)
 
 
-def get_event(u, dest, timeout, args, protocol='udp'):
+async def get_event(u, dest, timeout, args, protocol='udp'):
     controller = (CONTROLLER, dest, protocol)
     index = EVENT_INDEX
 
-    response = u.get_event(controller, index, timeout=timeout)
+    response = await u.get_event(controller, index, timeout=timeout)
     if response.event_type == 0xff:
         raise ValueError(f'event @ index {index} overwritten')
     elif response.index == 0:

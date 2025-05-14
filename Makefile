@@ -192,21 +192,37 @@ delete-all-cards-async: build
 	export UHPPOTED_ENV=DEV && $(ASYNC)     delete-all-cards --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) delete-all-cards --controller $(CONTROLLER)
 
+get-event: build
+	export UHPPOTED_ENV=DEV && $(CMD) get-event --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(TCP) get-event --controller $(CONTROLLER)
+
+get-event-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     get-event --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-event --controller $(CONTROLLER)
+
 get-event-index: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-event-index $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) get-event-index $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-event-index --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(TCP) get-event-index --controller $(CONTROLLER)
+
+get-event-index-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     get-event-index --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-event-index --controller $(CONTROLLER)
 
 set-event-index: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-event-index $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) set-event-index $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) set-event-index --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(TCP) set-event-index --controller $(CONTROLLER)
 
-get-event: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-event $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) get-event $(CONTROLLER)
+set-event-index-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     set-event-index --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-event-index --controller $(CONTROLLER)
 
 record-special-events: build
 	export UHPPOTED_ENV=DEV && $(CMD) record-special-events $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) record-special-events $(CONTROLLER)
+
+record-special-events-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     record-special-events $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) record-special-events $(CONTROLLER)
 
 get-time-profile: build
 	export UHPPOTED_ENV=DEV && $(CMD) get-time-profile $(CONTROLLER)

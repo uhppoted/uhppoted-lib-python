@@ -280,3 +280,46 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         response = await self.u.delete_all_cards(controller)
 
         self.assertEqual(response, DeleteAllCardsResponse)
+
+    async def test_get_event(self):
+        '''
+        Tests the get-event function with defaults.
+        '''
+        controller = CONTROLLER
+        index = EVENT_INDEX
+
+        response = await self.u.get_event(controller, index)
+
+        self.assertEqual(response, GetEventResponse)
+
+    async def test_get_event_index(self):
+        '''
+        Tests the get-event-index function with defaults.
+        '''
+        controller = CONTROLLER
+
+        response = await self.u.get_event_index(controller)
+
+        self.assertEqual(response, GetEventIndexResponse)
+
+    async def test_set_event_index(self):
+        '''
+        Tests the set-event-index function with defaults.
+        '''
+        controller = CONTROLLER
+        index = EVENT_INDEX
+
+        response = await self.u.set_event_index(controller, index)
+
+        self.assertEqual(response, SetEventIndexResponse)
+
+    async def test_record_special_events(self):
+        '''
+        Tests the record-special-events function with defaults.
+        '''
+        controller = CONTROLLER
+        enabled = True
+
+        response = await self.u.record_special_events(controller, enabled)
+
+        self.assertEqual(response, RecordSpecialEventsResponse)

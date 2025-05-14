@@ -577,6 +577,137 @@ class UhppoteAsync:
 
         return None
 
+    async def get_event(self, controller, event_index, timeout=2.5):
+        '''
+        Retrieves a stored event from the access controller.
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               event_index (uint32)  Index of event in controller list.
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               GetEventResponse  Event information.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.get_event_request(id, event_index)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.get_event_response(reply)
+
+        return None
+
+    async def get_event_index(self, controller, timeout=2.5):
+        '''
+        Retrieves the 'last downloaded event' index from the controller. The downloaded event index
+        is a single utility register on the controller that is managed by an application (not by the
+        controller).
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               GetEventIndexResponse  Current value of downloaded event index.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.get_event_index_request(id)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.get_event_index_response(reply)
+
+        return None
+
+    async def set_event_index(self, controller, event_index, timeout=2.5):
+        '''
+        Sets the 'last downloaded event' index on the controller. The downloaded event index is a 
+        single utility register on the controller that is managed by an application (not by the
+        controller).
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               event_index (uitn32)  Event index to which to set the 'downloaded event' index.
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               SetEventIndexResponse  Set event index success/fail response.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.set_event_index_request(id, event_index)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.set_event_index_response(reply)
+
+        return None
+
+    async def record_special_events(self, controller, enable, timeout=2.5):
+        '''
+        Enables or disables door open and close and pushbutton press events.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+                                          The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                             to 'udp'.
+
+               enable      (bool)    Includes door open and close and pushbutton events in the
+                                     events stored and broadcast by the controller.
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               RecordSpecialEventsResponse  Record special events success/fail response.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        '''
+        (id, addr, protocol) = disambiguate(controller)
+        request = encode.record_special_events_request(id, enable)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply != None:
+            return decode.record_special_events_response(reply)
+
+        return None
+
     async def _send(self, request, dest_addr, timeout, protocol):
         '''
         Internal HAL to use either TCP or UDP to send a request to a controller and return the response.
