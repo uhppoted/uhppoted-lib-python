@@ -35,7 +35,7 @@ class BroadcastProtocol(asyncio.Protocol):
             if self._debug:
                 net.dump(packet)
 
-    def connection_lost(self, exc):
+    def connection_lost(self, exception):
         pass
 
     async def run(self, timeout):
@@ -43,7 +43,7 @@ class BroadcastProtocol(asyncio.Protocol):
         return self._replies
 
 
-class SendToProtocol(asyncio.Protocol):
+class SendProtocol(asyncio.Protocol):
 
     def __init__(self, request, dest, debug=False):
         self._transport = None
@@ -64,8 +64,8 @@ class SendToProtocol(asyncio.Protocol):
                 net.dump(packet)
             self._done.set_result(packet)
 
-    def connection_lost(self, exc):
-        if exc is not None:
+    def connection_lost(self, exception):
+        if exception is not None:
             self._done.set_exception(ConnectionResetError())
 
     async def run(self, timeout):
@@ -75,6 +75,28 @@ class SendToProtocol(asyncio.Protocol):
             raise TimeoutError('UDP request timeout')
         except ConnectionResetError:
             raise ConnectionResetError('UDP connection reset')
+
+
+class EventProtocol(asyncio.DatagramProtocol):
+
+    def __init__(self, on_event, debug=False):
+        self._on_event = on_event
+        self._debug = debug
+
+    def connection_made(self, transport):
+        self.transport = transport
+
+    def datagram_received(self, packet, addr):
+        if len(packet) == 64:
+            if self._debug:
+                net.dump(packet)
+            self._on_event(packet)
+
+    def error_received(self, exception):
+        pass
+
+    def connection_lost(self, exception):
+        pass
 
 
 class UDPAsync:
@@ -156,19 +178,48 @@ class UDPAsync:
 
         if dest_addr is None:
             transport, protocol = await loop.create_datagram_endpoint(
-                lambda: SendToProtocol(request, self._broadcast, self._debug),
+                lambda: SendProtocol(request, self._broadcast, self._debug),
                 local_addr=self._bind,
                 allow_broadcast=True)
         else:
             addr = net.resolve(f'{dest_addr}')
-            transport, protocol = await loop.create_datagram_endpoint(
-                lambda: SendToProtocol(request, addr, self._debug),
-                local_addr=self._bind,
-                remote_addr=addr,
-                allow_broadcast=True)
+            transport, protocol = await loop.create_datagram_endpoint(lambda: SendProtocol(request, addr, self._debug),
+                                                                      local_addr=self._bind,
+                                                                      remote_addr=addr,
+                                                                      allow_broadcast=True)
 
         try:
             return await protocol.run(timeout)
+        finally:
+            transport.close()
+
+    async def listen(self, onEvent):
+        '''
+        Binds to the listen address from the constructor and invokes the events handler for
+        any received 64 byte UDP packets. Invalid'ish packets are silently discarded.
+
+            Parameters:
+               onEvent  (function)  Handler function for received events, with a function signature 
+                                    f(packet).
+
+            Returns:
+               None.
+
+            Raises:
+               Error  For any socket related errors.
+        '''
+        loop = asyncio.get_running_loop()
+
+        transport, protocol = await loop.create_datagram_endpoint(
+            lambda: EventProtocol(onEvent, self._debug),
+            local_addr=self._listen,
+            family=socket.AF_INET,
+        )
+
+        try:
+            await asyncio.sleep(float("inf"))
+        except asyncio.CancelledError:
+            pass
         finally:
             transport.close()
 

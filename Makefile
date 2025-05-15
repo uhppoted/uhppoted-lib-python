@@ -331,9 +331,15 @@ restore-default-parameters-async: build
 listen: build
 	export UHPPOTED_ENV=DEV && $(CMD) listen
 
+listen-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC) listen
+
 all: build
 	# export UHPPOTED_ENV=DEV && $(CMD) all
 	export UHPPOTED_ENV=DEV && $(CMD) all --destination 192.168.1.100:60000 --timeout 0.5
+
+all-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC) all --destination 192.168.1.100:60000 --timeout 0.5
 
 event-listener: build
 	export UHPPOTED_ENV=DEV    && \

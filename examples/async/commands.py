@@ -6,7 +6,9 @@ import pprint
 import sys
 import pathlib
 import itertools
-import contextlib
+import signal
+
+from contextlib import suppress
 
 if os.environ['UHPPOTED_ENV'] == 'DEV':
     root = pathlib.Path(__file__).resolve().parents[2]
@@ -96,7 +98,7 @@ async def exec(f, args):
     task2 = asyncio.create_task(windmill())
 
     response = await task1
-    with contextlib.suppress(asyncio.CancelledError):
+    with suppress(asyncio.CancelledError):
         task2.cancel()
         await task2
     
@@ -421,8 +423,21 @@ def restore_default_parameters(u, dest, timeout, args, protocol='udp'):
     return u.restore_default_parameters(controller, timeout=timeout)
 
 
-def listen(u, dest, timeout, args, protocol='udp'):
-    return u.listen(onEvent)
+async def listen(u, dest, timeout, args, protocol='udp'):
+    close = asyncio.Event()
+    task = asyncio.create_task(u.listen(onEvent))
+
+    loop = asyncio.get_running_loop()
+    loop.add_signal_handler(signal.SIGINT, close.set)
+
+    try:
+        await close.wait()
+    finally:
+        task.cancel()
+        with suppress(asyncio.CancelledError):
+            await task
+
+    return None    
 
 
 def onEvent(event):

@@ -7,16 +7,18 @@
       - [x] UDP broadcast
       - [x] connected UDP sockets
       - [x] TCP
-      - [ ] listen
+      - [x] listen
       - [x] FIXME: if request[1] == 0x96 return None
       - [x] integration tests
       - [x] examples
+      - [ ] event-listener example
       - [ ] FIXME: sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+      - [x] CHANGELOG
+      - [ ] README
       - (?) pylint
       - (?) ruff
       - (?) maybe replace yapf with black
       - (?) integration tests in github workflow
-      - https://lucas-six.github.io/python-cookbook/recipes/core/udp_client_asyncio.html
 
 - [ ] Use site-specific configuration to run examples locally
       - https://docs.python.org/3/library/site.html
@@ -31,4 +33,3 @@
       - https://docs.python.org/3/library/doctest.html#module-doctest
 
 3. Publish from github
-
