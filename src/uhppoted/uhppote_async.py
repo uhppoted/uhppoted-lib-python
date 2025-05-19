@@ -1239,11 +1239,11 @@ class UhppoteAsync:
         '''
 
         def handler(packet):
-            # # if on_event is async, schedule it
-            # if asyncio.iscoroutine(result):
-            #     asyncio.create_task(result)
             try:
-                onEvent(decode.event(packet))
+                event = decode.event(packet)
+                result = onEvent(event)
+                if asyncio.iscoroutine(result):
+                    asyncio.create_task(result)
             except BaseException as err:
                 print('   *** ERROR {}'.format(err))
 

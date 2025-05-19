@@ -20,7 +20,9 @@ update-release:
 format: 
 	yapf -ri src
 	yapf -ri examples/cli
+	yapf -ri examples/async
 	yapf -ri examples/event-listener
+	yapf -ri examples/async-event-listener
 	yapf -ri tests
 	yapf -ri integration-tests
 
@@ -344,6 +346,11 @@ all-async: build
 event-listener: build
 	export UHPPOTED_ENV=DEV    && \
 	cd examples/event-listener && \
+	python3 main.py --debug --bind 192.168.1.100 --broadcast 192.168.1.255 --listen 192.168.1.100:60001
+
+event-listener-async: build
+	export UHPPOTED_ENV=DEV          && \
+	cd examples/async-event-listener && \
 	python3 main.py --debug --bind 192.168.1.100 --broadcast 192.168.1.255 --listen 192.168.1.100:60001
 
 	

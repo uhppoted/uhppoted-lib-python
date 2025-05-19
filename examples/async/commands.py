@@ -72,11 +72,13 @@ def commands():
         'listen': listen,
     }
 
+
 async def windmill():
-    frames = ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏']
+    frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
     for frame in itertools.cycle(frames):
         print(f'\r{frame} ...', end='', flush=True)
         await asyncio.sleep(0.1)
+
 
 async def exec(f, args):
     bind = args.bind
@@ -101,7 +103,7 @@ async def exec(f, args):
     with suppress(asyncio.CancelledError):
         task2.cancel()
         await task2
-    
+
     print('\rok    \n')
 
     if response != None:
@@ -437,7 +439,7 @@ async def listen(u, dest, timeout, args, protocol='udp'):
         with suppress(asyncio.CancelledError):
             await task
 
-    return None    
+    return None
 
 
 def onEvent(event):

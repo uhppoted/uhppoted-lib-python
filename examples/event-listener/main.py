@@ -63,7 +63,7 @@ def record_special_events(u, controller):
 
 
 def listen(u, q):
-    print('-- listening for events')
+    print(f'INFO   listening for events')
     u.listen(lambda e: on_event(e, q))
 
 
@@ -73,7 +73,7 @@ def on_event(event, q):
         if q.qsize() < QUEUE_SIZE:
             q.put(event)
         else:
-            print('WARN   *** event queue full - discarding event {event.event_index}')
+            print(f'WARN   *** event queue full - discarding event {event.event_index}')
 
 
 def process_events(q):
@@ -85,7 +85,7 @@ def process_events(q):
 def process_event(event):
     print(f'INFO   processing event {event.event_index}')
     pprint.pprint(event.__dict__, indent=2, width=1)
-    time.sleep(5)
+    time.sleep(5)  # simulate time consuming event processing
 
 
 if __name__ == '__main__':

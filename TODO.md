@@ -11,13 +11,13 @@
       - [x] FIXME: if request[1] == 0x96 return None
       - [x] integration tests
       - [x] examples
-      - [ ] event-listener example
-      - [ ] FIXME: sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+      - [x] event-listener example
       - [x] CHANGELOG
       - [ ] README
+            - NOTE: sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+      - (?) maybe replace yapf with black
       - (?) pylint
       - (?) ruff
-      - (?) maybe replace yapf with black
       - (?) integration tests in github workflow
 
 - [ ] Use site-specific configuration to run examples locally
