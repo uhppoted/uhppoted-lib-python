@@ -2,11 +2,14 @@
 
 # uhppoted-lib-python
 
-Python wrapper around the request/response API for the UHPPOTE TCP/IP access controllers. As from v0.8.11, the library includes
-both `sync` and `async` implementations of the API functions.
+Python wrapper around the request/response API for the UHPPOTE TCP/IP access controllers. As of _v0.8.11_, the library includes
+both `sync` and `async` implementations of the API functions. 
 
-- A demo CLI illustrating the use of the API can be found in the [examples/cli](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/cli) folder.
-- A demo CLI illustrating the use of the `async` API can be found in the [examples/cli](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/async) folder.
+A set of basic examples illustrating the use of the library can be found in the [examples](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples) folder:
+- [examples/cli](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/cli) is a basic CLI using the `sync` API
+- [examples/async](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/async) is a basic CLI using the `async API
+- [examples/event-listener](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/event-listener) is a `sync` event handler with queueing
+- [examples/async-event-listener](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/async-event-listener) is an `async` event handler with queueing
 
 ## Installation
 
@@ -23,6 +26,8 @@ pip install uhppoted
 1. Added event _auto-send interval_ to the `get-listener` and `set-listener` API function.
 
 ## API
+
+### `sync` API
 
 Invoking an API function requires an instance of the `Uhppote` class initialised with the information required
 to access a controller:
@@ -153,7 +158,7 @@ pprint(record.__dict__, indent=2, width=1)
 ### Notes
 1. All API functions raise an `Exception` if the call fails for any reason whatsoever.
 2. All API functions (other than `get_controllers` and `listen`) take a `controller` that may be either:
-   - a _uint32_s controller serial number (legacy)
+   - a _uint32_ controller serial number (legacy)
    - a tuple comprising `(id,address,protocol)`, where
        - `id` is the (required) controller serial number
        - `address` is the (optional) controller IPv4 address or address:port
@@ -167,7 +172,7 @@ pprint(record.__dict__, indent=2, width=1)
    get_controller((405419896, '192.168.1.100:60000'))
    get_controller((405419896)
 
-   Defaults to UDP and udp broadcast if the controller cannot be disambiguated.
+   Defaults to UDP and UDP broadcast if the controller cannot be disambiguated.
 ```
 
 3. All API functions (other than `listen`) take an optional `timeout` kwarg that sets the time limit (in seconds)
