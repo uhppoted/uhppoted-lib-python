@@ -2,9 +2,11 @@
 
 # uhppoted-lib-python
 
-Python wrapper around the request/response API for the UHPPOTE TCP/IP access controllers. 
+Python wrapper around the request/response API for the UHPPOTE TCP/IP access controllers. As from v0.8.11, the library includes
+both `sync` and `async` implementations of the API functions.
 
-A demo CLI illustrating the use of the API can be found in the [examples/cli](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/cli) folder.
+- A demo CLI illustrating the use of the API can be found in the [examples/cli](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/cli) folder.
+- A demo CLI illustrating the use of the `async` API can be found in the [examples/cli](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/async) folder.
 
 ## Installation
 
@@ -27,15 +29,9 @@ to access a controller:
 
 ```
 class Uhppote:
-    def __init__(self, uhppote=None):
+    def __init__(self, bind='0.0.0.0', broadcast='255.255.255.255:60000', listen="0.0.0.0:60001", debug=False):
 
-where uhppote is an instance of 
-
-class UHPPOTE:
-    bind: str
-    broadcast: str
-    listen: str
-    debug: bool
+where:
 
 bind        IPv4 address to which to bind the UDP socket. Defaults to 0.0.0.0
 broadcast   IPv4 address:port for broadcast UDP packets. Defaults to 255.255.255.255:60000
@@ -90,6 +86,70 @@ pprint(record.__dict__, indent=2, width=1)
   'version': 'v8.92'}
 ```
 
+### `async` API
+
+Invoking an API function requires an instance of the `UhppoteAsync` class initialised with the information required
+to access a controller:
+
+```
+class UhppoteAsync:
+    def __init__(self, bind='0.0.0.0', broadcast='255.255.255.255:60000', listen="0.0.0.0:60001", debug=False):
+
+where:
+
+bind        IPv4 address to which to bind the UDP socket. Defaults to 0.0.0.0
+broadcast   IPv4 address:port for broadcast UDP packets. Defaults to 255.255.255.255:60000
+listen      IPv4 address:port for events from controller (unused). Defaults to 0.0.0.0:60001
+debug       Displays the controller requests/responses if true.
+```
+
+e.g.:
+```
+from uhppoted import uhppote_async as uhppote
+from pprint import pprint
+
+bind = '0.0.0.0'
+broadcast = '255.255.255.255:60000'
+listen = '0.0.0.0:60001'
+debug = True
+
+u = uhppote.UhppoteAsync(bind, broadcast, listen, debug)
+record = await u.get_controller(405419896)
+
+pprint(record.__dict__, indent=2, width=1)
+```
+```
+>>> from uhppoted import uhppote_async as uhppote
+>>> from pprint import pprint
+>>> 
+>>> bind = '0.0.0.0'
+>>> broadcast = '255.255.255.255:60000'
+>>> listen = '0.0.0.0:60001'
+>>> debug = True
+>>> 
+>>> u = uhppote.Uhppote(bind, broadcast, listen, debug)
+>>> record = await u.get_controller(405419896)
+   00000000  17 94 00 00 78 37 2a 18  00 00 00 00 00 00 00 00
+   00000010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+   00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+   00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+
+   00000000  17 94 00 00 78 37 2a 18  c0 a8 01 64 ff ff ff 00
+   00000010  c0 a8 01 01 00 12 23 34  45 56 08 92 20 18 11 05
+   00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+   00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+
+>>> 
+>>> pprint(record.__dict__, indent=2, width=1)
+{ 'controller': 405419896,
+  'date': datetime.date(2018, 11, 5),
+  'gateway': IPv4Address('192.168.1.1'),
+  'ip_address': IPv4Address('192.168.1.100'),
+  'mac_address': '00:12:23:34::45:56',
+  'subnet_mask': IPv4Address('255.255.255.0'),
+  'version': 'v8.92'}
+```
+
 ### Notes
 1. All API functions raise an `Exception` if the call fails for any reason whatsoever.
 2. All API functions (other than `get_controllers` and `listen`) take a `controller` that may be either:
@@ -117,6 +177,7 @@ pprint(record.__dict__, indent=2, width=1)
 
    Defaults to 2.5s.
 ```
+4. The `async` implementation does not enable either `SO_REUSEADDR` or `SO_REUSEPORT`.
 
 **API**
 

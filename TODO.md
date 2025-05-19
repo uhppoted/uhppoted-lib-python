@@ -2,8 +2,7 @@
 
 - [x] anti-passback (cf. https://github.com/uhppoted/uhppoted/issues/60)
 - [x] `argparse` args for examples
-
-- [ ] async functions (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/4)
+- [x] async functions (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/4)
       - [x] UDP broadcast
       - [x] connected UDP sockets
       - [x] TCP
@@ -13,8 +12,7 @@
       - [x] examples
       - [x] event-listener example
       - [x] CHANGELOG
-      - [ ] README
-            - NOTE: sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+      - [x] README
       - (?) maybe replace yapf with black
       - (?) pylint
       - (?) ruff
