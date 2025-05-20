@@ -38,6 +38,7 @@ integration-tests: build
 vet: 
 
 lint: 
+	pylint --rcfile=.pylintrc  examples/cli
 
 build-all: test vet lint
 
