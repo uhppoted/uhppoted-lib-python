@@ -15,7 +15,7 @@
       - [x] README
 
 - [x] Replace yapf with black
-- (?) pylint
+- [ ] pylint
 - (?) ruff
 - (?) integration tests in github workflow
 - (?) https://fractalideas.com/blog/sans-io-when-rubber-meets-road/
