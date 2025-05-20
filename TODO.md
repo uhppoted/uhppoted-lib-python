@@ -13,10 +13,12 @@
       - [x] event-listener example
       - [x] CHANGELOG
       - [x] README
-      - (?) maybe replace yapf with black
-      - (?) pylint
-      - (?) ruff
-      - (?) integration tests in github workflow
+
+- [x] Replace yapf with black
+- (?) pylint
+- (?) ruff
+- (?) integration tests in github workflow
+- (?) https://fractalideas.com/blog/sans-io-when-rubber-meets-road/
 
 - [ ] Use site-specific configuration to run examples locally
       - https://docs.python.org/3/library/site.html

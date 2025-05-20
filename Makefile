@@ -18,13 +18,13 @@ update:
 update-release:
 
 format: 
-	yapf -ri src
-	yapf -ri examples/cli
-	yapf -ri examples/async
-	yapf -ri examples/event-listener
-	yapf -ri examples/async-event-listener
-	yapf -ri tests
-	yapf -ri integration-tests
+	black src
+	black examples/cli
+	black examples/async
+	black examples/event-listener
+	black examples/async-event-listener
+	black tests
+	black integration-tests
 
 build: format
 	python3 -m compileall .

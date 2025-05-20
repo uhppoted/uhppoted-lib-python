@@ -1,6 +1,6 @@
-'''
+"""
 Shared dataclass definitions.
-'''
+"""
 
 import datetime
 import struct
@@ -9,12 +9,12 @@ from ipaddress import IPv4Address
 from dataclasses import dataclass
 from typing import NewType
 
-PIN = NewType('PIN', int)
+PIN = NewType("PIN", int)
 
 
 @dataclass
 class GetControllerResponse:
-    '''
+    """
     Container class for the decoded response from a get-controller request.
 
        Fields:
@@ -25,7 +25,8 @@ class GetControllerResponse:
           mac_address  (string)       MAC address (XX:XX:XX:XX:XX:XX).
           version      (string)       Firmware version (vN.NN).
           date         (date)         Release date (YYYY-MM-DD).
-    '''
+    """
+
     controller: int
     ip_address: IPv4Address
     subnet_mask: IPv4Address
@@ -37,34 +38,36 @@ class GetControllerResponse:
 
 @dataclass
 class GetTimeResponse:
-    '''
+    """
     Container class for the decoded response from a get-time request.
 
        Fields:
           controller   (uint32)    Controller serial number.
           datetime     (datetime)  Controller system date/time. None if
                                    the returned date/time is invalid.
-    '''
+    """
+
     controller: int
     datetime: datetime.datetime
 
 
 @dataclass
 class SetTimeResponse:
-    '''
+    """
     Container class for the decoded response from a set-time request.
 
        Fields:
           controller   (uint32)    Controller serial number.
           datetime     (datetime)  Controller system date/time.
-    '''
+    """
+
     controller: int
     datetime: datetime.datetime
 
 
 @dataclass
 class GetStatusResponse:
-    '''
+    """
     Container class for the decoded response from a get-status request.
 
        Fields:
@@ -92,7 +95,8 @@ class GetStatusResponse:
           event_timestamp      (datetime)  Last event timestamp.
           event_reason         (uint8)     Last event access granted/denied reason code.
           sequence_no          (uint32)    Packet sequence number.
-    '''
+    """
+
     controller: int
     system_date: datetime.date
     system_time: datetime.time
@@ -121,7 +125,7 @@ class GetStatusResponse:
 
 @dataclass
 class GetListenerResponse:
-    '''
+    """
     Container class for the decoded response from a get-listener request.
 
        Fields:
@@ -129,7 +133,8 @@ class GetListenerResponse:
           address     (IPv4Address)  Configured event listener IP address.
           port        (uint16)       Configured event listener UDP port.
           interval    (uint8)        Auto-send interval (seconds).
-    '''
+    """
+
     controller: int
     address: IPv4Address
     port: int
@@ -138,20 +143,21 @@ class GetListenerResponse:
 
 @dataclass
 class SetListenerResponse:
-    '''
+    """
     Container class for the decoded response from a set-listener request.
 
        Fields:
           controller  (uint32)  Controller serial number.
           ok          (bool)    Succeeded/failed.
-    '''
+    """
+
     controller: int
     ok: bool
 
 
 @dataclass
 class GetDoorControlResponse:
-    '''
+    """
     Container class for the decoded response from a get-door-control request.
 
        Fields:
@@ -159,7 +165,8 @@ class GetDoorControlResponse:
           door        (uint8)   Door no.[1..4]
           mode        (uint8)   Door control mode (1: normally open, 2: normally closed, 3: controlled)
           delay       (uint8)   Door unlock duration (seconds)
-    '''
+    """
+
     controller: int
     door: int
     mode: int
@@ -168,7 +175,7 @@ class GetDoorControlResponse:
 
 @dataclass
 class SetDoorControlResponse:
-    '''
+    """
     Container class for the decoded response from a set-door-control request.
 
        Fields:
@@ -176,7 +183,8 @@ class SetDoorControlResponse:
           door        (uint8)   Door no.[1..4]
           mode        (uint8)   Door control mode (1: normally open, 2: normally closed, 3: controlled)
           delay       (uint8)   Door unlock duration (seconds)
-    '''
+    """
+
     controller: int
     door: int
     mode: int
@@ -185,33 +193,35 @@ class SetDoorControlResponse:
 
 @dataclass
 class OpenDoorResponse:
-    '''
+    """
     Container class for the decoded response from an open-door request.
 
        Fields:
           controller  (uint32)  Controller serial number.
           opened      (bool)    Succeeded/failed.
-    '''
+    """
+
     controller: int
     opened: bool
 
 
 @dataclass
 class GetCardsResponse:
-    '''
+    """
     Container class for the decoded response from an open-door request.
 
        Fields:
           controller  (uint32)  Controller serial number.
           cards       (uint32)  Number of cards stored on controller.
-    '''
+    """
+
     controller: int
     cards: int
 
 
 @dataclass
 class GetCardResponse:
-    '''
+    """
     Container class for the decoded response from a get-card request.
 
        Fields:
@@ -225,7 +235,8 @@ class GetCardResponse:
           door_3      (uint8)   Card access permissions for door 3 (0: none, 1: all, 2-254: time profile ID)
           door_4      (uint8)   Card access permissions for door 4 (0: none, 1: all, 2-254: time profile ID)
           pin         (uint24)  Card access keypad PIN code (0 for none)
-    '''
+    """
+
     controller: int
     card_number: int
     start_date: datetime.date
@@ -239,7 +250,7 @@ class GetCardResponse:
 
 @dataclass
 class GetCardByIndexResponse:
-    '''
+    """
     Container class for the decoded response from a get-card-by-index request.
 
        Fields:
@@ -252,7 +263,8 @@ class GetCardByIndexResponse:
           door_3      (uint8)   Card access permissions for door 3 (0: none, 1: all, 2-254: time profile ID)
           door_4      (uint8)   Card access permissions for door 4 (0: none, 1: all, 2-254: time profile ID)
           pin         (uint24)  Card access keypad PIN code (0 for none)
-    '''
+    """
+
     controller: int
     card_number: int
     start_date: datetime.date
@@ -266,46 +278,49 @@ class GetCardByIndexResponse:
 
 @dataclass
 class PutCardResponse:
-    '''
+    """
     Container class for the decoded response from an open-door request.
 
        Fields:
           controller  (uint32)  Controller serial number.
           stored      (bool)    Succeeded/failed.
-    '''
+    """
+
     controller: int
     stored: bool
 
 
 @dataclass
 class DeleteCardResponse:
-    '''
+    """
     Container class for the decoded response from a delete-card request.
 
        Fields:
           controller  (uint32)  Controller serial number.
           deleted     (bool)    Succeeded/failed.
-    '''
+    """
+
     controller: int
     deleted: bool
 
 
 @dataclass
 class DeleteAllCardsResponse:
-    '''
+    """
     Container class for the decoded response from a delete-all-cards request.
 
        Fields:
           controller  (uint32)  Controller serial number.
           deleted     (bool)    Succeeded/failed.
-    '''
+    """
+
     controller: int
     deleted: bool
 
 
 @dataclass
 class GetEventResponse:
-    '''
+    """
     Container class for the decoded response from a get-event request.
 
        Fields:
@@ -318,7 +333,8 @@ class GetEventResponse:
           card            (uint32)    Last event card number.
           timestamp       (datetime)  Last event timestamp.
           reason          (uint8)     Last event access granted/denied reason code.
-    '''
+    """
+
     controller: int
     index: int
     event_type: int
@@ -332,46 +348,49 @@ class GetEventResponse:
 
 @dataclass
 class GetEventIndexResponse:
-    '''
+    """
     Container class for the decoded response from a get-event-index request.
 
        Fields:
           controller      (uint32)    Controller serial number.
           index           (uint32)    Downloaded event index.
-    '''
+    """
+
     controller: int
     event_index: int
 
 
 @dataclass
 class SetEventIndexResponse:
-    '''
+    """
     Container class for the decoded response from a set-event-index request.
 
        Fields:
           controller  (uint32)  Controller serial number.
           updated     (bool)    Succeeded/failed.
-    '''
+    """
+
     controller: int
     updated: bool
 
 
 @dataclass
 class RecordSpecialEventsResponse:
-    '''
+    """
     Container class for the decoded response from a record-special-events request.
 
        Fields:
           controller  (uint32)  Controller serial number.
           updated     (bool)    Succeeded/failed.
-    '''
+    """
+
     controller: int
     updated: bool
 
 
 @dataclass
 class GetTimeProfileResponse:
-    '''
+    """
     Container class for the decoded response from a get-time-profile request.
 
        Fields:
@@ -393,7 +412,8 @@ class GetTimeProfileResponse:
           segment_3_start   (time)    Time profile segment 3 start time (HHmm).
           segment_3_end     (time)    Time profile segment 3 end time (HHmm).
           linked_profile_id (uint8)   Next profile ID in chain (0 if none).
-    '''
+    """
+
     controller: int
     profile_id: int
     start_date: datetime.date
@@ -416,124 +436,133 @@ class GetTimeProfileResponse:
 
 @dataclass
 class SetTimeProfileResponse:
-    '''
+    """
     Container class for the decoded response from a set-time-profile request.
 
        Fields:
           controller  (uint32)  Controller serial number.
           stored      (bool)    Succeeded/failed.
-    '''
+    """
+
     controller: int
     stored: bool
 
 
 @dataclass
 class DeleteAllTimeProfilesResponse:
-    '''
+    """
     Container class for the decoded response from a delete-all-time-profiles request.
 
        Fields:
           controller  (uint32)  Controller serial number.
           deleted     (bool)    Succeeded/failed.
-    '''
+    """
+
     controller: int
     deleted: bool
 
 
 @dataclass
 class AddTaskResponse:
-    '''
+    """
     Container class for the decoded response from an add-task request.
 
        Fields:
           controller  (uint32)  Controller serial number.
           added       (bool)    Succeeded/failed.
-    '''
+    """
+
     controller: int
     added: bool
 
 
 @dataclass
 class RefreshTasklistResponse:
-    '''
+    """
     Container class for the decoded response from a refersh-tasklist request.
 
        Fields:
           controller  (uint32)  Controller serial number.
           refreshed   (bool)    Succeeded/failed.
-    '''
+    """
+
     controller: int
     refreshed: bool
 
 
 @dataclass
 class ClearTasklistResponse:
-    '''
+    """
     Container class for the decoded response from a clear-tasklist request.
 
        Fields:
           controller  (uint32)  Controller serial number.
           cleared     (bool)    Succeeded/failed.
-    '''
+    """
+
     controller: int
     cleared: bool
 
 
 @dataclass
 class SetPcControlResponse:
-    '''
+    """
     Container class for the decoded response from a set-pc-control request.
 
        Fields:
           controller  (uint32)  Controller serial number.
           ok          (bool)    Succeeded/failed.
-    '''
+    """
+
     controller: int
     ok: bool
 
 
 @dataclass
 class SetInterlockResponse:
-    '''
+    """
     Container class for the decoded response from a set-interlock request.
 
        Fields:
           controller  (uint32)  Controller serial number.
           ok          (bool)    Succeeded/failed.
-    '''
+    """
+
     controller: int
     ok: bool
 
 
 @dataclass
 class ActivateKeypadsResponse:
-    '''
+    """
     Container class for the decoded response from an activate-keypads request.
 
        Fields:
           controller  (uint32)  Controller serial number.
           ok          (bool)    Succeeded/failed.
-    '''
+    """
+
     controller: int
     ok: bool
 
 
 @dataclass
 class SetDoorPasscodesResponse:
-    '''
+    """
     Container class for the decoded response from a set-door-passcodes request.
 
        Fields:
           controller  (uint32)  Controller serial number.
           ok          (bool)    Succeeded/failed.
-    '''
+    """
+
     controller: int
     ok: bool
 
 
 @dataclass
 class GetAntiPassbackResponse:
-    '''
+    """
     Container class for the decoded response from a get-antipassback request.
 
        Fields:
@@ -544,40 +573,43 @@ class GetAntiPassbackResponse:
                                  - 2: (1,3):(2,4)
                                  - 3: 1:(2,3)
                                  - 4: 1:(2,3,4)
-    '''
+    """
+
     controller: int
     antipassback: int
 
 
 @dataclass
 class SetAntiPassbackResponse:
-    '''
+    """
     Container class for the decoded response from a set-antipassback request.
 
        Fields:
           controller (uint32)  Controller serial number.
           ok         (bool)    Succeeded/failed
-    '''
+    """
+
     controller: int
     ok: bool
 
 
 @dataclass
 class RestoreDefaultParametersResponse:
-    '''
+    """
     Container class for the decoded response from a restore-default-parameters request.
 
        Fields:
           controller  (uint32)  Controller serial number.
           reset       (bool)    Succeeded/failed.
-    '''
+    """
+
     controller: int
     reset: bool
 
 
 @dataclass
 class Event:
-    '''
+    """
     Container class for a decoded event packet.
 
        Fields:
@@ -605,7 +637,8 @@ class Event:
           system_error         (uint8)     System error code.
           special_info         (uint8)     Absolutely no idea.
           sequence_no          (uint32)    Packet sequence number.
-    '''
+    """
+
     controller: int
     event_index: int
     event_type: int

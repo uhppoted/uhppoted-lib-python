@@ -1,4 +1,4 @@
-'''
+"""
 UHPPOTE request packet encoder.
 
 Encodes a UHPPOTE access controller request as a 64 byte UDP packet:
@@ -6,7 +6,7 @@ Encodes a UHPPOTE access controller request as a 64 byte UDP packet:
 - uint8, uint16, uint24 and uint32 values are encoded as little endian unsigned integers
 - datetime, date and time values are encoded as BCD
 - boolean values are encoded as 0 (False) or 1 (True)
-'''
+"""
 
 import datetime
 import struct
@@ -15,7 +15,7 @@ from . import codec
 
 
 def get_controller_request(controller):
-    '''
+    """
     Encodes a get-controller request.
 
         Parameters:
@@ -23,7 +23,7 @@ def get_controller_request(controller):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -35,7 +35,7 @@ def get_controller_request(controller):
 
 
 def set_ip_request(controller, address, netmask, gateway):
-    '''
+    """
     Encodes a set-ip request.
 
         Parameters:
@@ -46,7 +46,7 @@ def set_ip_request(controller, address, netmask, gateway):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -56,13 +56,13 @@ def set_ip_request(controller, address, netmask, gateway):
     pack_IPv4(address, packet, 8)
     pack_IPv4(netmask, packet, 12)
     pack_IPv4(gateway, packet, 16)
-    pack_uint32(0x55aaaa55, packet, 20)
+    pack_uint32(0x55AAAA55, packet, 20)
 
     return packet
 
 
 def get_time_request(controller):
-    '''
+    """
     Encodes a get-time request.
 
         Parameters:
@@ -70,7 +70,7 @@ def get_time_request(controller):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -82,7 +82,7 @@ def get_time_request(controller):
 
 
 def set_time_request(controller, datetime):
-    '''
+    """
     Encodes a set-time request.
 
         Parameters:
@@ -91,7 +91,7 @@ def set_time_request(controller, datetime):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -104,15 +104,15 @@ def set_time_request(controller, datetime):
 
 
 def get_status_request(controller):
-    '''
+    """
     Encodes a get-status request.
 
         Parameters:
             controller (uint32) Controller serial number.
- 
+
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -124,15 +124,15 @@ def get_status_request(controller):
 
 
 def get_listener_request(controller):
-    '''
+    """
     Encodes a get-listener request.
 
         Parameters:
             controller (uint32) Controller serial number.
- 
+
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -144,7 +144,7 @@ def get_listener_request(controller):
 
 
 def set_listener_request(controller, address, port, interval=0):
-    '''
+    """
     Encodes a set-listener request.
 
         Parameters:
@@ -152,10 +152,10 @@ def set_listener_request(controller, address, port, interval=0):
             address    (ipaddress.IPv4Address)  IP address of event listener.
             port       (uint16)                 UDP port of event listener.
             interval   (uint8)                  Auto-send interval (seconds) Defaults to 0 (disabled).
- 
+
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -170,16 +170,16 @@ def set_listener_request(controller, address, port, interval=0):
 
 
 def get_door_control_request(controller, door):
-    '''
+    """
     Encodes a get-door-control request.
 
         Parameters:
             controller (uint32) Controller serial number.
             door       (uint8)  Door ID [1..4]
- 
+
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -192,7 +192,7 @@ def get_door_control_request(controller, door):
 
 
 def set_door_control_request(controller, door, mode, delay):
-    '''
+    """
     Encodes a set-door-control request.
 
         Parameters:
@@ -203,7 +203,7 @@ def set_door_control_request(controller, door, mode, delay):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -218,7 +218,7 @@ def set_door_control_request(controller, door, mode, delay):
 
 
 def open_door_request(controller, door):
-    '''
+    """
     Encodes an open-door request.
 
         Parameters:
@@ -227,7 +227,7 @@ def open_door_request(controller, door):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -240,7 +240,7 @@ def open_door_request(controller, door):
 
 
 def get_cards_request(controller):
-    '''
+    """
     Encodes a get-cards request.
 
         Parameters:
@@ -248,7 +248,7 @@ def get_cards_request(controller):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -260,7 +260,7 @@ def get_cards_request(controller):
 
 
 def get_card_request(controller, card_number):
-    '''
+    """
     Encodes a get-card request.
 
         Parameters:
@@ -269,7 +269,7 @@ def get_card_request(controller, card_number):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -282,7 +282,7 @@ def get_card_request(controller, card_number):
 
 
 def get_card_by_index_request(controller, card_index):
-    '''
+    """
     Encodes a get-card-by-index request.
 
         Parameters:
@@ -291,7 +291,7 @@ def get_card_by_index_request(controller, card_index):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -304,7 +304,7 @@ def get_card_by_index_request(controller, card_index):
 
 
 def put_card_request(controller, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin):
-    '''
+    """
     Encodes a put-card request.
 
         Parameters:
@@ -320,7 +320,7 @@ def put_card_request(controller, card_number, start_date, end_date, door_1, door
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -340,7 +340,7 @@ def put_card_request(controller, card_number, start_date, end_date, door_1, door
 
 
 def delete_card_request(controller, card_number):
-    '''
+    """
     Encodes a delete-card request.
 
         Parameters:
@@ -349,7 +349,7 @@ def delete_card_request(controller, card_number):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -362,7 +362,7 @@ def delete_card_request(controller, card_number):
 
 
 def delete_cards_request(controller):
-    '''
+    """
     Encodes a delete-cards request.
 
         Parameters:
@@ -370,20 +370,20 @@ def delete_cards_request(controller):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
     packet[1] = codec.DELETE_ALL_CARDS
 
     pack_uint32(controller, packet, 4)
-    pack_uint32(0x55aaaa55, packet, 8)
+    pack_uint32(0x55AAAA55, packet, 8)
 
     return packet
 
 
 def get_event_request(controller, event_index):
-    '''
+    """
     Encodes a get-event request.
 
         Parameters:
@@ -392,7 +392,7 @@ def get_event_request(controller, event_index):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -405,7 +405,7 @@ def get_event_request(controller, event_index):
 
 
 def get_event_index_request(controller):
-    '''
+    """
     Encodes a get-event-index request.
 
         Parameters:
@@ -413,7 +413,7 @@ def get_event_index_request(controller):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -425,7 +425,7 @@ def get_event_index_request(controller):
 
 
 def set_event_index_request(controller, event_index):
-    '''
+    """
     Encodes a set-event-index request.
 
         Parameters:
@@ -434,7 +434,7 @@ def set_event_index_request(controller, event_index):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -442,13 +442,13 @@ def set_event_index_request(controller, event_index):
 
     pack_uint32(controller, packet, 4)
     pack_uint32(event_index, packet, 8)
-    pack_uint32(0x55aaaa55, packet, 12)
+    pack_uint32(0x55AAAA55, packet, 12)
 
     return packet
 
 
 def record_special_events_request(controller, enable):
-    '''
+    """
     Encodes a record-special-events request.
 
         Parameters:
@@ -457,7 +457,7 @@ def record_special_events_request(controller, enable):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -470,7 +470,7 @@ def record_special_events_request(controller, enable):
 
 
 def get_time_profile_request(controller, profile_id):
-    '''
+    """
     Encodes a get-time-profile request.
 
         Parameters:
@@ -479,7 +479,7 @@ def get_time_profile_request(controller, profile_id):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -491,10 +491,27 @@ def get_time_profile_request(controller, profile_id):
     return packet
 
 
-def set_time_profile_request(controller, profile_id, start_date, end_date, monday, tuesday, wednesday, thursday, friday,
-                             saturday, sunday, segment_1_start, segment_1_end, segment_2_start, segment_2_end,
-                             segment_3_start, segment_3_end, linked_profile_id):
-    '''
+def set_time_profile_request(
+    controller,
+    profile_id,
+    start_date,
+    end_date,
+    monday,
+    tuesday,
+    wednesday,
+    thursday,
+    friday,
+    saturday,
+    sunday,
+    segment_1_start,
+    segment_1_end,
+    segment_2_start,
+    segment_2_end,
+    segment_3_start,
+    segment_3_end,
+    linked_profile_id,
+):
+    """
     Encodes a set-time-profile request.
 
         Parameters:
@@ -519,7 +536,7 @@ def set_time_profile_request(controller, profile_id, start_date, end_date, monda
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -573,7 +590,7 @@ def set_time_profile_request(controller, profile_id, start_date, end_date, monda
 
 
 def delete_all_time_profiles_request(controller):
-    '''
+    """
     Encodes a delete-all-time-profiles request.
 
         Parameters:
@@ -581,21 +598,35 @@ def delete_all_time_profiles_request(controller):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
     packet[1] = codec.CLEAR_TIME_PROFILES
 
     pack_uint32(controller, packet, 4)
-    pack_uint32(0x55aaaa55, packet, 8)
+    pack_uint32(0x55AAAA55, packet, 8)
 
     return packet
 
 
-def add_task_request(controller, start_date, end_date, monday, tuesday, wednesday, thursday, friday, saturday, sunday,
-                     start_time, door, task_type, more_cards):
-    '''
+def add_task_request(
+    controller,
+    start_date,
+    end_date,
+    monday,
+    tuesday,
+    wednesday,
+    thursday,
+    friday,
+    saturday,
+    sunday,
+    start_time,
+    door,
+    task_type,
+    more_cards,
+):
+    """
     Encodes an add-task request.
 
         Parameters:
@@ -629,7 +660,7 @@ def add_task_request(controller, start_date, end_date, monday, tuesday, wednesda
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -654,7 +685,7 @@ def add_task_request(controller, start_date, end_date, monday, tuesday, wednesda
 
 
 def refresh_tasklist_request(controller):
-    '''
+    """
     Encodes a refresh-tasklist request.
 
         Parameters:
@@ -662,20 +693,20 @@ def refresh_tasklist_request(controller):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
     packet[1] = codec.REFRESH_TASKLIST
 
     pack_uint32(controller, packet, 4)
-    pack_uint32(0x55aaaa55, packet, 8)
+    pack_uint32(0x55AAAA55, packet, 8)
 
     return packet
 
 
 def clear_tasklist_request(controller):
-    '''
+    """
     Encodes a clear-tasklist request.
 
         Parameters:
@@ -683,20 +714,20 @@ def clear_tasklist_request(controller):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
     packet[1] = codec.CLEAR_TASKLIST
 
     pack_uint32(controller, packet, 4)
-    pack_uint32(0x55aaaa55, packet, 8)
+    pack_uint32(0x55AAAA55, packet, 8)
 
     return packet
 
 
 def set_pc_control_request(controller, enable):
-    '''
+    """
     Encodes a set-pc-control request.
 
         Parameters:
@@ -705,21 +736,21 @@ def set_pc_control_request(controller, enable):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
     packet[1] = codec.SET_PC_CONTROL
 
     pack_uint32(controller, packet, 4)
-    pack_uint32(0x55aaaa55, packet, 8)
+    pack_uint32(0x55AAAA55, packet, 8)
     pack_bool(enable, packet, 12)
 
     return packet
 
 
 def set_interlock_request(controller, interlock):
-    '''
+    """
     Encodes a set-interlock request.
 
         Parameters:
@@ -734,7 +765,7 @@ def set_interlock_request(controller, interlock):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -747,7 +778,7 @@ def set_interlock_request(controller, interlock):
 
 
 def activate_keypads_request(controller, reader1, reader2, reader3, reader4):
-    '''
+    """
     Encodes an activate-keypads request.
 
         Parameters:
@@ -759,7 +790,7 @@ def activate_keypads_request(controller, reader1, reader2, reader3, reader4):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -775,7 +806,7 @@ def activate_keypads_request(controller, reader1, reader2, reader3, reader4):
 
 
 def set_door_passcodes_request(device_id, door, passcode1, passcode2, passcode3, passcode4):
-    '''
+    """
     Encodes a set-door-passcodes request.
 
         Parameters:
@@ -788,7 +819,7 @@ def set_door_passcodes_request(device_id, door, passcode1, passcode2, passcode3,
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -805,7 +836,7 @@ def set_door_passcodes_request(device_id, door, passcode1, passcode2, passcode3,
 
 
 def get_antipassback_request(controller):
-    '''
+    """
     Encodes a get-antipassback request.
 
         Parameters:
@@ -813,7 +844,7 @@ def get_antipassback_request(controller):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -825,7 +856,7 @@ def get_antipassback_request(controller):
 
 
 def set_antipassback_request(controller, antipassback):
-    '''
+    """
     Encodes a set-antipassback request.
 
         Parameters:
@@ -839,7 +870,7 @@ def set_antipassback_request(controller, antipassback):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -852,7 +883,7 @@ def set_antipassback_request(controller, antipassback):
 
 
 def restore_default_parameters_request(controller):
-    '''
+    """
     Encodes a restore-default-parameters request.
 
         Parameters:
@@ -860,110 +891,110 @@ def restore_default_parameters_request(controller):
 
         Returns:
             64 byte UDP packet.
-    '''
+    """
     packet = bytearray(64)
 
     packet[0] = codec.SOM
     packet[1] = codec.RESTORE_DEFAULT_PARAMETERS
 
     pack_uint32(controller, packet, 4)
-    pack_uint32(0x55aaaa55, packet, 8)
+    pack_uint32(0x55AAAA55, packet, 8)
 
     return packet
 
 
 def pack_uint8(v, packet, offset):
-    '''
+    """
     'in-place' packs a uint8 value as a byte into the packet at the offset.
 
         Parameters:
            v      (uint8)      uint8 value to encode.
            packet (bytearray)  64 byte array.
            offset (int)        Value location in array.
-    '''
+    """
     packet[offset] = v
 
 
 def pack_uint16(v, packet, offset):
-    '''
-    'in-place' packs a uint16 value as a 2-byte little endian value into the packet 
+    """
+    'in-place' packs a uint16 value as a 2-byte little endian value into the packet
     at the offset.
 
         Parameters:
            v      (uint16)     uint16 value to encode.
            packet (bytearray)  64 byte array.
            offset (int)        Value location in array.
-    '''
-    struct.pack_into('<H', packet, offset, v)
+    """
+    struct.pack_into("<H", packet, offset, v)
 
 
 def pack_uint32(v, packet, offset):
-    '''
-    'in-place' packs a uint16 value as a 4-byte little endian value into the packet 
+    """
+    'in-place' packs a uint16 value as a 4-byte little endian value into the packet
     at the offset.
 
         Parameters:
            v      (uint32)     uint32 value to encode.
            packet (bytearray)  64 byte array.
            offset (int)        Value location in array.
-    '''
-    struct.pack_into('<L', packet, offset, v)
+    """
+    struct.pack_into("<L", packet, offset, v)
 
 
 def pack_IPv4(v, packet, offset):
-    '''
+    """
     'in-place' packs an IPv4Address value 4-byte address into the packet at the offset.
 
         Parameters:
            v      (IPv4Address)  IP address to encode.
            packet (bytearray)    64 byte array.
            offset (int)          Value location in array.
-    '''
-    packet[offset:offset + 4] = v.packed
+    """
+    packet[offset : offset + 4] = v.packed
 
 
 def pack_date(v, packet, offset):
-    '''
+    """
     'in-place' packs a date value as a 4-byte BCD encoded YYYYMMDD value into the packet at the offset.
 
         Parameters:
            v      (date)       Date value to encode.
            packet (bytearray)  64 byte array.
            offset (int)        Value location in array.
-    '''
-    bcd = f'{v:%Y%m%d}'
-    packet[offset:offset + 4] = bytes.fromhex(bcd)
+    """
+    bcd = f"{v:%Y%m%d}"
+    packet[offset : offset + 4] = bytes.fromhex(bcd)
 
 
 def pack_datetime(v, packet, offset):
-    '''
-    'in-place' packs a date value as a 7s-byte BCD encoded YYYYMMDDHHmmss value into the packet at 
+    """
+    'in-place' packs a date value as a 7s-byte BCD encoded YYYYMMDDHHmmss value into the packet at
     the offset.
 
         Parameters:
            v      (datetime)   Date and time value to encode.
            packet (bytearray)  64 byte array.
            offset (int)        Value location in array.
-    '''
-    bcd = f'{v:%Y%m%d%H%M%S}'
-    packet[offset:offset + 7] = bytes.fromhex(bcd)
+    """
+    bcd = f"{v:%Y%m%d%H%M%S}"
+    packet[offset : offset + 7] = bytes.fromhex(bcd)
 
 
 def pack_HHmm(v, packet, offset):
-    '''
+    """
     'in-place' packs a short time value as a 2-byte BCD encoded HHmm value into the packet at the offset.
 
         Parameters:
            v      (time)       Time value to encode. Only the hours and minutes are encoded.
            packet (bytearray)  64 byte array.
            offset (int)        Value location in array.
-    '''
-    bcd = f'{v:%H%M}'
-    packet[offset:offset + 2] = bytes.fromhex(bcd)
+    """
+    bcd = f"{v:%H%M}"
+    packet[offset : offset + 2] = bytes.fromhex(bcd)
 
 
 def pack_bool(v, packet, offset):
-    '''
+    """
     'in-place' packs a boolean value as a byte value into the packet at the offset. False is encoded
     as 0, True as 1.
 
@@ -971,19 +1002,19 @@ def pack_bool(v, packet, offset):
            v      (bool)       Boolean value to encode.
            packet (bytearray)  64 byte array.
            offset (int)        Value location in array.
-    '''
+    """
     packet[offset] = 0x00 if not v else 0x01
 
 
 def pack_pin(v, packet, offset):
-    '''
+    """
     'in-place' packs a 24-bit PIN value as a 3-byte little-endian value into the packet at the offset.
 
         Parameters:
            v      (uint24)     24-bit PIN value to encode.
            packet (bytearray)  64 byte array.
            offset (int)        Value location in array.
-    '''
-    packet[offset] = (v >> 0) & 0x00ff
-    packet[offset + 1] = (v >> 8) & 0x0ff
-    packet[offset + 2] = (v >> 16) & 0x0ff
+    """
+    packet[offset] = (v >> 0) & 0x00FF
+    packet[offset + 1] = (v >> 8) & 0x0FF
+    packet[offset + 2] = (v >> 16) & 0x0FF

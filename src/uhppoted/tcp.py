@@ -1,9 +1,9 @@
-'''
+"""
 UHPPOTE TCP communications wrapper.
 
-Implements the functionality to send and receive 64 byte TCP packets to/from a UHPPOTE 
+Implements the functionality to send and receive 64 byte TCP packets to/from a UHPPOTE
 access controller.
-'''
+"""
 
 import socket
 import struct
@@ -16,8 +16,8 @@ from . import net
 
 class TCP:
 
-    def __init__(self, bind='0.0.0.0', debug=False):
-        '''
+    def __init__(self, bind="0.0.0.0", debug=False):
+        """
         Initialises a TCP communications wrapper with the bind address.
 
             Parameters:
@@ -28,14 +28,14 @@ class TCP:
                Initialised TCP object.
 
             Raises:
-               Exception  If any of the supplied IPv4 values cannot be translated to a valid IPv4 
+               Exception  If any of the supplied IPv4 values cannot be translated to a valid IPv4
                           address:port combination.
-        '''
+        """
         self._bind = (bind, 0)
         self._debug = debug
 
     def send(self, request, dest_addr, timeout=2.5):
-        '''
+        """
         Binds to the bind address from the constructor and connects to the access controller after which it sends
         the request and waits 'timeout' seconds for the reply (if any).
 
@@ -50,10 +50,10 @@ class TCP:
 
             Raises:
                Error  For any socket related errors.
-        '''
+        """
         self.dump(request)
 
-        addr = net.resolve(f'{dest_addr}')
+        addr = net.resolve(f"{dest_addr}")
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, net.WRITE_TIMEOUT)
@@ -71,7 +71,7 @@ class TCP:
                 return _read(sock, timeout=timeout, debug=self._debug)
 
     def dump(self, packet):
-        '''
+        """
         Prints a packet to the console as a formatted hexadecimal string if debug was enabled in the
         constructor.
 
@@ -80,7 +80,7 @@ class TCP:
 
             Returns:
                None.
-        '''
+        """
         if self._debug:
             net.dump(packet)
 
@@ -89,10 +89,10 @@ def is_INADDR_ANY(addr):
     if addr == None:
         return True
 
-    if f'{addr}' == '':
+    if f"{addr}" == "":
         return True
 
-    if addr == (('0.0.0.0', 0)):
+    if addr == (("0.0.0.0", 0)):
         return True
 
     return False
@@ -100,7 +100,7 @@ def is_INADDR_ANY(addr):
 
 # TODO convert to asyncio
 def _read(sock, timeout=2.5, debug=False):
-    '''
+    """
     Waits 2.5 seconds for a single 64 byte packet to be received on the socket. Prints the packet to the console
     if debug is True.
 
@@ -111,7 +111,7 @@ def _read(sock, timeout=2.5, debug=False):
 
         Returns:
             Received 64 byte UDP packet (or None).
-    '''
+    """
     time_limit = net.timeout_to_seconds(timeout)
 
     sock.settimeout(time_limit)

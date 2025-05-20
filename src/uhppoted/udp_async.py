@@ -1,9 +1,9 @@
-'''
+"""
 UHPPOTE UDP asynchronous communications wrapper.
 
-Implements the functionality to send and receive 64 byte UDP packets to/from a UHPPOTE 
+Implements the functionality to send and receive 64 byte UDP packets to/from a UHPPOTE
 access controller.
-'''
+"""
 
 import asyncio
 import socket
@@ -72,9 +72,9 @@ class SendProtocol(asyncio.Protocol):
         try:
             return await asyncio.wait_for(self._done, timeout)
         except asyncio.TimeoutError:
-            raise TimeoutError('UDP request timeout')
+            raise TimeoutError("UDP request timeout")
         except ConnectionResetError:
-            raise ConnectionResetError('UDP connection reset')
+            raise ConnectionResetError("UDP connection reset")
 
 
 class EventProtocol(asyncio.DatagramProtocol):
@@ -101,8 +101,8 @@ class EventProtocol(asyncio.DatagramProtocol):
 
 class UDPAsync:
 
-    def __init__(self, bind='0.0.0.0', broadcast='255.255.255.255:60000', listen="0.0.0.0:60001", debug=False):
-        '''
+    def __init__(self, bind="0.0.0.0", broadcast="255.255.255.255:60000", listen="0.0.0.0:60001", debug=False):
+        """
         Initialises an asynchronous UDP communications wrapper with the bind address, broadcast address
         and listen address.
 
@@ -117,16 +117,16 @@ class UDPAsync:
                Initialised UDP object.
 
             Raises:
-               Exception  If any of the supplied IPv4 values cannot be translated to a valid IPv4 
+               Exception  If any of the supplied IPv4 values cannot be translated to a valid IPv4
                           address:port combination.
-        '''
+        """
         self._bind = (bind, 0)
         self._broadcast = net.resolve(broadcast)
         self._listen = net.resolve(listen)
         self._debug = debug
 
     async def broadcast(self, request, timeout=2.5):
-        '''
+        """
         Binds to the bind address from the constructor and then broadcasts a UDP request to the broadcast
         address from the constructor and then waits 'timeout' seconds for the replies from any reponding
         access controllers.
@@ -140,7 +140,7 @@ class UDPAsync:
 
             Raises:
                Error  For any socket related errors.
-        '''
+        """
         self.dump(request)
 
         loop = asyncio.get_running_loop()
@@ -148,7 +148,8 @@ class UDPAsync:
         transport, protocol = await loop.create_datagram_endpoint(
             lambda: BroadcastProtocol(request, self._broadcast, self._debug),
             local_addr=self._bind,
-            allow_broadcast=True)
+            allow_broadcast=True,
+        )
 
         try:
             return await protocol.run(timeout)
@@ -156,7 +157,7 @@ class UDPAsync:
             transport.close()
 
     async def send(self, request, dest_addr=None, timeout=2.5):
-        '''
+        """
         Binds to the bind address from the constructor and then broadcasts a UDP request to the broadcast,
         and then waits 'timeout seconds for a reply from the destination access controllers.
 
@@ -171,22 +172,23 @@ class UDPAsync:
 
             Raises:
                Error  For any socket related errors.
-        '''
+        """
         self.dump(request)
 
         loop = asyncio.get_running_loop()
 
         if dest_addr is None:
             transport, protocol = await loop.create_datagram_endpoint(
-                lambda: SendProtocol(request, self._broadcast, self._debug),
-                local_addr=self._bind,
-                allow_broadcast=True)
+                lambda: SendProtocol(request, self._broadcast, self._debug), local_addr=self._bind, allow_broadcast=True
+            )
         else:
-            addr = net.resolve(f'{dest_addr}')
-            transport, protocol = await loop.create_datagram_endpoint(lambda: SendProtocol(request, addr, self._debug),
-                                                                      local_addr=self._bind,
-                                                                      remote_addr=addr,
-                                                                      allow_broadcast=True)
+            addr = net.resolve(f"{dest_addr}")
+            transport, protocol = await loop.create_datagram_endpoint(
+                lambda: SendProtocol(request, addr, self._debug),
+                local_addr=self._bind,
+                remote_addr=addr,
+                allow_broadcast=True,
+            )
 
         try:
             return await protocol.run(timeout)
@@ -194,12 +196,12 @@ class UDPAsync:
             transport.close()
 
     async def listen(self, onEvent):
-        '''
+        """
         Binds to the listen address from the constructor and invokes the events handler for
         any received 64 byte UDP packets. Invalid'ish packets are silently discarded.
 
             Parameters:
-               onEvent  (function)  Handler function for received events, with a function signature 
+               onEvent  (function)  Handler function for received events, with a function signature
                                     f(packet).
 
             Returns:
@@ -207,7 +209,7 @@ class UDPAsync:
 
             Raises:
                Error  For any socket related errors.
-        '''
+        """
         loop = asyncio.get_running_loop()
 
         transport, protocol = await loop.create_datagram_endpoint(
@@ -224,7 +226,7 @@ class UDPAsync:
             transport.close()
 
     def dump(self, packet):
-        '''
+        """
         Prints a packet to the console as a formatted hexadecimal string if debug was enabled in the
         constructor.
 
@@ -233,6 +235,6 @@ class UDPAsync:
 
             Returns:
                None.
-        '''
+        """
         if self._debug:
             net.dump(packet)

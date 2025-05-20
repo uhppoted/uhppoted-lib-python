@@ -12,9 +12,9 @@ import time
 
 from contextlib import suppress
 
-if os.environ.get('UHPPOTED_ENV', '') == 'DEV':
+if os.environ.get("UHPPOTED_ENV", "") == "DEV":
     root = pathlib.Path(__file__).resolve().parents[2]
-    sys.path.append(os.path.join(root, 'src'))
+    sys.path.append(os.path.join(root, "src"))
 
 from uhppoted import uhppote_async as uhppote
 
@@ -23,12 +23,14 @@ QUEUE_SIZE = 8
 
 async def main():
     controllers = [405419896, 303986753, 201020304]  # controller serial numbers
-    host_addr = ipaddress.IPv4Address('192.168.1.100')  # IPv4 address of host machine
+    host_addr = ipaddress.IPv4Address("192.168.1.100")  # IPv4 address of host machine
     host_port = 60001  # port on which to listen for events
 
-    bind_addr = '0.0.0.0'  # either INADDR_ANY (0.0.0.0) or the host IPv4 address
-    broadcast_addr = '255.255.255.255:60000'  # either the broadcast address for INADDR_ANY or the host IP broadcast address
-    listen_addr = f'0.0.0.0:{host_port}'  # either INADDR_ANY (0.0.0.0) or the host IP IPv4 address
+    bind_addr = "0.0.0.0"  # either INADDR_ANY (0.0.0.0) or the host IPv4 address
+    broadcast_addr = (
+        "255.255.255.255:60000"  # either the broadcast address for INADDR_ANY or the host IP broadcast address
+    )
+    listen_addr = f"0.0.0.0:{host_port}"  # either INADDR_ANY (0.0.0.0) or the host IP IPv4 address
     debug = False
 
     try:
@@ -56,7 +58,7 @@ async def main():
 
     except Exception as x:
         print()
-        print(f'*** ERROR  {x}')
+        print(f"*** ERROR  {x}")
         print()
 
 
@@ -69,7 +71,7 @@ async def record_special_events(u, controller):
 
 
 async def listen(u, q):
-    print(f'INFO   listening for events')
+    print(f"INFO   listening for events")
 
     close = asyncio.Event()
     #   task = asyncio.create_task(u.listen(lambda e: on_event(e, q)))
@@ -91,21 +93,21 @@ async def listen(u, q):
 # 'sync' event handling
 def on_event(event, q):
     if event != None:
-        print(f'DEBUG  event queue: {q.qsize()} entries')
+        print(f"DEBUG  event queue: {q.qsize()} entries")
         if q.qsize() < QUEUE_SIZE:
             asyncio.create_task(q.put(event))
         else:
-            print(f'WARN   *** event queue full - discarding event {event.event_index}')
+            print(f"WARN   *** event queue full - discarding event {event.event_index}")
 
 
 # 'async' event handling
 async def on_event_async(event, q):
     if event != None:
-        print(f'DEBUG  event queue: {q.qsize()} entries')
+        print(f"DEBUG  event queue: {q.qsize()} entries")
         if q.qsize() < QUEUE_SIZE:
             await q.put(event)
         else:
-            print(f'WARN   *** event queue full - discarding event {event.event_index}')
+            print(f"WARN   *** event queue full - discarding event {event.event_index}")
 
 
 async def process_events(q):
@@ -115,10 +117,10 @@ async def process_events(q):
 
 
 async def process_event(event):
-    print(f'INFO   processing event {event.event_index}')
+    print(f"INFO   processing event {event.event_index}")
     pprint.pprint(event.__dict__, indent=2, width=1)
     await asyncio.sleep(5)  # simulate time consuming event processing
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     asyncio.run(main())

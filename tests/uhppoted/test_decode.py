@@ -1,8 +1,8 @@
-'''
+"""
 UHPPOTE request packet decoder unit tests.
 
 Tests the packet decoding functions.
-'''
+"""
 
 import unittest
 import datetime
@@ -14,9 +14,9 @@ from uhppoted import decode
 class TestDecode(unittest.TestCase):
 
     def test_get_controller_response(self):
-        '''
+        """
         Tests a valid get-controller response.
-        '''
+        """
         # yapf: disable
         packet = bytearray([
                   0x17, 0x94, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0xc0, 0xa8, 0x01, 0x64, 0xff, 0xff, 0xff, 0x00,
@@ -29,17 +29,17 @@ class TestDecode(unittest.TestCase):
         response = decode.get_controller_response(packet)
 
         self.assertEqual(response.controller, 405419896)
-        self.assertEqual(response.ip_address, IPv4Address('192.168.1.100'))
-        self.assertEqual(response.subnet_mask, IPv4Address('255.255.255.0'))
-        self.assertEqual(response.gateway, IPv4Address('192.168.1.1'))
-        self.assertEqual(response.mac_address, '00:12:23:34:45:56')
-        self.assertEqual(response.version, 'v8.92')
+        self.assertEqual(response.ip_address, IPv4Address("192.168.1.100"))
+        self.assertEqual(response.subnet_mask, IPv4Address("255.255.255.0"))
+        self.assertEqual(response.gateway, IPv4Address("192.168.1.1"))
+        self.assertEqual(response.mac_address, "00:12:23:34:45:56")
+        self.assertEqual(response.version, "v8.92")
         self.assertEqual(response.date, datetime.date(2018, 11, 5))
 
     def test_decode_get_listener_response(self):
-        '''
+        """
         Tests decoding a valid get-listener response.
-        '''
+        """
         # yapf: disable
         packet = bytearray([
                   0x17, 0x92, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0xc0, 0xa8, 0x01, 0x64, 0x61, 0xea, 0x0f, 0x00,
@@ -52,14 +52,14 @@ class TestDecode(unittest.TestCase):
         response = decode.get_listener_response(packet)
 
         self.assertEqual(response.controller, 405419896)
-        self.assertEqual(response.address, IPv4Address('192.168.1.100'))
+        self.assertEqual(response.address, IPv4Address("192.168.1.100"))
         self.assertEqual(response.port, 60001)
         self.assertEqual(response.interval, 15)
 
     def test_get_status_response(self):
-        '''
+        """
         Tests a valid get-status response.
-        '''
+        """
         # yapf: disable
         packet = bytearray([
             0x17, 0x20, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0x4e, 0x00, 0x00, 0x00, 0x02, 0x01, 0x03, 0x01,
@@ -97,9 +97,9 @@ class TestDecode(unittest.TestCase):
         self.assertEqual(response.sequence_no, 0)
 
     def test_get_status_response_with_no_event(self):
-        '''
+        """
         Tests a valid get-status response with no event information in the response.
-        '''
+        """
         # yapf: disable
         packet = bytearray([
                   0x17, 0x20, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -137,9 +137,9 @@ class TestDecode(unittest.TestCase):
         self.assertEqual(response.sequence_no, 0)
 
     def test_get_status_response_with_invalid_event_timestamp(self):
-        '''
+        """
         Tests a valid get-status response.
-        '''
+        """
         # yapf: disable
         packet = bytearray([
             0x17, 0x20, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0x4e, 0x00, 0x00, 0x00, 0x02, 0x01, 0x03, 0x01,
@@ -177,9 +177,9 @@ class TestDecode(unittest.TestCase):
         self.assertEqual(response.sequence_no, 0)
 
     def test_decode_get_time_response(self):
-        '''
+        """
         Tests a get-time response with an invalid date/time.
-        '''
+        """
         # yapf: disable
         packet = bytearray([
                   0x17, 0x32, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0x20, 0x23, 0x01, 0x02, 0x12, 0x34, 0x56, 0x00,
@@ -195,9 +195,9 @@ class TestDecode(unittest.TestCase):
         self.assertEqual(response.datetime, datetime.datetime(2023, 1, 2, 12, 34, 56))
 
     def test_get_time_response_with_invalid_datetime(self):
-        '''
+        """
         Tests a get-time response with an invalid date/time.
-        '''
+        """
         # yapf: disable
         packet = bytearray([
                   0x17, 0x32, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -213,9 +213,9 @@ class TestDecode(unittest.TestCase):
         self.assertEqual(response.datetime, None)
 
     def test_get_card_response_with_invalid_dates(self):
-        '''
+        """
         Tests a get-card response with invalid start/end dates.
-        '''
+        """
         # yapf: disable
         packet = bytearray([
                   0x17, 0x5a, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0xa0, 0x7a, 0x99, 0x00, 0x20, 0x00, 0x00, 0x00,
@@ -238,9 +238,9 @@ class TestDecode(unittest.TestCase):
         self.assertEqual(response.pin, 0)
 
     def test_get_card_by_index_response_with_invalid_dates(self):
-        '''
+        """
         Tests a get-card-by-index response with invalid start/end dates.
-        '''
+        """
         # yapf: disable
         packet = bytearray([
                   0x17, 0x5c, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0xa0, 0x7a, 0x99, 0x00, 0x20, 0x00, 0x00, 0x00,
@@ -263,9 +263,9 @@ class TestDecode(unittest.TestCase):
         self.assertEqual(response.pin, 0)
 
     def test_get_event_response_with_invalid_timestamp(self):
-        '''
+        """
         Tests a get-event response with an invalid timestamp.
-        '''
+        """
         # yapf: disable
         packet = bytearray([
                   0x17, 0xb0, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0x11, 0x27, 0x00, 0x00, 0x20, 0x01, 0x01, 0x01,
@@ -288,9 +288,9 @@ class TestDecode(unittest.TestCase):
         self.assertEqual(response.reason, 44)
 
     def test_get_time_profile_response_with_invalid_dates(self):
-        '''
+        """
         Tests a get-time-profile response with an invalid dates.
-        '''
+        """
         # yapf: disable
         packet = bytearray([
                   0x17, 0x98, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0x1d, 0x20, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00,
@@ -322,9 +322,9 @@ class TestDecode(unittest.TestCase):
         self.assertEqual(response.linked_profile_id, 3)
 
     def test_decode_restore_default_parameters_response(self):
-        '''
+        """
         Tests a restore-default-parameters response.
-        '''
+        """
         # yapf: disable
         packet = bytearray([
                   0x17, 0xc8, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -341,9 +341,9 @@ class TestDecode(unittest.TestCase):
 
     # Ref. https://github.com/uhppoted/uhppoted-lib-python/issues/3
     def test_listen_event(self):
-        '''
+        """
         Tests a listen event.
-        '''
+        """
         # yapf: disable
         packet = bytearray([
             0x17, 0x20, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0x46, 0x00, 0x00, 0x00, 0x02, 0x01, 0x03, 0x01,
@@ -366,7 +366,7 @@ class TestDecode(unittest.TestCase):
         self.assertEqual(event.door_2_button, False)
         self.assertEqual(event.door_3_button, True)
         self.assertEqual(event.door_4_button, True)
-        self.assertEqual(event.relays, 0x0a)
+        self.assertEqual(event.relays, 0x0A)
         self.assertEqual(event.inputs, 0x05)
         self.assertEqual(event.system_error, 3)
         self.assertEqual(event.special_info, 39)
@@ -381,9 +381,9 @@ class TestDecode(unittest.TestCase):
         self.assertEqual(event.sequence_no, 123)
 
     def test_get_antipassback_response(self):
-        '''
+        """
         Tests a valid get-antipassback response.
-        '''
+        """
         # yapf: disable
         packet = bytearray([
                   0x17, 0x86, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -399,9 +399,9 @@ class TestDecode(unittest.TestCase):
         self.assertEqual(response.antipassback, 2)
 
     def test_set_antipassback_response(self):
-        '''
+        """
         Tests a valid set-antipassback response.
-        '''
+        """
         # yapf: disable
         packet = bytearray([
                   0x17, 0x84, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -417,9 +417,9 @@ class TestDecode(unittest.TestCase):
         self.assertEqual(response.ok, True)
 
     def test_restore_default_parameters_response(self):
-        '''
+        """
         Tests a valid restore-default-parameters response.
-        '''
+        """
         # yapf: disable
         packet = bytearray([
                   0x17, 0xc8, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -435,5 +435,5 @@ class TestDecode(unittest.TestCase):
         self.assertEqual(response.reset, True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

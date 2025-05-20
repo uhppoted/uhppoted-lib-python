@@ -1,9 +1,9 @@
-'''
+"""
 UHPPOTE TCP asynchronous communications wrapper.
 
-Implements the functionality to send and receive 64 byte TCP packets to/from a UHPPOTE 
+Implements the functionality to send and receive 64 byte TCP packets to/from a UHPPOTE
 access controller.
-'''
+"""
 
 import asyncio
 import socket
@@ -52,17 +52,17 @@ class SendProtocol(asyncio.Protocol):
         try:
             return await asyncio.wait_for(self._done, timeout)
         except asyncio.TimeoutError:
-            raise TimeoutError('TCP request timeout')
+            raise TimeoutError("TCP request timeout")
         except ConnectionResetError:
-            raise ConnectionResetError('TCP connection reset')
+            raise ConnectionResetError("TCP connection reset")
         except EOFError:
-            raise EOFError('TCP connection closed')
+            raise EOFError("TCP connection closed")
 
 
 class TCPAsync:
 
-    def __init__(self, bind='0.0.0.0', debug=False):
-        '''
+    def __init__(self, bind="0.0.0.0", debug=False):
+        """
         Initialises an asynchronous TCP communications wrapper with the bind address.
 
             Parameters:
@@ -73,14 +73,14 @@ class TCPAsync:
                Initialised TCP object.
 
             Raises:
-               Exception  If any of the supplied IPv4 values cannot be translated to a valid IPv4 
+               Exception  If any of the supplied IPv4 values cannot be translated to a valid IPv4
                           address:port combination.
-        '''
+        """
         self._bind = (bind, 0)
         self._debug = debug
 
     async def send(self, request, dest_addr, timeout=2.5):
-        '''
+        """
         Binds to the bind address from the constructor and connects to the access controller after which it sends
         the request and waits 'timeout' seconds for the reply (if any).
 
@@ -95,19 +95,18 @@ class TCPAsync:
 
             Raises:
                Error  For any socket related errors.
-        '''
+        """
         self.dump(request)
 
-        (host, port) = net.resolve(f'{dest_addr}')
+        (host, port) = net.resolve(f"{dest_addr}")
         loop = asyncio.get_running_loop()
 
         if is_INADDR_ANY(self._bind):
             transport, protocol = await loop.create_connection(lambda: SendProtocol(request, self._debug), host, port)
         else:
-            transport, protocol = await loop.create_connection(lambda: SendProtocol(request, self._debug),
-                                                               host,
-                                                               port,
-                                                               local_addr=self._bind)
+            transport, protocol = await loop.create_connection(
+                lambda: SendProtocol(request, self._debug), host, port, local_addr=self._bind
+            )
 
         # FIXME sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
@@ -117,7 +116,7 @@ class TCPAsync:
             transport.close()
 
     def dump(self, packet):
-        '''
+        """
         Prints a packet to the console as a formatted hexadecimal string if debug was enabled in the
         constructor.
 
@@ -126,7 +125,7 @@ class TCPAsync:
 
             Returns:
                None.
-        '''
+        """
         if self._debug:
             net.dump(packet)
 
@@ -135,10 +134,10 @@ def is_INADDR_ANY(addr):
     if addr == None:
         return True
 
-    if f'{addr}' == '':
+    if f"{addr}" == "":
         return True
 
-    if addr == (('0.0.0.0', 0)):
+    if addr == (("0.0.0.0", 0)):
         return True
 
     return False

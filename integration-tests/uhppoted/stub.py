@@ -1,8 +1,8 @@
-'''
+"""
 'Canned' requests/responses for UHPPOTE integration tests.
-'''
+"""
 
-
+# fmt: off
 def messages():
     return [
         { # get-all-controllers
@@ -581,3 +581,4 @@ def messages():
         ],
       },
     ]
+# fmt: on

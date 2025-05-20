@@ -1,9 +1,9 @@
-'''
+"""
 UHPPOTE request packet decoder.
 
 Decodes a UHPPOTE access controller 64 byte UDP response packet into the
 equivalent Python object.
-'''
+"""
 
 import datetime
 import struct
@@ -50,7 +50,7 @@ from . import codec
 
 
 def get_controller_response(packet):
-    '''
+    """
     Decodes a get-controller response.
 
         Parameters:
@@ -62,15 +62,15 @@ def get_controller_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.GET_CONTROLLER:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return GetControllerResponse(
         unpack_uint32(packet, 4),
@@ -84,7 +84,7 @@ def get_controller_response(packet):
 
 
 def get_time_response(packet):
-    '''
+    """
     Decodes a get-time response.
 
         Parameters:
@@ -96,15 +96,15 @@ def get_time_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.GET_TIME:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return GetTimeResponse(
         unpack_uint32(packet, 4),
@@ -113,7 +113,7 @@ def get_time_response(packet):
 
 
 def set_time_response(packet):
-    '''
+    """
     Decodes a set-time response.
 
         Parameters:
@@ -125,15 +125,15 @@ def set_time_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.SET_TIME:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return SetTimeResponse(
         unpack_uint32(packet, 4),
@@ -142,7 +142,7 @@ def set_time_response(packet):
 
 
 def get_status_response(packet):
-    '''
+    """
     Decodes a get-status response.
 
         Parameters:
@@ -154,15 +154,15 @@ def get_status_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.GET_STATUS:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     event_index = unpack_uint32(packet, 8)
 
@@ -224,7 +224,7 @@ def get_status_response(packet):
 
 
 def get_listener_response(packet):
-    '''
+    """
     Decodes a get-listener response.
 
         Parameters:
@@ -236,15 +236,15 @@ def get_listener_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.GET_LISTENER:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return GetListenerResponse(
         unpack_uint32(packet, 4),
@@ -255,7 +255,7 @@ def get_listener_response(packet):
 
 
 def set_listener_response(packet):
-    '''
+    """
     Decodes a set-listener response.
 
         Parameters:
@@ -267,15 +267,15 @@ def set_listener_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.SET_LISTENER:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return SetListenerResponse(
         unpack_uint32(packet, 4),
@@ -284,7 +284,7 @@ def set_listener_response(packet):
 
 
 def get_door_control_response(packet):
-    '''
+    """
     Decodes a get-door-control response.
 
         Parameters:
@@ -296,15 +296,15 @@ def get_door_control_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.GET_DOOR:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return GetDoorControlResponse(
         unpack_uint32(packet, 4),
@@ -315,7 +315,7 @@ def get_door_control_response(packet):
 
 
 def set_door_control_response(packet):
-    '''
+    """
     Decodes a set-door-control response.
 
         Parameters:
@@ -327,15 +327,15 @@ def set_door_control_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.SET_DOOR:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return SetDoorControlResponse(
         unpack_uint32(packet, 4),
@@ -346,7 +346,7 @@ def set_door_control_response(packet):
 
 
 def open_door_response(packet):
-    '''
+    """
     Decodes an open-door response.
 
         Parameters:
@@ -358,15 +358,15 @@ def open_door_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.OPEN_DOOR:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return OpenDoorResponse(
         unpack_uint32(packet, 4),
@@ -375,7 +375,7 @@ def open_door_response(packet):
 
 
 def get_cards_response(packet):
-    '''
+    """
     Decodes a get-cards response.
 
         Parameters:
@@ -387,15 +387,15 @@ def get_cards_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.GET_CARDS:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return GetCardsResponse(
         unpack_uint32(packet, 4),
@@ -404,7 +404,7 @@ def get_cards_response(packet):
 
 
 def get_card_response(packet):
-    '''
+    """
     Decodes a get-card response.
 
         Parameters:
@@ -416,15 +416,15 @@ def get_card_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.GET_CARD:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return GetCardResponse(
         unpack_uint32(packet, 4),
@@ -440,7 +440,7 @@ def get_card_response(packet):
 
 
 def get_card_by_index_response(packet):
-    '''
+    """
     Decodes a get-card-by-index response.
 
         Parameters:
@@ -452,15 +452,15 @@ def get_card_by_index_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.GET_CARD_AT_INDEX:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return GetCardByIndexResponse(
         unpack_uint32(packet, 4),
@@ -476,7 +476,7 @@ def get_card_by_index_response(packet):
 
 
 def put_card_response(packet):
-    '''
+    """
     Decodes a put-card response.
 
         Parameters:
@@ -488,15 +488,15 @@ def put_card_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.PUT_CARD:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return PutCardResponse(
         unpack_uint32(packet, 4),
@@ -505,7 +505,7 @@ def put_card_response(packet):
 
 
 def delete_card_response(packet):
-    '''
+    """
     Decodes a delete-card response.
 
         Parameters:
@@ -517,15 +517,15 @@ def delete_card_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.DELETE_CARD:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return DeleteCardResponse(
         unpack_uint32(packet, 4),
@@ -534,7 +534,7 @@ def delete_card_response(packet):
 
 
 def delete_all_cards_response(packet):
-    '''
+    """
     Decodes a delete-all-cards response.
 
         Parameters:
@@ -546,15 +546,15 @@ def delete_all_cards_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.DELETE_ALL_CARDS:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return DeleteAllCardsResponse(
         unpack_uint32(packet, 4),
@@ -563,7 +563,7 @@ def delete_all_cards_response(packet):
 
 
 def get_event_response(packet):
-    '''
+    """
     Decodes a get-event response.
 
         Parameters:
@@ -575,15 +575,15 @@ def get_event_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.GET_EVENT:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return GetEventResponse(
         unpack_uint32(packet, 4),
@@ -599,7 +599,7 @@ def get_event_response(packet):
 
 
 def get_event_index_response(packet):
-    '''
+    """
     Decodes a get-event-index response.
 
         Parameters:
@@ -611,15 +611,15 @@ def get_event_index_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.GET_EVENT_INDEX:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return GetEventIndexResponse(
         unpack_uint32(packet, 4),
@@ -628,7 +628,7 @@ def get_event_index_response(packet):
 
 
 def set_event_index_response(packet):
-    '''
+    """
     Decodes a set-event-index response.
 
         Parameters:
@@ -640,15 +640,15 @@ def set_event_index_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.SET_EVENT_INDEX:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return SetEventIndexResponse(
         unpack_uint32(packet, 4),
@@ -657,7 +657,7 @@ def set_event_index_response(packet):
 
 
 def record_special_events_response(packet):
-    '''
+    """
     Decodes a record-special-events response.
 
         Parameters:
@@ -669,15 +669,15 @@ def record_special_events_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.RECORD_SPECIAL_EVENTS:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return RecordSpecialEventsResponse(
         unpack_uint32(packet, 4),
@@ -686,7 +686,7 @@ def record_special_events_response(packet):
 
 
 def get_time_profile_response(packet):
-    '''
+    """
     Decodes a get-time-profile response.
 
         Parameters:
@@ -698,15 +698,15 @@ def get_time_profile_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.GET_TIME_PROFILE:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return GetTimeProfileResponse(
         unpack_uint32(packet, 4),
@@ -731,7 +731,7 @@ def get_time_profile_response(packet):
 
 
 def set_time_profile_response(packet):
-    '''
+    """
     Decodes a set-time-profile response.
 
         Parameters:
@@ -743,15 +743,15 @@ def set_time_profile_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.SET_TIME_PROFILE:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return SetTimeProfileResponse(
         unpack_uint32(packet, 4),
@@ -760,7 +760,7 @@ def set_time_profile_response(packet):
 
 
 def delete_all_time_profiles_response(packet):
-    '''
+    """
     Decodes a delete-all-time-profiles response.
 
         Parameters:
@@ -772,15 +772,15 @@ def delete_all_time_profiles_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.CLEAR_TIME_PROFILES:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return DeleteAllTimeProfilesResponse(
         unpack_uint32(packet, 4),
@@ -789,7 +789,7 @@ def delete_all_time_profiles_response(packet):
 
 
 def add_task_response(packet):
-    '''
+    """
     Decodes an add-task response.
 
         Parameters:
@@ -801,15 +801,15 @@ def add_task_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.ADD_TASK:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return AddTaskResponse(
         unpack_uint32(packet, 4),
@@ -818,7 +818,7 @@ def add_task_response(packet):
 
 
 def refresh_tasklist_response(packet):
-    '''
+    """
     Decodes a refresh-tasklist response.
 
         Parameters:
@@ -830,15 +830,15 @@ def refresh_tasklist_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.REFRESH_TASKLIST:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return RefreshTasklistResponse(
         unpack_uint32(packet, 4),
@@ -847,7 +847,7 @@ def refresh_tasklist_response(packet):
 
 
 def clear_tasklist_response(packet):
-    '''
+    """
     Decodes a clear-tasklist response.
 
         Parameters:
@@ -859,15 +859,15 @@ def clear_tasklist_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.CLEAR_TASKLIST:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return ClearTasklistResponse(
         unpack_uint32(packet, 4),
@@ -876,7 +876,7 @@ def clear_tasklist_response(packet):
 
 
 def set_pc_control_response(packet):
-    '''
+    """
     Decodes a set-pc-control response.
 
         Parameters:
@@ -888,15 +888,15 @@ def set_pc_control_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.SET_PC_CONTROL:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return SetPcControlResponse(
         unpack_uint32(packet, 4),
@@ -905,7 +905,7 @@ def set_pc_control_response(packet):
 
 
 def set_interlock_response(packet):
-    '''
+    """
     Decodes a set-interlock response.
 
         Parameters:
@@ -917,15 +917,15 @@ def set_interlock_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.SET_INTERLOCK:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return SetInterlockResponse(
         unpack_uint32(packet, 4),
@@ -934,7 +934,7 @@ def set_interlock_response(packet):
 
 
 def activate_keypads_response(packet):
-    '''
+    """
     Decodes an activate-keypads response.
 
         Parameters:
@@ -946,15 +946,15 @@ def activate_keypads_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.ACTIVATE_KEYPADS:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return ActivateKeypadsResponse(
         unpack_uint32(packet, 4),
@@ -963,7 +963,7 @@ def activate_keypads_response(packet):
 
 
 def set_door_passcodes_response(packet):
-    '''
+    """
     Decodes a set-door-passcodes response.
 
         Parameters:
@@ -975,15 +975,15 @@ def set_door_passcodes_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.SET_DOOR_PASSCODES:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return SetDoorPasscodesResponse(
         unpack_uint32(packet, 4),
@@ -992,7 +992,7 @@ def set_door_passcodes_response(packet):
 
 
 def get_antipassback_response(packet):
-    '''
+    """
     Decodes a get-antipassback response.
 
         Parameters:
@@ -1004,15 +1004,15 @@ def get_antipassback_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.GET_ANTIPASSBACK:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return GetAntiPassbackResponse(
         unpack_uint32(packet, 4),
@@ -1021,7 +1021,7 @@ def get_antipassback_response(packet):
 
 
 def set_antipassback_response(packet):
-    '''
+    """
     Decodes a set-antipassback response.
 
         Parameters:
@@ -1033,21 +1033,21 @@ def set_antipassback_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.SET_ANTIPASSBACK:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return SetAntiPassbackResponse(unpack_uint32(packet, 4), unpack_bool(packet, 8))
 
 
 def restore_default_parameters_response(packet):
-    '''
+    """
     Decodes a restore-default-parameters response.
 
         Parameters:
@@ -1059,15 +1059,15 @@ def restore_default_parameters_response(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     if packet[0] != codec.SOM:
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.RESTORE_DEFAULT_PARAMETERS:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return RestoreDefaultParametersResponse(
         unpack_uint32(packet, 4),
@@ -1076,7 +1076,7 @@ def restore_default_parameters_response(packet):
 
 
 def event(packet):
-    '''
+    """
     Decodes an event packet.
 
         Parameters:
@@ -1088,16 +1088,16 @@ def event(packet):
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
                        the incorrect message type.
-    '''
+    """
     if len(packet) != 64:
-        raise ValueError(f'invalid reply packet length ({len(packet)})')
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
 
     # Ref. v6.62 firmware event
     if packet[0] != codec.SOM and (packet[0] != codec.SOM_v6_62 or packet[1] != codec.LISTEN_EVENT):
-        raise ValueError(f'invalid reply start of message byte ({packet[0]:02x})')
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
 
     if packet[1] != codec.LISTEN_EVENT:
-        raise ValueError(f'invalid reply function code ({packet[1]:02x})')
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     # yapf: disable
     return Event(
@@ -1130,7 +1130,7 @@ def event(packet):
 
 
 def unpack_uint8(packet, offset):
-    '''
+    """
     Unpacks the uint8 value from the packet at the offset.
 
         Parameters:
@@ -1139,12 +1139,12 @@ def unpack_uint8(packet, offset):
 
         Returns:
            uint8 value.
-    '''
+    """
     return packet[offset]
 
 
 def unpack_uint16(packet, offset):
-    '''
+    """
     Unpacks the 2-byte little endian uint16 value from the packet at the offset.
 
         Parameters:
@@ -1153,12 +1153,12 @@ def unpack_uint16(packet, offset):
 
         Returns:
            uint16 value.
-    '''
-    return struct.unpack_from('<H', packet, offset)[0]
+    """
+    return struct.unpack_from("<H", packet, offset)[0]
 
 
 def unpack_uint32(packet, offset):
-    '''
+    """
     Unpacks the 4-byte little endian uint32 value from the packet at the offset.
 
         Parameters:
@@ -1167,12 +1167,12 @@ def unpack_uint32(packet, offset):
 
         Returns:
            uint32 value.
-    '''
-    return struct.unpack_from('<L', packet, offset)[0]
+    """
+    return struct.unpack_from("<L", packet, offset)[0]
 
 
 def unpack_ipv4(packet, offset):
-    '''
+    """
     Unpacks the 4-byte IP address value from the packet at the offset.
 
         Parameters:
@@ -1181,12 +1181,12 @@ def unpack_ipv4(packet, offset):
 
         Returns:
            IPv4Address value.
-    '''
-    return IPv4Address(f'{packet[offset]}.{packet[offset+1]}.{packet[offset+2]}.{packet[offset+3]}')
+    """
+    return IPv4Address(f"{packet[offset]}.{packet[offset+1]}.{packet[offset+2]}.{packet[offset+3]}")
 
 
 def unpack_mac(packet, offset):
-    '''
+    """
     Unpacks the 6-byte MAC address value from the packet at the offset.
 
         Parameters:
@@ -1195,12 +1195,12 @@ def unpack_mac(packet, offset):
 
         Returns:
            MAC address as a colon-seperated hexadecimal string.
-    '''
-    return '{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}'.format(*packet[offset:offset + 7])
+    """
+    return "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}".format(*packet[offset : offset + 7])
 
 
 def unpack_version(packet, offset):
-    '''
+    """
     Unpacks the 2-byte BCD encoded version value from the packet at the offset.
 
         Parameters:
@@ -1209,12 +1209,12 @@ def unpack_version(packet, offset):
 
         Returns:
            Version string.
-    '''
-    return 'v{:x}.{:02x}'.format(*packet[offset:offset + 2])
+    """
+    return "v{:x}.{:02x}".format(*packet[offset : offset + 2])
 
 
 def unpack_date(packet, offset):
-    '''
+    """
     Unpacks the 4-byte BCD encoded YYYYMMDD value from the packet at the offset.
 
         Parameters:
@@ -1223,17 +1223,17 @@ def unpack_date(packet, offset):
 
         Returns:
            datetime value (or None if the date/time valid is invalid)
-    '''
-    bcd = '{:02x}{:02x}{:02x}{:02x}'.format(*packet[offset:offset + 4])
+    """
+    bcd = "{:02x}{:02x}{:02x}{:02x}".format(*packet[offset : offset + 4])
 
     try:
-        return datetime.datetime.strptime(bcd, '%Y%m%d').date()
+        return datetime.datetime.strptime(bcd, "%Y%m%d").date()
     except ValueError:
         return None
 
 
 def unpack_shortdate(packet, offset):
-    '''
+    """
     Unpacks the 3-byte BCD encoded YYMMDD value from the packet at the offset,
     automatically adding the CC value.
 
@@ -1243,17 +1243,17 @@ def unpack_shortdate(packet, offset):
 
         Returns:
            datetime value (or None if the date/time valid is invalid)
-    '''
-    bcd = '20{:02x}{:02x}{:02x}'.format(*packet[offset:offset + 3])
+    """
+    bcd = "20{:02x}{:02x}{:02x}".format(*packet[offset : offset + 3])
 
     try:
-        return datetime.datetime.strptime(bcd, '%Y%m%d').date()
+        return datetime.datetime.strptime(bcd, "%Y%m%d").date()
     except ValueError:
         return None
 
 
 def unpack_optional_date(packet, offset):
-    '''
+    """
     Unpacks the 4-byte BCD encoded YYYYMMDD value from the packet at the offset.
 
         Parameters:
@@ -1262,17 +1262,17 @@ def unpack_optional_date(packet, offset):
 
         Returns:
            datetime value (or None if the date/time valid is invalid)
-    '''
-    bcd = '{:02x}{:02x}{:02x}{:02x}'.format(*packet[offset:offset + 4])
+    """
+    bcd = "{:02x}{:02x}{:02x}{:02x}".format(*packet[offset : offset + 4])
 
     try:
-        return datetime.datetime.strptime(bcd, '%Y%m%d').date()
+        return datetime.datetime.strptime(bcd, "%Y%m%d").date()
     except ValueError:
         return None
 
 
 def unpack_datetime(packet, offset):
-    '''
+    """
     Unpacks the 7-byte BCD encoded YYYYMMDDHHmmss value from the packet at the offset.
 
         Parameters:
@@ -1281,17 +1281,17 @@ def unpack_datetime(packet, offset):
 
         Returns:
            datetime value (or None if the BCD value is not a valid date/time).
-    '''
-    bcd = '{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}'.format(*packet[offset:offset + 7])
+    """
+    bcd = "{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}".format(*packet[offset : offset + 7])
 
     try:
-        return datetime.datetime.strptime(bcd, '%Y%m%d%H%M%S')
+        return datetime.datetime.strptime(bcd, "%Y%m%d%H%M%S")
     except ValueError:
         return None
 
 
 def unpack_optional_datetime(packet, offset):
-    '''
+    """
     Unpacks the 7-byte BCD encoded YYYYMMDDHHmmss value from the packet at the offset.
 
         Parameters:
@@ -1300,17 +1300,17 @@ def unpack_optional_datetime(packet, offset):
 
         Returns:
            datetime value (or None if the BCD value is not a valid date/time).
-    '''
-    bcd = '{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}'.format(*packet[offset:offset + 7])
+    """
+    bcd = "{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}".format(*packet[offset : offset + 7])
 
     try:
-        return datetime.datetime.strptime(bcd, '%Y%m%d%H%M%S')
+        return datetime.datetime.strptime(bcd, "%Y%m%d%H%M%S")
     except ValueError:
         return None
 
 
 def unpack_time(packet, offset):
-    '''
+    """
     Unpacks the 3-byte BCD encoded HHmmss value from the packet at the offset.
 
         Parameters:
@@ -1319,17 +1319,17 @@ def unpack_time(packet, offset):
 
         Returns:
            datetime value (or None if the BCD value is not a valid date/time).
-    '''
-    bcd = '{:02x}{:02x}{:02x}'.format(*packet[offset:offset + 3])
+    """
+    bcd = "{:02x}{:02x}{:02x}".format(*packet[offset : offset + 3])
 
     try:
-        return datetime.datetime.strptime(bcd, '%H%M%S').time()
+        return datetime.datetime.strptime(bcd, "%H%M%S").time()
     except ValueError:
         return None
 
 
 def unpack_hhmm(packet, offset):
-    '''
+    """
     Unpacks the 2-byte BCD encoded HHmm value from the packet at the offset.
 
         Parameters:
@@ -1338,17 +1338,17 @@ def unpack_hhmm(packet, offset):
 
         Returns:
            datetime value (or None if the BCD value is not a valid date/time).
-    '''
-    bcd = '{:02x}{:02x}'.format(*packet[offset:offset + 2])
+    """
+    bcd = "{:02x}{:02x}".format(*packet[offset : offset + 2])
 
     try:
-        return datetime.datetime.strptime(bcd, '%H%M').time()
+        return datetime.datetime.strptime(bcd, "%H%M").time()
     except ValueError:
         return None
 
 
 def unpack_bool(packet, offset):
-    '''
+    """
     Unpacks the byte from the packet at the offset as a boolean value. 0 is translated
     to False and 'not zero' to True. The access controller should only fill this field
     with either a one or a zero.
@@ -1359,12 +1359,12 @@ def unpack_bool(packet, offset):
 
         Returns:
            datetime value.
-    '''
+    """
     return packet[offset] != 0x00
 
 
 def unpack_pin(packet, offset):
-    '''
+    """
     Unpacks the 3-byte PIN value from the packet at the offset.
 
         Parameters:
@@ -1373,11 +1373,11 @@ def unpack_pin(packet, offset):
 
         Returns:
            PIN  value.
-    '''
-    v = packet[offset + 2] & 0x0ff
+    """
+    v = packet[offset + 2] & 0x0FF
     v <<= 8
-    v |= packet[offset + 1] & 0x0ff
+    v |= packet[offset + 1] & 0x0FF
     v <<= 8
-    v |= packet[offset] & 0x00ff
+    v |= packet[offset] & 0x00FF
 
     return v

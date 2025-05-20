@@ -8,9 +8,9 @@ import sys
 import threading
 import time
 
-if os.environ.get('UHPPOTED_ENV', '') == 'DEV':
+if os.environ.get("UHPPOTED_ENV", "") == "DEV":
     root = pathlib.Path(__file__).resolve().parents[2]
-    sys.path.append(os.path.join(root, 'src'))
+    sys.path.append(os.path.join(root, "src"))
 
 from uhppoted import uhppote
 
@@ -19,12 +19,14 @@ QUEUE_SIZE = 8
 
 def main():
     controller = 405419896  # controller serial number
-    host_addr = ipaddress.IPv4Address('192.168.1.100')  # IPv4 address of host machine
+    host_addr = ipaddress.IPv4Address("192.168.1.100")  # IPv4 address of host machine
     host_port = 60001  # port on which to listen for events
 
-    bind_addr = '0.0.0.0'  # either INADDR_ANY (0.0.0.0) or the host IPv4 address
-    broadcast_addr = '255.255.255.255:60000'  # either the broadcast address for INADDR_ANY or the host IP broadcast address
-    listen_addr = f'0.0.0.0:{host_port}'  # either INADDR_ANY (0.0.0.0) or the host IP IPv4 address
+    bind_addr = "0.0.0.0"  # either INADDR_ANY (0.0.0.0) or the host IPv4 address
+    broadcast_addr = (
+        "255.255.255.255:60000"  # either the broadcast address for INADDR_ANY or the host IP broadcast address
+    )
+    listen_addr = f"0.0.0.0:{host_port}"  # either INADDR_ANY (0.0.0.0) or the host IP IPv4 address
     debug = False
 
     try:
@@ -41,7 +43,7 @@ def main():
         q = queue.Queue()
 
         # start processing thread
-        t = threading.Thread(target=process_events, name='processing', args=[q])
+        t = threading.Thread(target=process_events, name="processing", args=[q])
         t.daemon = True
         t.start()
 
@@ -50,7 +52,7 @@ def main():
 
     except Exception as x:
         print()
-        print(f'*** ERROR  {x}')
+        print(f"*** ERROR  {x}")
         print()
 
 
@@ -63,17 +65,17 @@ def record_special_events(u, controller):
 
 
 def listen(u, q):
-    print(f'INFO   listening for events')
+    print(f"INFO   listening for events")
     u.listen(lambda e: on_event(e, q))
 
 
 def on_event(event, q):
     if event != None:
-        print(f'DEBUG  event queue: {q.qsize()} entries')
+        print(f"DEBUG  event queue: {q.qsize()} entries")
         if q.qsize() < QUEUE_SIZE:
             q.put(event)
         else:
-            print(f'WARN   *** event queue full - discarding event {event.event_index}')
+            print(f"WARN   *** event queue full - discarding event {event.event_index}")
 
 
 def process_events(q):
@@ -83,10 +85,10 @@ def process_events(q):
 
 
 def process_event(event):
-    print(f'INFO   processing event {event.event_index}')
+    print(f"INFO   processing event {event.event_index}")
     pprint.pprint(event.__dict__, indent=2, width=1)
     time.sleep(5)  # simulate time consuming event processing
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -1,9 +1,9 @@
-'''
+"""
 UHPPOTE UDP communications wrapper.
 
-Implements the functionality to send and receive 64 byte UDP packets to/from a UHPPOTE 
+Implements the functionality to send and receive 64 byte UDP packets to/from a UHPPOTE
 access controller.
-'''
+"""
 
 import socket
 import struct
@@ -16,8 +16,8 @@ from . import net
 
 class UDP:
 
-    def __init__(self, bind='0.0.0.0', broadcast='255.255.255.255:60000', listen="0.0.0.0:60001", debug=False):
-        '''
+    def __init__(self, bind="0.0.0.0", broadcast="255.255.255.255:60000", listen="0.0.0.0:60001", debug=False):
+        """
         Initialises a UDP communications wrapper with the bind address, broadcast address and listen address.
 
             Parameters:
@@ -31,18 +31,18 @@ class UDP:
                Initialised UDP object.
 
             Raises:
-               Exception  If any of the supplied IPv4 values cannot be translated to a valid IPv4 
+               Exception  If any of the supplied IPv4 values cannot be translated to a valid IPv4
                           address:port combination.
-        '''
+        """
         self._bind = (bind, 0)
         self._broadcast = net.resolve(broadcast)
         self._listen = net.resolve(listen)
         self._debug = debug
 
     def broadcast(self, request, timeout=2.5):
-        '''
+        """
         Binds to the bind address from the constructor and then broadcasts a UDP request to the broadcast
-        address from the constructor and then waits 'timeout' seconds for the replies from any reponding access 
+        address from the constructor and then waits 'timeout' seconds for the replies from any reponding access
         controllers.
 
             Parameters:
@@ -54,7 +54,7 @@ class UDP:
 
             Raises:
                Error  For any socket related errors.
-        '''
+        """
         self.dump(request)
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
@@ -72,7 +72,7 @@ class UDP:
             sock.close()
 
     def send(self, request, dest_addr=None, timeout=2.5):
-        '''
+        """
         Binds to the bind address from the constructor and then broadcasts a UDP request to the broadcast,
         and then waits 'timeout' seconds for a reply from the destination access controllers.
 
@@ -87,7 +87,7 @@ class UDP:
 
             Raises:
                Error  For any socket related errors.
-        '''
+        """
         self.dump(request)
 
         # sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM | socket.SOCK_NONBLOCK)
@@ -102,7 +102,7 @@ class UDP:
             if dest_addr is None:
                 sock.sendto(request, self._broadcast)
             else:
-                addr = net.resolve(f'{dest_addr}')
+                addr = net.resolve(f"{dest_addr}")
                 sock.sendto(request, addr)
 
             if request[1] == 0x96:
@@ -113,12 +113,12 @@ class UDP:
             sock.close()
 
     def listen(self, onEvent):
-        '''
+        """
         Binds to the listen address from the constructor and invokes the events handler for
         any received 64 byte UDP packets. Invalid'ish packets are silently discarded.
 
             Parameters:
-               onEvent  (function)  Handler function for received events, with a function signature 
+               onEvent  (function)  Handler function for received events, with a function signature
                                     f(packet).
 
             Returns:
@@ -126,7 +126,7 @@ class UDP:
 
             Raises:
                Error  For any socket related errors.
-        '''
+        """
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
 
         try:
@@ -142,7 +142,7 @@ class UDP:
             sock.close()
 
     def dump(self, packet):
-        '''
+        """
         Prints a packet to the console as a formatted hexadecimal string if debug was enabled in the
         constructor.
 
@@ -151,14 +151,14 @@ class UDP:
 
             Returns:
                None.
-        '''
+        """
         if self._debug:
             net.dump(packet)
 
 
 # TODO convert to asyncio
 def _read(sock, timeout=2.5, debug=False):
-    '''
+    """
     Waits 2.5 seconds for a single 64 byte packet to be received on the socket. Prints the packet to the console
     if debug is True.
 
@@ -169,7 +169,7 @@ def _read(sock, timeout=2.5, debug=False):
 
         Returns:
             Received 64 byte UDP packet (or None).
-    '''
+    """
     time_limit = net.timeout_to_seconds(timeout)
 
     sock.settimeout(time_limit)
@@ -186,8 +186,8 @@ def _read(sock, timeout=2.5, debug=False):
 
 # TODO convert to asyncio
 def _read_all(sock, timeout=2.5, debug=False):
-    '''
-    Accumulates received 64 byte UDP packets, waiting up to 2.5 seconds for an incoming packet. Prints the 
+    """
+    Accumulates received 64 byte UDP packets, waiting up to 2.5 seconds for an incoming packet. Prints the
     packet to the console if debug is True.
 
         Parameters:
@@ -197,7 +197,7 @@ def _read_all(sock, timeout=2.5, debug=False):
 
         Returns:
             List of received 64 byte UDP packets (may be empty).
-    '''
+    """
     time_limit = net.timeout_to_seconds(timeout)
 
     sock.settimeout(time_limit)

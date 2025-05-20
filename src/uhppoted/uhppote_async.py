@@ -1,6 +1,6 @@
-'''
+"""
 Implements an async Python wrapper around the UHPPOTE TCP/IP access controller API.
-'''
+"""
 
 import asyncio
 
@@ -15,8 +15,8 @@ from .net import disambiguate
 
 class UhppoteAsync:
 
-    def __init__(self, bind='0.0.0.0', broadcast='255.255.255.255:60000', listen="0.0.0.0:60001", debug=False):
-        '''
+    def __init__(self, bind="0.0.0.0", broadcast="255.255.255.255:60000", listen="0.0.0.0:60001", debug=False):
+        """
         Initialises a UhppoteAsync object with the bind address, broadcast address and listen address.
 
             Parameters:
@@ -30,26 +30,26 @@ class UhppoteAsync:
                Initialised Uhppote object.
 
             Raises:
-               ValueError  If any of the supplied IPv4 values cannot be translated to a valid IPv4 
+               ValueError  If any of the supplied IPv4 values cannot be translated to a valid IPv4
                            address:port combination.
-        '''
+        """
         self._udp = udp.UDPAsync(bind, broadcast, listen, debug)
         self._tcp = tcp.TCPAsync(bind, debug)
 
     async def get_all_controllers(self, timeout=2.5):
-        '''
+        """
         Retrieves a list of all controllers accessible on the local LAN segment.
 
             Parameters:
               timeout (float)  Optional operation timeout (in seconds). Defaults to 2.5s.
 
             Returns:
-               []GetControllerResponse  List of get_controller_responses from access controllers 
+               []GetControllerResponse  List of get_controller_responses from access controllers
                                        on the local LAN segment.
 
             Raises:
                Exception  If any of the responses from the access controllers cannot be decoded.
-        '''
+        """
         request = encode.get_controller_request(0)
         replies = await self._udp.broadcast(request, timeout=timeout)
 
@@ -60,17 +60,17 @@ class UhppoteAsync:
         return list
 
     async def get_controller(self, controller, timeout=2.5):
-        '''
+        """
         Retrieves the controller information for an access controller.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
@@ -80,7 +80,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.get_controller_request(id)
         reply = await self._send(request, addr, timeout, protocol)
@@ -91,17 +91,17 @@ class UhppoteAsync:
         return None
 
     async def set_ip(self, controller, address, netmask, gateway, timeout=2.5):
-        '''
+        """
         Sets the controller IPv4 address, netmask and gateway address.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                address    (IPv4Address)  Controller IPv4 address.
@@ -114,7 +114,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the request failed for any reason.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.set_ip_request(id, address, netmask, gateway)
         reply = await self._send(request, addr, timeout, protocol)
@@ -122,17 +122,17 @@ class UhppoteAsync:
         return True
 
     async def get_time(self, controller, timeout=2.5):
-        '''
+        """
         Retrieves the access controller current date/time.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
@@ -142,7 +142,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.get_time_request(id)
         reply = await self._send(request, addr, timeout, protocol)
@@ -153,17 +153,17 @@ class UhppoteAsync:
         return None
 
     async def set_time(self, controller, datetime, timeout=2.5):
-        '''
+        """
         Sets the access controller current date/time.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                datetime   (dateime)  Date/time to set.
@@ -173,9 +173,9 @@ class UhppoteAsync:
                SetTimeResponse  Controller current date/time.
 
             Raises:
-               Exception  If the datetime format cannot be encoded or the response from the 
+               Exception  If the datetime format cannot be encoded or the response from the
                           access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.set_time_request(id, datetime)
         reply = await self._send(request, addr, timeout, protocol)
@@ -186,17 +186,17 @@ class UhppoteAsync:
         return None
 
     async def get_status(self, controller, timeout=2.5):
-        '''
+        """
         Retrieves the current status of an access controller.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
@@ -206,7 +206,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.get_status_request(id)
         reply = await self._send(request, addr, timeout, protocol)
@@ -217,17 +217,17 @@ class UhppoteAsync:
         return None
 
     async def get_listener(self, controller, timeout=2.5):
-        '''
+        """
         Retrieves the configured event listener address:port from an access controller.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
@@ -237,7 +237,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.get_listener_request(id)
         reply = await self._send(request, addr, timeout, protocol)
@@ -248,17 +248,17 @@ class UhppoteAsync:
         return None
 
     async def set_listener(self, controller, address, port, interval=0, timeout=2.5):
-        '''
+        """
         Sets an access controller event listener IPv4 address and port.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                address    (IPv4Address)  IPv4 address of event listener.
@@ -271,7 +271,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.set_listener_request(id, address, port, interval)
         reply = await self._send(request, addr, timeout, protocol)
@@ -282,17 +282,17 @@ class UhppoteAsync:
         return None
 
     async def get_door_control(self, controller, door, timeout=2.5):
-        '''
+        """
         Gets the door delay and control mode for an access controller door.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                door       (uint8)   Door [1..4]
@@ -303,7 +303,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.get_door_control_request(id, door)
         reply = await self._send(request, addr, timeout, protocol)
@@ -314,17 +314,17 @@ class UhppoteAsync:
         return None
 
     async def set_door_control(self, controller, door, mode, delay, timeout=2.5):
-        '''
+        """
         Sets the door delay and control mode for an access controller door.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                door       (uint8)   Door [1..4]
@@ -337,7 +337,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.set_door_control_request(id, door, mode, delay)
         reply = await self._send(request, addr, timeout, protocol)
@@ -348,17 +348,17 @@ class UhppoteAsync:
         return None
 
     async def open_door(self, controller, door, timeout=2.5):
-        '''
+        """
         Remotely opens a door controlled by an access controller.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                door       (uint8)   Door [1..4]
@@ -369,7 +369,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.open_door_request(id, door)
         reply = await self._send(request, addr, timeout, protocol)
@@ -380,17 +380,17 @@ class UhppoteAsync:
         return None
 
     async def get_cards(self, controller, timeout=2.5):
-        '''
+        """
         Retrieves the number of cards stored in the access controller.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
@@ -400,7 +400,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.get_cards_request(id)
         reply = await self._send(request, addr, timeout, protocol)
@@ -411,7 +411,7 @@ class UhppoteAsync:
         return None
 
     async def get_card(self, controller, card_number, timeout=2.5):
-        '''
+        """
         Retrieves the card access record for a card number from the access controller.
             Parameters:
                controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
@@ -431,7 +431,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.get_card_request(id, card_number)
         reply = await self._send(request, addr, timeout, protocol)
@@ -442,16 +442,16 @@ class UhppoteAsync:
         return None
 
     async def get_card_by_index(self, controller, card_index, timeout=2.5):
-        '''
+        """
         Retrieves the card access record for a card record from the access controller.
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                index       (uint32)  Controller card list record number.
@@ -462,7 +462,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.get_card_by_index_request(id, card_index)
         reply = await self._send(request, addr, timeout, protocol)
@@ -472,27 +472,19 @@ class UhppoteAsync:
 
         return None
 
-    async def put_card(self,
-                       controller,
-                       card_number,
-                       start_date,
-                       end_date,
-                       door_1,
-                       door_2,
-                       door_3,
-                       door_4,
-                       pin,
-                       timeout=2.5):
-        '''
+    async def put_card(
+        self, controller, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin, timeout=2.5
+    ):
+        """
         Adds (or updates) a card record stored on the access controller.
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                card_number (uint32)  Access card number.
@@ -510,7 +502,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.put_card_request(id, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin)
         reply = await self._send(request, addr, timeout, protocol)
@@ -521,16 +513,16 @@ class UhppoteAsync:
         return None
 
     async def delete_card(self, controller, card_number, timeout=2.5):
-        '''
+        """
         Deletes the card record from the access controller.
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                card_number (uint32)  Access card number to delete.
@@ -541,7 +533,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.delete_card_request(id, card_number)
         reply = await self._send(request, addr, timeout, protocol)
@@ -552,16 +544,16 @@ class UhppoteAsync:
         return None
 
     async def delete_all_cards(self, controller, timeout=2.5):
-        '''
+        """
         Deletes all card records stored on the access controller.
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
@@ -571,7 +563,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.delete_cards_request(id)
         reply = await self._send(request, addr, timeout, protocol)
@@ -582,16 +574,16 @@ class UhppoteAsync:
         return None
 
     async def get_event(self, controller, event_index, timeout=2.5):
-        '''
+        """
         Retrieves a stored event from the access controller.
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                event_index (uint32)  Index of event in controller list.
@@ -602,7 +594,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.get_event_request(id, event_index)
         reply = await self._send(request, addr, timeout, protocol)
@@ -613,19 +605,19 @@ class UhppoteAsync:
         return None
 
     async def get_event_index(self, controller, timeout=2.5):
-        '''
+        """
         Retrieves the 'last downloaded event' index from the controller. The downloaded event index
         is a single utility register on the controller that is managed by an application (not by the
         controller).
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
@@ -635,7 +627,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.get_event_index_request(id)
         reply = await self._send(request, addr, timeout, protocol)
@@ -646,19 +638,19 @@ class UhppoteAsync:
         return None
 
     async def set_event_index(self, controller, event_index, timeout=2.5):
-        '''
-        Sets the 'last downloaded event' index on the controller. The downloaded event index is a 
+        """
+        Sets the 'last downloaded event' index on the controller. The downloaded event index is a
         single utility register on the controller that is managed by an application (not by the
         controller).
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                event_index (uitn32)  Event index to which to set the 'downloaded event' index.
@@ -669,7 +661,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.set_event_index_request(id, event_index)
         reply = await self._send(request, addr, timeout, protocol)
@@ -680,17 +672,17 @@ class UhppoteAsync:
         return None
 
     async def record_special_events(self, controller, enable, timeout=2.5):
-        '''
+        """
         Enables or disables door open and close and pushbutton press events.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                enable      (bool)    Includes door open and close and pushbutton events in the
@@ -702,7 +694,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.record_special_events_request(id, enable)
         reply = await self._send(request, addr, timeout, protocol)
@@ -713,17 +705,17 @@ class UhppoteAsync:
         return None
 
     async def get_time_profile(self, controller, profile_id, timeout=2.5):
-        '''
+        """
         Retrieves a time profile from an access conntroller.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                profile_id  (uint8)   Time profile ID [2..254] to retrieve.
@@ -734,7 +726,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.get_time_profile_request(id, profile_id)
         reply = await self._send(request, addr, timeout, protocol)
@@ -744,37 +736,39 @@ class UhppoteAsync:
 
         return None
 
-    async def set_time_profile(self,
-                               controller,
-                               profile_id,
-                               start_date,
-                               end_date,
-                               monday,
-                               tuesday,
-                               wednesday,
-                               thursday,
-                               friday,
-                               saturday,
-                               sunday,
-                               segment_1_start,
-                               segment_1_end,
-                               segment_2_start,
-                               segment_2_end,
-                               segment_3_start,
-                               segment_3_end,
-                               linked_profile_id,
-                               timeout=2.5):
-        '''
+    async def set_time_profile(
+        self,
+        controller,
+        profile_id,
+        start_date,
+        end_date,
+        monday,
+        tuesday,
+        wednesday,
+        thursday,
+        friday,
+        saturday,
+        sunday,
+        segment_1_start,
+        segment_1_end,
+        segment_2_start,
+        segment_2_end,
+        segment_3_start,
+        segment_3_end,
+        linked_profile_id,
+        timeout=2.5,
+    ):
+        """
         Creates (or updates) a time profile on an access conntroller.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                profile_id        (uint8)   Time profile ID [2..254] to retrieve.
@@ -801,12 +795,28 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
-        request = encode.set_time_profile_request(id, profile_id, start_date, end_date, monday, tuesday, wednesday,
-                                                  thursday, friday, saturday, sunday, segment_1_start, segment_1_end,
-                                                  segment_2_start, segment_2_end, segment_3_start, segment_3_end,
-                                                  linked_profile_id)
+        request = encode.set_time_profile_request(
+            id,
+            profile_id,
+            start_date,
+            end_date,
+            monday,
+            tuesday,
+            wednesday,
+            thursday,
+            friday,
+            saturday,
+            sunday,
+            segment_1_start,
+            segment_1_end,
+            segment_2_start,
+            segment_2_end,
+            segment_3_start,
+            segment_3_end,
+            linked_profile_id,
+        )
         reply = await self._send(request, addr, timeout, protocol)
 
         if reply != None:
@@ -815,17 +825,17 @@ class UhppoteAsync:
         return None
 
     async def delete_all_time_profiles(self, controller, timeout=2.5):
-        '''
+        """
         Clears all time profiles from an access conntroller.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
@@ -835,7 +845,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.delete_all_time_profiles_request(id)
         reply = await self._send(request, addr, timeout, protocol)
@@ -845,33 +855,35 @@ class UhppoteAsync:
 
         return None
 
-    async def add_task(self,
-                       controller,
-                       start_date,
-                       end_date,
-                       monday,
-                       tuesday,
-                       wednesday,
-                       thursday,
-                       friday,
-                       saturday,
-                       sunday,
-                       start_time,
-                       door,
-                       task_type,
-                       more_cards,
-                       timeout=2.5):
-        '''
+    async def add_task(
+        self,
+        controller,
+        start_date,
+        end_date,
+        monday,
+        tuesday,
+        wednesday,
+        thursday,
+        friday,
+        saturday,
+        sunday,
+        start_time,
+        door,
+        task_type,
+        more_cards,
+        timeout=2.5,
+    ):
+        """
         Creates a scheduled task on an access conntroller.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                start_date  (datetime)  Task 'valid from' date.
@@ -907,10 +919,24 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
-        request = encode.add_task_request(id, start_date, end_date, monday, tuesday, wednesday, thursday, friday,
-                                          saturday, sunday, start_time, door, task_type, more_cards)
+        request = encode.add_task_request(
+            id,
+            start_date,
+            end_date,
+            monday,
+            tuesday,
+            wednesday,
+            thursday,
+            friday,
+            saturday,
+            sunday,
+            start_time,
+            door,
+            task_type,
+            more_cards,
+        )
         reply = await self._send(request, addr, timeout, protocol)
 
         if reply != None:
@@ -919,17 +945,17 @@ class UhppoteAsync:
         return None
 
     async def refresh_tasklist(self, controller, timeout=2.5):
-        '''
+        """
         Updates the active tasklist to include tasks added by add_task.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
@@ -939,7 +965,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.refresh_tasklist_request(id)
         reply = await self._send(request, addr, timeout, protocol)
@@ -950,17 +976,17 @@ class UhppoteAsync:
         return None
 
     async def clear_tasklist(self, controller, timeout=2.5):
-        '''
+        """
         Clears all active and pending tasks.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
@@ -970,7 +996,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.clear_tasklist_request(id)
         reply = await self._send(request, addr, timeout, protocol)
@@ -981,20 +1007,20 @@ class UhppoteAsync:
         return None
 
     async def set_pc_control(self, controller, enable, timeout=2.5):
-        '''
-        Defers access control decisions to a remote host. The remote host is expected to 
+        """
+        Defers access control decisions to a remote host. The remote host is expected to
         interact with the controller at least once every 30 seconds (typically by enabling
         set_pc_control), failing which the access controller will fallback to the internal
         access control list.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                enable      (bool)    Enables remote control of access.
@@ -1005,7 +1031,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.set_pc_control_request(id, enable)
         reply = await self._send(request, addr, timeout, protocol)
@@ -1016,17 +1042,17 @@ class UhppoteAsync:
         return None
 
     async def set_interlock(self, controller, interlock, timeout=2.5):
-        '''
+        """
         Sets the door interlock mode for an access controller.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                interlock   (uint8)   Door interlock mode:
@@ -1043,7 +1069,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.set_interlock_request(id, interlock)
         reply = await self._send(request, addr, timeout, protocol)
@@ -1054,17 +1080,17 @@ class UhppoteAsync:
         return None
 
     async def activate_keypads(self, controller, reader1, reader2, reader3, reader4, timeout=2.5):
-        '''
+        """
         Enables (or disables) the keypad associated with an access reader.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                reader1    (bool)    Enables/disable reader 1 access keypad
@@ -1078,7 +1104,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.activate_keypads_request(id, reader1, reader2, reader3, reader4)
         reply = await self._send(request, addr, timeout, protocol)
@@ -1089,19 +1115,19 @@ class UhppoteAsync:
         return None
 
     async def set_door_passcodes(self, controller, door, passcode1, passcode2, passcode3, passcode4, timeout=2.5):
-        '''
-        Sets up to four supervisor passcodes for a door. The passcodes override any other access 
-        restrictions and a valid passcode is in the range [0..999999], with 0 corresponding to 
+        """
+        Sets up to four supervisor passcodes for a door. The passcodes override any other access
+        restrictions and a valid passcode is in the range [0..999999], with 0 corresponding to
         'no code'.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                door       (uint8)   Door ID [1..4].
@@ -1116,7 +1142,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.set_door_passcodes_request(id, door, passcode1, passcode2, passcode3, passcode4)
         reply = await self._send(request, addr, timeout, protocol)
@@ -1127,17 +1153,17 @@ class UhppoteAsync:
         return None
 
     async def get_antipassback(self, controller, timeout=2.5):
-        '''
+        """
         Retrieves the anti-passback mode for an access controller.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
@@ -1147,7 +1173,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.get_antipassback_request(id)
         reply = await self._send(request, addr, timeout, protocol)
@@ -1158,17 +1184,17 @@ class UhppoteAsync:
         return None
 
     async def set_antipassback(self, controller, antipassback, timeout=2.5):
-        '''
+        """
         Retrieves the anti-passback mode for an access controller.
 
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                antipassback (uint8) Anti-passback mode:
@@ -1185,7 +1211,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.set_antipassback_request(id, antipassback)
         reply = await self._send(request, addr, timeout, protocol)
@@ -1196,16 +1222,16 @@ class UhppoteAsync:
         return None
 
     async def restore_default_parameters(self, controller, timeout=2.5):
-        '''
+        """
         Resets a controller to the manufacturer default configuratio, protocol='udp'n.
             Parameters:
-               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields). 
+               controller (uint32|tuple)  Controller serial number or tuple with (id,address,protocol fields).
                                           The controller serial number is expected to be greater than 0.
                                           If the controller is a tuple:
                                           - 'id' is the controller serial number
                                           - 'address' is the optional controller IPv4 addess:port. Defaults to the
                                              UDP broadcast address and port 60000.
-                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults 
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
                timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
@@ -1215,7 +1241,7 @@ class UhppoteAsync:
 
             Raises:
                Exception  If the response from the access controller cannot be decoded.
-        '''
+        """
         (id, addr, protocol) = disambiguate(controller)
         request = encode.restore_default_parameters_request(id)
         reply = await self._send(request, addr, timeout, protocol)
@@ -1226,17 +1252,17 @@ class UhppoteAsync:
         return None
 
     async def listen(self, onEvent):
-        '''
-        Establishes a listener for events from the access controllers by binding to the UDP listen 
+        """
+        Establishes a listener for events from the access controllers by binding to the UDP listen
         address from the constructor.
 
             Parameters:
-               onEvent  (function)  Handler function for received events, with a function signature 
+               onEvent  (function)  Handler function for received events, with a function signature
                                     f(event).
 
             Returns:
                None
-        '''
+        """
 
         def handler(packet):
             try:
@@ -1245,7 +1271,7 @@ class UhppoteAsync:
                 if asyncio.iscoroutine(result):
                     asyncio.create_task(result)
             except BaseException as err:
-                print('   *** ERROR {}'.format(err))
+                print("   *** ERROR {}".format(err))
 
         task = asyncio.create_task(self._udp.listen(handler))
 
@@ -1261,7 +1287,7 @@ class UhppoteAsync:
         return None
 
     async def _send(self, request, dest_addr, timeout, protocol):
-        '''
+        """
         Internal HAL to use either TCP or UDP to send a request to a controller and return the response.
 
             Parameters:
@@ -1274,8 +1300,8 @@ class UhppoteAsync:
 
             Raises:
                Exception  If request could not be sent or the access controller failed to respond.
-        '''
-        if protocol == 'tcp' and dest_addr != None:
+        """
+        if protocol == "tcp" and dest_addr != None:
             return await self._tcp.send(request, dest_addr, timeout)
         else:
             return await self._udp.send(request, dest_addr=dest_addr, timeout=timeout)

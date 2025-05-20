@@ -1,8 +1,8 @@
-'''
+"""
 UHPPOTE async function tests.
 
 End-to-end tests for the uhppote functions over broadcast UDP.
-'''
+"""
 
 import unittest
 import socket
@@ -25,14 +25,14 @@ CARD = 8165538
 CARD_INDEX = 2
 EVENT_INDEX = 29
 TIME_PROFILE = 29
-NO_TIMEOUT = struct.pack('ll', 0, 0)  # (infinite)
+NO_TIMEOUT = struct.pack("ll", 0, 0)  # (infinite)
 
 
 def handle(sock, bind, debug):
-    '''
+    """
     Replies to received UDP packets with the matching response.
-    '''
-    never = struct.pack('ll', 0, 0)  # (infinite)
+    """
+    never = struct.pack("ll", 0, 0)  # (infinite)
 
     try:
         sock.bind(bind)
@@ -44,8 +44,8 @@ def handle(sock, bind, debug):
                 if debug:
                     dump(message)
                 for m in messages():
-                    if bytes(m['request']) == message:
-                        response = m['response']
+                    if bytes(m["request"]) == message:
+                        response = m["response"]
                         if len(response) == 64:
                             sock.sendto(bytes(response), addr)
                         else:
@@ -62,14 +62,14 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
 
     @classmethod
     def setUpClass(clazz):
-        bind = '0.0.0.0'
-        broadcast = '255.255.255.255:60000'
-        listen = '0.0.0.0:60001'
+        bind = "0.0.0.0"
+        broadcast = "255.255.255.255:60000"
+        listen = "0.0.0.0:60001"
         debug = False
 
         clazz.u = uhppote.UhppoteAsync(bind, broadcast, listen, debug)
         clazz._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
-        clazz._thread = threading.Thread(target=handle, args=(clazz._sock, ('0.0.0.0', 60000), False))
+        clazz._thread = threading.Thread(target=handle, args=(clazz._sock, ("0.0.0.0", 60000), False))
 
         clazz._thread.start()
         time.sleep(1)
@@ -80,49 +80,49 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         clazz._sock = None
 
     async def test_get_all_controllers(self):
-        '''
+        """
         Tests the get-all-controllers function with defaults.
-        '''
+        """
         controller = CONTROLLER
         response = await self.u.get_all_controllers()
 
         self.assertEqual(response, GetControllersResponse)
 
     async def test_get_controller(self):
-        '''
+        """
         Tests the get-controller function with defaults.
-        '''
+        """
         controller = CONTROLLER
         response = await self.u.get_controller(controller)
 
         self.assertEqual(response, GetControllerResponse)
 
     async def test_set_ip(self):
-        '''
+        """
         Tests the set-ip function with defaults.
-        '''
+        """
         controller = CONTROLLER
-        address = IPv4Address('192.168.1.100')
-        netmask = IPv4Address('255.255.255.0')
-        gateway = IPv4Address('192.168.1.1')
+        address = IPv4Address("192.168.1.100")
+        netmask = IPv4Address("255.255.255.0")
+        gateway = IPv4Address("192.168.1.1")
 
         response = await self.u.set_ip(controller, address, netmask, gateway)
 
         self.assertEqual(response, SetIPResponse)
 
     async def test_get_time(self):
-        '''
+        """
         Tests the get-time function with defaults.
-        '''
+        """
         controller = CONTROLLER
         response = await self.u.get_time(controller)
 
         self.assertEqual(response, GetTimeResponse)
 
     async def test_set_time(self):
-        '''
+        """
         Tests the set-time function with defaults.
-        '''
+        """
         controller = CONTROLLER
         time = datetime.datetime(2021, 5, 28, 14, 56, 14)
 
@@ -131,9 +131,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, SetTimeResponse)
 
     async def test_get_status(self):
-        '''
+        """
         Tests the get-status function with defaults.
-        '''
+        """
         controller = CONTROLLER
 
         response = await self.u.get_status(controller)
@@ -141,9 +141,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, GetStatusResponse)
 
     async def test_get_listener(self):
-        '''
+        """
         Tests the get-listener function with defaults.
-        '''
+        """
         controller = CONTROLLER
 
         response = await self.u.get_listener(controller)
@@ -151,11 +151,11 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, GetListenerResponse)
 
     async def test_set_listener(self):
-        '''
+        """
         Tests the set-listener function with defaults.
-        '''
+        """
         controller = CONTROLLER
-        address = IPv4Address('192.168.1.100')
+        address = IPv4Address("192.168.1.100")
         port = 60001
         interval = 15
 
@@ -164,11 +164,11 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, SetListenerResponse)
 
     async def test_set_listener_without_interval(self):
-        '''
+        """
         Tests the set-listener function with defaults.
-        '''
+        """
         controller = CONTROLLER
-        address = IPv4Address('192.168.1.100')
+        address = IPv4Address("192.168.1.100")
         port = 60001
 
         response = await self.u.set_listener(controller, address, port)
@@ -176,9 +176,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, SetListenerResponse)
 
     async def test_get_door_control(self):
-        '''
+        """
         Tests the get-door-control function with defaults.
-        '''
+        """
         controller = CONTROLLER
         door = 3
 
@@ -187,9 +187,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, GetDoorControlResponse)
 
     async def test_set_door_control(self):
-        '''
+        """
         Tests the set-door-control function with defaults.
-        '''
+        """
         controller = CONTROLLER
         door = 3
         delay = 4
@@ -200,9 +200,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, SetDoorControlResponse)
 
     async def test_open_door(self):
-        '''
+        """
         Tests the open-door function with defaults.
-        '''
+        """
         controller = CONTROLLER
         door = 3
 
@@ -211,9 +211,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, OpenDoorResponse)
 
     async def test_get_cards(self):
-        '''
+        """
         Tests the get-cards function with defaults.
-        '''
+        """
         controller = CONTROLLER
 
         response = await self.u.get_cards(controller)
@@ -221,9 +221,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, GetCardsResponse)
 
     async def test_get_card(self):
-        '''
+        """
         Tests the get-card function with defaults.
-        '''
+        """
         controller = CONTROLLER
         card = CARD
 
@@ -232,9 +232,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, GetCardResponse)
 
     async def test_get_card_by_index(self):
-        '''
+        """
         Tests the get-card-by-index function with defaults.
-        '''
+        """
         controller = CONTROLLER
         index = CARD_INDEX
 
@@ -243,9 +243,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, GetCardByIndexResponse)
 
     async def test_put_card(self):
-        '''
+        """
         Tests the put-card function with defaults.
-        '''
+        """
         controller = CONTROLLER
         card = 123456789
         start = datetime.date(2023, 1, 1)
@@ -261,9 +261,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, PutCardResponse)
 
     async def test_delete_card(self):
-        '''
+        """
         Tests the delete-card function with defaults.
-        '''
+        """
         controller = CONTROLLER
         card = CARD
 
@@ -272,9 +272,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, DeleteCardResponse)
 
     async def test_delete_all_cards(self):
-        '''
+        """
         Tests the delete-all-cards function with defaults.
-        '''
+        """
         controller = CONTROLLER
 
         response = await self.u.delete_all_cards(controller)
@@ -282,9 +282,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, DeleteAllCardsResponse)
 
     async def test_get_event(self):
-        '''
+        """
         Tests the get-event function with defaults.
-        '''
+        """
         controller = CONTROLLER
         index = EVENT_INDEX
 
@@ -293,9 +293,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, GetEventResponse)
 
     async def test_get_event_index(self):
-        '''
+        """
         Tests the get-event-index function with defaults.
-        '''
+        """
         controller = CONTROLLER
 
         response = await self.u.get_event_index(controller)
@@ -303,9 +303,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, GetEventIndexResponse)
 
     async def test_set_event_index(self):
-        '''
+        """
         Tests the set-event-index function with defaults.
-        '''
+        """
         controller = CONTROLLER
         index = EVENT_INDEX
 
@@ -314,9 +314,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, SetEventIndexResponse)
 
     async def test_record_special_events(self):
-        '''
+        """
         Tests the record-special-events function with defaults.
-        '''
+        """
         controller = CONTROLLER
         enabled = True
 
@@ -325,9 +325,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, RecordSpecialEventsResponse)
 
     async def test_get_time_profile(self):
-        '''
+        """
         Tests the get-time-profile function with defaults.
-        '''
+        """
         controller = CONTROLLER
         profile = TIME_PROFILE
 
@@ -336,9 +336,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, GetTimeProfileResponse)
 
     async def test_set_time_profile(self):
-        '''
+        """
         Tests the set-time-profile function with defaults.
-        '''
+        """
         controller = CONTROLLER
         profile_id = TIME_PROFILE
         start_date = datetime.date(2021, 1, 1)
@@ -358,17 +358,33 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         segment_3_end = None
         linked_profile_id = 3
 
-        response = await self.u.set_time_profile(controller, profile_id, start_date, end_date, monday, tuesday,
-                                                 wednesday, thursday, friday, saturday, sunday, segment_1_start,
-                                                 segment_1_end, segment_2_start, segment_2_end, segment_3_start,
-                                                 segment_3_end, linked_profile_id)
+        response = await self.u.set_time_profile(
+            controller,
+            profile_id,
+            start_date,
+            end_date,
+            monday,
+            tuesday,
+            wednesday,
+            thursday,
+            friday,
+            saturday,
+            sunday,
+            segment_1_start,
+            segment_1_end,
+            segment_2_start,
+            segment_2_end,
+            segment_3_start,
+            segment_3_end,
+            linked_profile_id,
+        )
 
         self.assertEqual(response, SetTimeProfileResponse)
 
     async def test_delete_all_time_profiles(self):
-        '''
+        """
         Tests the delete-all-time-profiles function with defaults.
-        '''
+        """
         controller = CONTROLLER
 
         response = await self.u.delete_all_time_profiles(controller)
@@ -376,9 +392,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, DeleteAllTimeProfilesResponse)
 
     async def test_add_task(self):
-        '''
+        """
         Tests the add-task function with defaults.
-        '''
+        """
         controller = CONTROLLER
         start_date = datetime.date(2021, 1, 1)
         end_date = datetime.date(2021, 12, 31)
@@ -394,15 +410,29 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         task_type = 4
         more_cards = 17
 
-        response = await self.u.add_task(controller, start_date, end_date, monday, tuesday, wednesday, thursday, friday,
-                                         saturday, sunday, start_time, door, task_type, more_cards)
+        response = await self.u.add_task(
+            controller,
+            start_date,
+            end_date,
+            monday,
+            tuesday,
+            wednesday,
+            thursday,
+            friday,
+            saturday,
+            sunday,
+            start_time,
+            door,
+            task_type,
+            more_cards,
+        )
 
         self.assertEqual(response, AddTaskResponse)
 
     async def test_refresh_tasklist(self):
-        '''
+        """
         Tests the refresh-tasklist function with defaults.
-        '''
+        """
         controller = CONTROLLER
 
         response = await self.u.refresh_tasklist(controller)
@@ -410,9 +440,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, RefreshTaskListResponse)
 
     async def test_clear_tasklist(self):
-        '''
+        """
         Tests the clear-tasklist function with defaults.
-        '''
+        """
         controller = CONTROLLER
 
         response = await self.u.clear_tasklist(controller)
@@ -420,9 +450,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, ClearTaskListResponse)
 
     async def test_set_pc_control(self):
-        '''
+        """
         Tests the set-pc-control function with defaults.
-        '''
+        """
         controller = CONTROLLER
         enable = True
 
@@ -431,9 +461,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, SetPCControlResponse)
 
     async def test_set_interlock(self):
-        '''
+        """
         Tests the set-interlock function with defaults.
-        '''
+        """
         controller = CONTROLLER
         interlock = 8
 
@@ -442,9 +472,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, SetInterlockResponse)
 
     async def test_activate_keypads(self):
-        '''
+        """
         Tests the activate-keypads function with defaults.
-        '''
+        """
         controller = CONTROLLER
         reader1 = True
         reader2 = True
@@ -456,9 +486,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, ActivateKeypadsResponse)
 
     async def test_set_door_passcodes(self):
-        '''
+        """
         Tests the set-door-passcodes function with defaults.
-        '''
+        """
         controller = CONTROLLER
         door = 3
         passcode1 = 12345
@@ -471,18 +501,18 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, SetDoorPasscodesResponse)
 
     async def test_get_antipassback(self):
-        '''
+        """
         Tests the get_antipassback function with defaults.
-        '''
+        """
         controller = CONTROLLER
         response = await self.u.get_antipassback(controller)
 
         self.assertEqual(response, GetAntiPassbackResponse)
 
     async def test_set_antipassback(self):
-        '''
+        """
         Tests the set_antipassback function with defaults.
-        '''
+        """
         controller = CONTROLLER
         antipassback = 2
         response = await self.u.set_antipassback(controller, antipassback)
@@ -490,9 +520,9 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(response, SetAntiPassbackResponse)
 
     async def test_restore_default_parameters(self):
-        '''
+        """
         Tests the restore-default-parameters function with defaults.
-        '''
+        """
         controller = CONTROLLER
 
         response = await self.u.restore_default_parameters(controller)
