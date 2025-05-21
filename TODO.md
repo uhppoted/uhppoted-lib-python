@@ -16,6 +16,7 @@
 
 - [x] Replace yapf with black
 - [ ] pylint
+- [ ] Fix 'all' command
 - (?) ruff
 - (?) integration tests in github workflow
 - (?) https://fractalideas.com/blog/sans-io-when-rubber-meets-road/

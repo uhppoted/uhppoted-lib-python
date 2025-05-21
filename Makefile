@@ -38,7 +38,7 @@ integration-tests: build
 vet: 
 
 lint: 
-#	pylint --rcfile=.pylintrc  examples/cli
+	pylint --rcfile=.pylintrc  examples/cli
 
 build-all: test vet lint
 
@@ -172,8 +172,8 @@ get-card-by-index-async: build
 	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-card-by-index --controller $(CONTROLLER) --index 3
 
 put-card: build
-	export UHPPOTED_ENV=DEV && $(CMD) put-card --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) put-card --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) put-card --controller $(CONTROLLER) --card $(CARD)
+	export UHPPOTED_ENV=DEV && $(TCP) put-card --controller $(CONTROLLER) --card $(CARD)
 
 put-card-async: build
 	export UHPPOTED_ENV=DEV && $(ASYNC)     put-card --controller $(CONTROLLER)
