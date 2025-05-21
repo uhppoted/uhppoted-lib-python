@@ -3,10 +3,8 @@ UHPPOTE network utility functions.
 
 """
 
-import socket
 import struct
 import re
-import time
 import ipaddress
 
 from collections import namedtuple
@@ -32,9 +30,9 @@ def resolve(addr):
     match = re.match(r"(.*?):([0-9]+)", addr)
     if match:
         return (match.group(1), int(match.group(2)))
-    else:
-        address = ipaddress.IPv4Address(addr)
-        return (str(address), 60000)
+
+    address = ipaddress.IPv4Address(addr)
+    return (str(address), 60000)
 
 
 def timeout_to_seconds(val, defval=2.5):
@@ -50,9 +48,9 @@ def timeout_to_seconds(val, defval=2.5):
             timeout in seconds as a float
     """
     try:
-        if val != None:
+        if val is not None:
             v = float(f"{val}")
-            if v >= 0.05 and v <= 30:
+            if 0.05 <= v <= 30:
                 return v
     except:
         pass
@@ -76,7 +74,7 @@ def disambiguate(v):
         return Controller(v, None, "udp")
 
     if isinstance(v, tuple):
-        id = v[0]
+        controller = v[0]
         address = None
         protocol = "udp"
 
@@ -86,7 +84,7 @@ def disambiguate(v):
         if len(v) > 2 and (v[2] == "tcp" or v[2] == "TCP"):
             protocol = "tcp"
 
-        return Controller(id, address, protocol)
+        return Controller(controller, address, protocol)
 
     return Controller(None, None, "udp")
 

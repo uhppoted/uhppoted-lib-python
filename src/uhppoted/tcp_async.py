@@ -6,16 +6,14 @@ access controller.
 """
 
 import asyncio
-import socket
-import struct
-import re
-import time
-import ipaddress
 
 from . import net
 
 
 class SendProtocol(asyncio.Protocol):
+    """
+    asycnio protocol implementation for TCP single request/response.
+    """
 
     def __init__(self, request, debug=False):
         self._transport = None
@@ -42,24 +40,30 @@ class SendProtocol(asyncio.Protocol):
         if not self._done.done():
             self._done.set_exception(EOFError())
 
-    def connection_lost(self, exception):
-        if exception is not None and not self._done.done():
+    def connection_lost(self, exc):
+        if exc is not None and not self._done.done():
             self._done.set_exception(ConnectionResetError())
         elif not self._done.done():
             self._done.set_exception(EOFError())
 
     async def run(self, timeout):
+        """
+        Waits for the response to the request sent in 'connection_made' or a timeout.
+        """
         try:
             return await asyncio.wait_for(self._done, timeout)
-        except asyncio.TimeoutError:
-            raise TimeoutError("TCP request timeout")
-        except ConnectionResetError:
-            raise ConnectionResetError("TCP connection reset")
-        except EOFError:
-            raise EOFError("TCP connection closed")
+        except asyncio.TimeoutError as exc:
+            raise TimeoutError("TCP request timeout") from exc
+        except ConnectionResetError as exc:
+            raise ConnectionResetError("TCP connection reset") from exc
+        except EOFError as exc:
+            raise EOFError("TCP connection closed") from exc
 
 
 class TCPAsync:
+    """
+    async implementation of the TCP transport for the UHPPOTE request/response protocol.
+    """
 
     def __init__(self, bind="0.0.0.0", debug=False):
         """
@@ -101,14 +105,12 @@ class TCPAsync:
         (host, port) = net.resolve(f"{dest_addr}")
         loop = asyncio.get_running_loop()
 
-        if is_INADDR_ANY(self._bind):
+        if is_inaddr_any(self._bind):
             transport, protocol = await loop.create_connection(lambda: SendProtocol(request, self._debug), host, port)
         else:
             transport, protocol = await loop.create_connection(
                 lambda: SendProtocol(request, self._debug), host, port, local_addr=self._bind
             )
-
-        # FIXME sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
         try:
             return await protocol.run(timeout)
@@ -130,8 +132,11 @@ class TCPAsync:
             net.dump(packet)
 
 
-def is_INADDR_ANY(addr):
-    if addr == None:
+def is_inaddr_any(addr):
+    """
+    Checks if an IPv4 address is '0.0.0.0'.
+    """
+    if addr is None:
         return True
 
     if f"{addr}" == "":

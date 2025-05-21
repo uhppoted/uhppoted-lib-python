@@ -6,15 +6,14 @@ access controller.
 """
 
 import socket
-import struct
-import re
-import time
-import ipaddress
 
 from . import net
 
 
 class TCP:
+    """
+    'sync' implementation of the TCP transport for the UHPPOTE request/response protocol.
+    """
 
     def __init__(self, bind="0.0.0.0", debug=False):
         """
@@ -59,7 +58,7 @@ class TCP:
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, net.WRITE_TIMEOUT)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, net.READ_TIMEOUT)
 
-            if not is_INADDR_ANY(self._bind):
+            if not is_inaddr_any(self._bind):
                 sock.bind(self._bind)
 
             sock.connect(addr)
@@ -67,8 +66,8 @@ class TCP:
 
             if request[1] == 0x96:
                 return None
-            else:
-                return _read(sock, timeout=timeout, debug=self._debug)
+
+            return _read(sock, timeout=timeout, debug=self._debug)
 
     def dump(self, packet):
         """
@@ -85,8 +84,11 @@ class TCP:
             net.dump(packet)
 
 
-def is_INADDR_ANY(addr):
-    if addr == None:
+def is_inaddr_any(addr):
+    """
+    Checks if an IPv4 address is '0.0.0.0'.
+    """
+    if addr is None:
         return True
 
     if f"{addr}" == "":
@@ -98,7 +100,6 @@ def is_INADDR_ANY(addr):
     return False
 
 
-# TODO convert to asyncio
 def _read(sock, timeout=2.5, debug=False):
     """
     Waits 2.5 seconds for a single 64 byte packet to be received on the socket. Prints the packet to the console

@@ -81,13 +81,13 @@ def get_time_request(controller):
     return packet
 
 
-def set_time_request(controller, datetime):
+def set_time_request(controller, date_time):
     """
     Encodes a set-time request.
 
         Parameters:
             controller (uint32)    Controller serial number.
-            datetime   (datetime)  Date and time.
+            date_time  (datetime)  Date and time.
 
         Returns:
             64 byte UDP packet.
@@ -98,7 +98,7 @@ def set_time_request(controller, datetime):
     packet[1] = codec.SET_TIME
 
     pack_uint32(controller, packet, 4)
-    pack_datetime(datetime, packet, 8)
+    pack_datetime(date_time, packet, 8)
 
     return packet
 
@@ -554,32 +554,32 @@ def set_time_profile_request(
     pack_bool(saturday, packet, 22)
     pack_bool(sunday, packet, 23)
 
-    if segment_1_start == None:
+    if segment_1_start is None:
         pack_HHmm(datetime.time(0, 0), packet, 24)
     else:
         pack_HHmm(segment_1_start, packet, 24)
 
-    if segment_1_end == None:
+    if segment_1_end is None:
         pack_HHmm(datetime.time(0, 0), packet, 26)
     else:
         pack_HHmm(segment_1_end, packet, 26)
 
-    if segment_2_start == None:
+    if segment_2_start is None:
         pack_HHmm(datetime.time(0, 0), packet, 28)
     else:
         pack_HHmm(segment_2_start, packet, 28)
 
-    if segment_2_end == None:
+    if segment_2_end is None:
         pack_HHmm(datetime.time(0, 0), packet, 30)
     else:
         pack_HHmm(segment_2_end, packet, 30)
 
-    if segment_3_start == None:
+    if segment_3_start is None:
         pack_HHmm(datetime.time(0, 0), packet, 32)
     else:
         pack_HHmm(segment_3_start, packet, 32)
 
-    if segment_3_end == None:
+    if segment_3_end is None:
         pack_HHmm(datetime.time(0, 0), packet, 34)
     else:
         pack_HHmm(segment_3_end, packet, 34)
@@ -941,6 +941,7 @@ def pack_uint32(v, packet, offset):
     struct.pack_into("<L", packet, offset, v)
 
 
+# pylint: disable=invalid-name
 def pack_IPv4(v, packet, offset):
     """
     'in-place' packs an IPv4Address value 4-byte address into the packet at the offset.
@@ -980,6 +981,7 @@ def pack_datetime(v, packet, offset):
     packet[offset : offset + 7] = bytes.fromhex(bcd)
 
 
+# pylint: disable=invalid-name
 def pack_HHmm(v, packet, offset):
     """
     'in-place' packs a short time value as a 2-byte BCD encoded HHmm value into the packet at the offset.

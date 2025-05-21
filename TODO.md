@@ -16,6 +16,9 @@
 
 - [x] Replace yapf with black
 - [ ] pylint
+      - [ ] fix decode::MAC
+      - [ ] move is_inaddr_any to net
+
 - [ ] Fix 'all' command
 - (?) ruff
 - (?) integration tests in github workflow

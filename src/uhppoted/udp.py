@@ -6,15 +6,14 @@ access controller.
 """
 
 import socket
-import struct
-import re
-import time
-import ipaddress
 
 from . import net
 
 
 class UDP:
+    """
+    'sync' implementation of the UDP transport for the UHPPOTE request/response protocol.
+    """
 
     def __init__(self, bind="0.0.0.0", broadcast="255.255.255.255:60000", listen="0.0.0.0:60001", debug=False):
         """
@@ -112,14 +111,14 @@ class UDP:
         finally:
             sock.close()
 
-    def listen(self, onEvent):
+    def listen(self, on_event):
         """
         Binds to the listen address from the constructor and invokes the events handler for
         any received 64 byte UDP packets. Invalid'ish packets are silently discarded.
 
             Parameters:
-               onEvent  (function)  Handler function for received events, with a function signature
-                                    f(packet).
+               on_event  (function)  Handler function for received events, with a function signature
+                                     f(packet).
 
             Returns:
                None.
@@ -137,7 +136,7 @@ class UDP:
                 message = sock.recv(1024)
                 if len(message) == 64:
                     self.dump(message)
-                    onEvent(message)
+                    on_event(message)
         finally:
             sock.close()
 
@@ -156,7 +155,6 @@ class UDP:
             net.dump(packet)
 
 
-# TODO convert to asyncio
 def _read(sock, timeout=2.5, debug=False):
     """
     Waits 2.5 seconds for a single 64 byte packet to be received on the socket. Prints the packet to the console
@@ -184,7 +182,6 @@ def _read(sock, timeout=2.5, debug=False):
     return None
 
 
-# TODO convert to asyncio
 def _read_all(sock, timeout=2.5, debug=False):
     """
     Accumulates received 64 byte UDP packets, waiting up to 2.5 seconds for an incoming packet. Prints the

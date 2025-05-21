@@ -1196,7 +1196,7 @@ def unpack_mac(packet, offset):
         Returns:
            MAC address as a colon-seperated hexadecimal string.
     """
-    return "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}".format(*packet[offset : offset + 7])
+    return "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}".format(*packet[offset : offset + 6])
 
 
 def unpack_version(packet, offset):

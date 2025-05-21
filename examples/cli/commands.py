@@ -302,7 +302,6 @@ def delete_card(u, dest, timeout, args, protocol="udp"):
     return u.delete_card(controller, card, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def delete_all_cards(u, dest, timeout, args, protocol="udp"):
     """
     Deletes all access cards from a controller using the 'delete_all_cards' API function.
@@ -312,7 +311,6 @@ def delete_all_cards(u, dest, timeout, args, protocol="udp"):
     return u.delete_all_cards(controller, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def get_event(u, dest, timeout, args, protocol="udp"):
     """
     Retrieves the information for an event from a controller using the 'get_event' API function.
@@ -331,7 +329,6 @@ def get_event(u, dest, timeout, args, protocol="udp"):
     return response
 
 
-# pylint: disable=unused-argument
 def get_event_index(u, dest, timeout, args, protocol="udp"):
     """
     Retrieves the current 'user event index' from a controller using the 'get_event_index' API function.
@@ -341,7 +338,6 @@ def get_event_index(u, dest, timeout, args, protocol="udp"):
     return u.get_event_index(controller, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def set_event_index(u, dest, timeout, args, protocol="udp"):
     """
     Sets the current 'user event index' on a controller using the 'set_event_index' API function.
@@ -352,7 +348,6 @@ def set_event_index(u, dest, timeout, args, protocol="udp"):
     return u.set_event_index(controller, index, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def record_special_events(u, dest, timeout, args, protocol="udp"):
     """
     Enables/disables door open, door close and door unlock events using the 'record_special_events'
@@ -364,7 +359,6 @@ def record_special_events(u, dest, timeout, args, protocol="udp"):
     return u.record_special_events(controller, enabled, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def get_time_profile(u, dest, timeout, args, protocol="udp"):
     """
     Retrieves a time profile from a controller using the 'get_time_profile' API function.
@@ -379,7 +373,6 @@ def get_time_profile(u, dest, timeout, args, protocol="udp"):
     return response
 
 
-# pylint: disable=unused-argument
 def set_time_profile(u, dest, timeout, args, protocol="udp"):
     """
     Adds or updates a time profile on a controller using the 'set_time_profile' API function.
@@ -423,7 +416,6 @@ def set_time_profile(u, dest, timeout, args, protocol="udp"):
     # yapf: enable
 
 
-# pylint: disable=unused-argument
 def clear_time_profiles(u, dest, timeout, args, protocol="udp"):
     """
     Deletes all time profiles from a controller using the 'clear_time_profiles' API function.
@@ -433,7 +425,6 @@ def clear_time_profiles(u, dest, timeout, args, protocol="udp"):
     return u.delete_all_time_profiles(controller, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def add_task(u, dest, timeout, args, protocol="udp"):
     """
     Adds a scheduled task to a controller using the 'add_task' API function.
@@ -473,7 +464,6 @@ def add_task(u, dest, timeout, args, protocol="udp"):
     # yapf: enable
 
 
-# pylint: disable=unused-argument
 def refresh_tasklist(u, dest, timeout, args, protocol="udp"):
     """
     Schedules tasks added using 'add_task' for execution using the 'refresh_tasklist' API function.
@@ -483,7 +473,6 @@ def refresh_tasklist(u, dest, timeout, args, protocol="udp"):
     return u.refresh_tasklist(controller, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def clear_tasklist(u, dest, timeout, args, protocol="udp"):
     """
     Clears the scheduled tasklist from a controller using the 'clear_tasklist' API function.
@@ -493,7 +482,6 @@ def clear_tasklist(u, dest, timeout, args, protocol="udp"):
     return u.clear_tasklist(controller, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def set_pc_control(u, dest, timeout, args, protocol="udp"):
     """
     Enables remote access control using the 'set_pc_control' API function.
@@ -504,7 +492,6 @@ def set_pc_control(u, dest, timeout, args, protocol="udp"):
     return u.set_pc_control(controller, enabled, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def set_interlock(u, dest, timeout, args, protocol="udp"):
     """
     Sets the door interlock mode for a controller using the 'set_interlock' API function.
@@ -515,7 +502,6 @@ def set_interlock(u, dest, timeout, args, protocol="udp"):
     return u.set_interlock(controller, interlock, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def activate_keypads(u, dest, timeout, args, protocol="udp"):
     """
     Enables/disables reader keypads on a controller using the 'activate_keypads' API function.
@@ -529,7 +515,6 @@ def activate_keypads(u, dest, timeout, args, protocol="udp"):
     return u.activate_keypads(controller, reader1, reader2, reader3, reader4, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def set_door_passcodes(u, dest, timeout, args, protocol="udp"):
     """
     Sets the supervisor passcodes for a door using the 'set_door_passcodes' API function.
@@ -544,7 +529,6 @@ def set_door_passcodes(u, dest, timeout, args, protocol="udp"):
     return u.set_door_passcodes(controller, door, passcode1, passcode2, passcode3, passcode4, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def get_antipassback(u, dest, timeout, args, protocol="udp"):
     """
     Retrieves the anti-passback mode from a controller using the 'get_antipassback' API function.
@@ -554,7 +538,6 @@ def get_antipassback(u, dest, timeout, args, protocol="udp"):
     return u.get_antipassback(controller, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def set_antipassback(u, dest, timeout, args, protocol="udp"):
     """
     Sets the anti-passback mode for a controller using the 'set_antipassback' API function.
@@ -565,7 +548,6 @@ def set_antipassback(u, dest, timeout, args, protocol="udp"):
     return u.set_antipassback(controller, antipassback, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def restore_default_parameters(u, dest, timeout, args, protocol="udp"):
     """
     Resets the controller configuration to the manufacturer defaults using the 'restore_default_parameters'
@@ -576,7 +558,6 @@ def restore_default_parameters(u, dest, timeout, args, protocol="udp"):
     return u.restore_default_parameters(controller, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def listen(u, dest, timeout, args, protocol="udp"):
     """
     Listens for controller generated events the 'listen' API function.

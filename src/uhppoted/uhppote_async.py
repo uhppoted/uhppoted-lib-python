@@ -85,7 +85,7 @@ class UhppoteAsync:
         request = encode.get_controller_request(id)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.get_controller_response(reply)
 
         return None
@@ -147,7 +147,7 @@ class UhppoteAsync:
         request = encode.get_time_request(id)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.get_time_response(reply)
 
         return None
@@ -180,7 +180,7 @@ class UhppoteAsync:
         request = encode.set_time_request(id, datetime)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.set_time_response(reply)
 
         return None
@@ -211,7 +211,7 @@ class UhppoteAsync:
         request = encode.get_status_request(id)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.get_status_response(reply)
 
         return None
@@ -242,7 +242,7 @@ class UhppoteAsync:
         request = encode.get_listener_request(id)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.get_listener_response(reply)
 
         return None
@@ -276,7 +276,7 @@ class UhppoteAsync:
         request = encode.set_listener_request(id, address, port, interval)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.set_listener_response(reply)
 
         return None
@@ -308,7 +308,7 @@ class UhppoteAsync:
         request = encode.get_door_control_request(id, door)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.get_door_control_response(reply)
 
         return None
@@ -342,7 +342,7 @@ class UhppoteAsync:
         request = encode.set_door_control_request(id, door, mode, delay)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.set_door_control_response(reply)
 
         return None
@@ -374,7 +374,7 @@ class UhppoteAsync:
         request = encode.open_door_request(id, door)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.open_door_response(reply)
 
         return None
@@ -405,7 +405,7 @@ class UhppoteAsync:
         request = encode.get_cards_request(id)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.get_cards_response(reply)
 
         return None
@@ -436,7 +436,7 @@ class UhppoteAsync:
         request = encode.get_card_request(id, card_number)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.get_card_response(reply)
 
         return None
@@ -467,7 +467,7 @@ class UhppoteAsync:
         request = encode.get_card_by_index_request(id, card_index)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.get_card_by_index_response(reply)
 
         return None
@@ -507,7 +507,7 @@ class UhppoteAsync:
         request = encode.put_card_request(id, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.put_card_response(reply)
 
         return None
@@ -538,7 +538,7 @@ class UhppoteAsync:
         request = encode.delete_card_request(id, card_number)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.delete_card_response(reply)
 
         return None
@@ -568,7 +568,7 @@ class UhppoteAsync:
         request = encode.delete_cards_request(id)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.delete_all_cards_response(reply)
 
         return None
@@ -599,7 +599,7 @@ class UhppoteAsync:
         request = encode.get_event_request(id, event_index)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.get_event_response(reply)
 
         return None
@@ -632,7 +632,7 @@ class UhppoteAsync:
         request = encode.get_event_index_request(id)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.get_event_index_response(reply)
 
         return None
@@ -666,7 +666,7 @@ class UhppoteAsync:
         request = encode.set_event_index_request(id, event_index)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.set_event_index_response(reply)
 
         return None
@@ -699,7 +699,7 @@ class UhppoteAsync:
         request = encode.record_special_events_request(id, enable)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.record_special_events_response(reply)
 
         return None
@@ -731,7 +731,7 @@ class UhppoteAsync:
         request = encode.get_time_profile_request(id, profile_id)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.get_time_profile_response(reply)
 
         return None
@@ -819,7 +819,7 @@ class UhppoteAsync:
         )
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.set_time_profile_response(reply)
 
         return None
@@ -850,7 +850,7 @@ class UhppoteAsync:
         request = encode.delete_all_time_profiles_request(id)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.delete_all_time_profiles_response(reply)
 
         return None
@@ -939,7 +939,7 @@ class UhppoteAsync:
         )
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.add_task_response(reply)
 
         return None
@@ -970,7 +970,7 @@ class UhppoteAsync:
         request = encode.refresh_tasklist_request(id)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.refresh_tasklist_response(reply)
 
         return None
@@ -1001,7 +1001,7 @@ class UhppoteAsync:
         request = encode.clear_tasklist_request(id)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.clear_tasklist_response(reply)
 
         return None
@@ -1036,7 +1036,7 @@ class UhppoteAsync:
         request = encode.set_pc_control_request(id, enable)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.set_pc_control_response(reply)
 
         return None
@@ -1074,7 +1074,7 @@ class UhppoteAsync:
         request = encode.set_interlock_request(id, interlock)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.set_interlock_response(reply)
 
         return None
@@ -1109,7 +1109,7 @@ class UhppoteAsync:
         request = encode.activate_keypads_request(id, reader1, reader2, reader3, reader4)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.activate_keypads_response(reply)
 
         return None
@@ -1147,7 +1147,7 @@ class UhppoteAsync:
         request = encode.set_door_passcodes_request(id, door, passcode1, passcode2, passcode3, passcode4)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.set_door_passcodes_response(reply)
 
         return None
@@ -1178,7 +1178,7 @@ class UhppoteAsync:
         request = encode.get_antipassback_request(id)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.get_antipassback_response(reply)
 
         return None
@@ -1216,7 +1216,7 @@ class UhppoteAsync:
         request = encode.set_antipassback_request(id, antipassback)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.set_antipassback_response(reply)
 
         return None
@@ -1246,7 +1246,7 @@ class UhppoteAsync:
         request = encode.restore_default_parameters_request(id)
         reply = await self._send(request, addr, timeout, protocol)
 
-        if reply != None:
+        if reply is not None:
             return decode.restore_default_parameters_response(reply)
 
         return None

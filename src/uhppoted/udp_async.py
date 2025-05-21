@@ -7,10 +7,6 @@ access controller.
 
 import asyncio
 import socket
-import struct
-import re
-import time
-import ipaddress
 
 from . import net
 
@@ -100,6 +96,9 @@ class EventProtocol(asyncio.DatagramProtocol):
 
 
 class UDPAsync:
+    """
+    async implementation of the UDP transport for the UHPPOTE request/response protocol.
+    """
 
     def __init__(self, bind="0.0.0.0", broadcast="255.255.255.255:60000", listen="0.0.0.0:60001", debug=False):
         """

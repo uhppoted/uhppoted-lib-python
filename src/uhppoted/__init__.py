@@ -1,5 +1,12 @@
 """
-Python API for the UHPPOTE TCP/IP access controllers, generated from the models in [uhppoted-codegen](https://github.com/uhppoted/uhppoted-codegen).
+Python wrapper around the request/response API for the UHPPOTE TCP/IP access controllers. The library includes
+both `sync` and `async` implementations of the API functions.
 
-For an demo CLI illustrating the use of the API, see https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/cli.
+A set of basic examples illustrating the use of the library can be found in the
+https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples folder:
+
+- examples/cli is a basic CLI using the 'sync' API
+- examples/async is a basic CLI using the 'async' API
+- examples/event-listener is a 'sync' event handler with queueing
+- examples/async-event-listener is an 'async event handler with queueing
 """

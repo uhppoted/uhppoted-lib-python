@@ -39,6 +39,7 @@ vet:
 
 lint: 
 	pylint --rcfile=.pylintrc  examples/cli
+	# pylint --rcfile=.pylintrc  src
 
 build-all: test vet lint
 

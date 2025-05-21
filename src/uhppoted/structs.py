@@ -3,7 +3,6 @@ Shared dataclass definitions.
 """
 
 import datetime
-import struct
 
 from ipaddress import IPv4Address
 from dataclasses import dataclass
@@ -65,6 +64,7 @@ class SetTimeResponse:
     datetime: datetime.datetime
 
 
+# pylint: disable=too-many-instance-attributes
 @dataclass
 class GetStatusResponse:
     """
