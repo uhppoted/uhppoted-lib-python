@@ -12,6 +12,9 @@ from . import net
 
 
 class BroadcastProtocol(asyncio.Protocol):
+    """
+    asycnio protocol implementation for UDP broadcast single request/multiple response.
+    """
 
     def __init__(self, request, dest, debug=False):
         self._transport = None
@@ -25,21 +28,30 @@ class BroadcastProtocol(asyncio.Protocol):
         self._transport = transport
         self._transport.sendto(self._request, self._dest)
 
-    def datagram_received(self, packet, addr):
+    def datagram_received(self, packet, _addr):
+        """
+        Collects valid'ish received packets into the 'replies' list that is returned on timeout.
+        """
         if len(packet) == 64:
             self._replies.append(packet)
             if self._debug:
                 net.dump(packet)
 
-    def connection_lost(self, exception):
+    def connection_lost(self, exc):
         pass
 
     async def run(self, timeout):
+        """
+        Returns the collected replies after a delay.
+        """
         await asyncio.sleep(timeout)
         return self._replies
 
 
 class SendProtocol(asyncio.Protocol):
+    """
+    asycnio protocol implementation for UDP connected socket single request/response.
+    """
 
     def __init__(self, request, dest, debug=False):
         self._transport = None
@@ -54,44 +66,54 @@ class SendProtocol(asyncio.Protocol):
         if self._request[1] == 0x96:
             self._done.set_result(None)
 
-    def datagram_received(self, packet, addr):
+    def datagram_received(self, packet, _addr):
+        """
+        Signals 'done' on receiving a valid'ish packet.
+        """
         if len(packet) == 64 and not self._done.done():
             if self._debug:
                 net.dump(packet)
             self._done.set_result(packet)
 
-    def connection_lost(self, exception):
-        if exception is not None:
+    def connection_lost(self, exc):
+        if exc is not None:
             self._done.set_exception(ConnectionResetError())
 
     async def run(self, timeout):
+        """
+        Waits for 'done' or timeout, returning the received packet on 'done'.
+        """
         try:
             return await asyncio.wait_for(self._done, timeout)
-        except asyncio.TimeoutError:
-            raise TimeoutError("UDP request timeout")
-        except ConnectionResetError:
-            raise ConnectionResetError("UDP connection reset")
+        except asyncio.TimeoutError as exc:
+            raise TimeoutError("UDP request timeout") from exc
+        except ConnectionResetError as exc:
+            raise ConnectionResetError("UDP connection reset") from exc
 
 
 class EventProtocol(asyncio.DatagramProtocol):
+    """
+    asycnio protocol implementation for UDP event receive.
+    """
 
     def __init__(self, on_event, debug=False):
+        self._transport = None
         self._on_event = on_event
         self._debug = debug
 
     def connection_made(self, transport):
-        self.transport = transport
+        self._transport = transport
 
-    def datagram_received(self, packet, addr):
-        if len(packet) == 64:
+    def datagram_received(self, data, addr):
+        if len(data) == 64:
             if self._debug:
-                net.dump(packet)
-            self._on_event(packet)
+                net.dump(data)
+            self._on_event(data)
 
-    def error_received(self, exception):
+    def error_received(self, exc):
         pass
 
-    def connection_lost(self, exception):
+    def connection_lost(self, exc):
         pass
 
 
@@ -194,14 +216,14 @@ class UDPAsync:
         finally:
             transport.close()
 
-    async def listen(self, onEvent):
+    async def listen(self, on_event):
         """
         Binds to the listen address from the constructor and invokes the events handler for
         any received 64 byte UDP packets. Invalid'ish packets are silently discarded.
 
             Parameters:
-               onEvent  (function)  Handler function for received events, with a function signature
-                                    f(packet).
+               on_event  (function)  Handler function for received events, with a function signature
+                                     f(packet).
 
             Returns:
                None.
@@ -211,8 +233,8 @@ class UDPAsync:
         """
         loop = asyncio.get_running_loop()
 
-        transport, protocol = await loop.create_datagram_endpoint(
-            lambda: EventProtocol(onEvent, self._debug),
+        transport, _ = await loop.create_datagram_endpoint(
+            lambda: EventProtocol(on_event, self._debug),
             local_addr=self._listen,
             family=socket.AF_INET,
         )

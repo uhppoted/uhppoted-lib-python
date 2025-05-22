@@ -1,7 +1,9 @@
-# message constants
+"""
+Message constants for the UHPPOTE request/response protocol.
+"""
 
 SOM = 0x17
-SOM_v6_62 = 0x19
+SOM_v6_62 = 0x19  # pylint: disable=invalid-name
 
 GET_STATUS = 0x20
 SET_TIME = 0x30
@@ -24,7 +26,7 @@ RECORD_SPECIAL_EVENTS = 0x8E
 SET_LISTENER = 0x90
 GET_LISTENER = 0x92
 GET_CONTROLLER = 0x94
-SET_IPv4 = 0x96
+SET_IPv4 = 0x96  # pylint: disable=invalid-name
 GET_TIME_PROFILE = 0x98
 SET_PC_CONTROL = 0xA0
 SET_INTERLOCK = 0xA2

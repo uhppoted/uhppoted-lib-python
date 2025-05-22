@@ -39,7 +39,7 @@ vet:
 
 lint: 
 	pylint --rcfile=.pylintrc  examples/cli
-	# pylint --rcfile=.pylintrc  src
+	pylint --rcfile=.pylintrc  --disable=duplicate-code src
 
 build-all: test vet lint
 
@@ -55,9 +55,7 @@ publish: release
 	python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-#	export UHPPOTED_ENV=DEV && $(ASYNC)     get-time --controller $(CONTROLLER)
-#	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-time --controller $(CONTROLLER)
-	python3 -m unittest integration-tests/uhppoted/async_*.py 
+	pylint --rcfile=.pylintrc  --disable=duplicate-code src
 
 usage: build
 	$(CMD)

@@ -52,7 +52,7 @@ def timeout_to_seconds(val, defval=2.5):
             v = float(f"{val}")
             if 0.05 <= v <= 30:
                 return v
-    except:
+    except (ValueError, TypeError):
         pass
 
     return defval

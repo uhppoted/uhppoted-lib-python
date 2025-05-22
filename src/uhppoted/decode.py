@@ -1,3 +1,5 @@
+# pylint: disable=too-many-lines
+
 """
 UHPPOTE request packet decoder.
 
@@ -9,7 +11,6 @@ import datetime
 import struct
 
 from ipaddress import IPv4Address
-from dataclasses import dataclass
 
 from .structs import GetControllerResponse
 from .structs import GetTimeResponse
@@ -44,7 +45,6 @@ from .structs import RestoreDefaultParametersResponse
 from .structs import GetAntiPassbackResponse
 from .structs import SetAntiPassbackResponse
 from .structs import Event
-from .structs import PIN
 
 from . import codec
 
@@ -194,33 +194,33 @@ def get_status_response(packet):
             None,
             unpack_uint32(packet, 40),
         )
-    else:
-        return GetStatusResponse(
-            unpack_uint32(packet, 4),
-            unpack_shortdate(packet, 51),
-            unpack_time(packet, 37),
-            unpack_bool(packet, 28),
-            unpack_bool(packet, 29),
-            unpack_bool(packet, 30),
-            unpack_bool(packet, 31),
-            unpack_bool(packet, 32),
-            unpack_bool(packet, 33),
-            unpack_bool(packet, 34),
-            unpack_bool(packet, 35),
-            unpack_uint8(packet, 49),
-            unpack_uint8(packet, 50),
-            unpack_uint8(packet, 36),
-            unpack_uint8(packet, 48),
-            unpack_uint32(packet, 8),
-            unpack_uint8(packet, 12),
-            unpack_bool(packet, 13),
-            unpack_uint8(packet, 14),
-            unpack_uint8(packet, 15),
-            unpack_uint32(packet, 16),
-            unpack_optional_datetime(packet, 20),
-            unpack_uint8(packet, 27),
-            unpack_uint32(packet, 40),
-        )
+
+    return GetStatusResponse(
+        unpack_uint32(packet, 4),
+        unpack_shortdate(packet, 51),
+        unpack_time(packet, 37),
+        unpack_bool(packet, 28),
+        unpack_bool(packet, 29),
+        unpack_bool(packet, 30),
+        unpack_bool(packet, 31),
+        unpack_bool(packet, 32),
+        unpack_bool(packet, 33),
+        unpack_bool(packet, 34),
+        unpack_bool(packet, 35),
+        unpack_uint8(packet, 49),
+        unpack_uint8(packet, 50),
+        unpack_uint8(packet, 36),
+        unpack_uint8(packet, 48),
+        unpack_uint32(packet, 8),
+        unpack_uint8(packet, 12),
+        unpack_bool(packet, 13),
+        unpack_uint8(packet, 14),
+        unpack_uint8(packet, 15),
+        unpack_uint32(packet, 16),
+        unpack_optional_datetime(packet, 20),
+        unpack_uint8(packet, 27),
+        unpack_uint32(packet, 40),
+    )
 
 
 def get_listener_response(packet):
@@ -1196,6 +1196,7 @@ def unpack_mac(packet, offset):
         Returns:
            MAC address as a colon-seperated hexadecimal string.
     """
+    # pylint: disable=consider-using-f-string
     return "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}".format(*packet[offset : offset + 6])
 
 
@@ -1210,6 +1211,7 @@ def unpack_version(packet, offset):
         Returns:
            Version string.
     """
+    # pylint: disable=consider-using-f-string
     return "v{:x}.{:02x}".format(*packet[offset : offset + 2])
 
 
@@ -1224,6 +1226,7 @@ def unpack_date(packet, offset):
         Returns:
            datetime value (or None if the date/time valid is invalid)
     """
+    # pylint: disable=consider-using-f-string
     bcd = "{:02x}{:02x}{:02x}{:02x}".format(*packet[offset : offset + 4])
 
     try:
@@ -1244,6 +1247,7 @@ def unpack_shortdate(packet, offset):
         Returns:
            datetime value (or None if the date/time valid is invalid)
     """
+    # pylint: disable=consider-using-f-string
     bcd = "20{:02x}{:02x}{:02x}".format(*packet[offset : offset + 3])
 
     try:
@@ -1263,6 +1267,7 @@ def unpack_optional_date(packet, offset):
         Returns:
            datetime value (or None if the date/time valid is invalid)
     """
+    # pylint: disable=consider-using-f-string
     bcd = "{:02x}{:02x}{:02x}{:02x}".format(*packet[offset : offset + 4])
 
     try:
@@ -1282,6 +1287,7 @@ def unpack_datetime(packet, offset):
         Returns:
            datetime value (or None if the BCD value is not a valid date/time).
     """
+    # pylint: disable=consider-using-f-string
     bcd = "{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}".format(*packet[offset : offset + 7])
 
     try:
@@ -1301,6 +1307,7 @@ def unpack_optional_datetime(packet, offset):
         Returns:
            datetime value (or None if the BCD value is not a valid date/time).
     """
+    # pylint: disable=consider-using-f-string
     bcd = "{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}".format(*packet[offset : offset + 7])
 
     try:
@@ -1320,6 +1327,7 @@ def unpack_time(packet, offset):
         Returns:
            datetime value (or None if the BCD value is not a valid date/time).
     """
+    # pylint: disable=consider-using-f-string
     bcd = "{:02x}{:02x}{:02x}".format(*packet[offset : offset + 3])
 
     try:
@@ -1339,6 +1347,7 @@ def unpack_hhmm(packet, offset):
         Returns:
            datetime value (or None if the BCD value is not a valid date/time).
     """
+    # pylint: disable=consider-using-f-string
     bcd = "{:02x}{:02x}".format(*packet[offset : offset + 2])
 
     try:
