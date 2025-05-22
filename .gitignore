@@ -6,5 +6,3 @@ __pycache__
 workdir
 dist
 release-notes.md
-examples/cli/__init__.py
-examples/event-listener/__init__.py

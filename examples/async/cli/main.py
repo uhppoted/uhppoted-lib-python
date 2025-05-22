@@ -112,6 +112,7 @@ def parse_args():
     # ... put-card
     put_card = parsers["put-card"]
     put_card.add_argument("--controller", type=int, help="controller serial number, e.g. 405419896")
+    put_card.add_argument("--card", type=int, help="card number, e.g. 10058400")
 
     # ... delete-card
     delete_card = parsers["delete-card"]
@@ -211,16 +212,7 @@ async def main():
         print()
         sys.exit(1)
 
-    if cmd == "all":
-        for c, fn in commands().items():
-            if c != "listen":
-                try:
-                    exec(fn, args)
-                except Exception as x:
-                    print()
-                    print(f"*** ERROR  {cmd}: {x}")
-                    print()
-    elif cmd in commands():
+    if cmd in commands():
         try:
             await exec(commands()[cmd], args)
         except Exception as x:

@@ -13,7 +13,7 @@ import time
 from contextlib import suppress
 
 if os.environ.get("UHPPOTED_ENV", "") == "DEV":
-    root = pathlib.Path(__file__).resolve().parents[2]
+    root = pathlib.Path(__file__).resolve().parents[3]
     sys.path.append(os.path.join(root, "src"))
 
 from uhppoted import uhppote_async as uhppote

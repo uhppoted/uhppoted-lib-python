@@ -1,8 +1,8 @@
 DIST ?= development
 CMD   = cd examples/cli && python3 main.py --debug --bind 192.168.1.100 --broadcast 192.168.1.255 --listen 192.168.1.100:60001
 TCP   = cd examples/cli && python3 main.py --debug --tcp --dest 192.168.1.100
-ASYNC = cd examples/async && python3 main.py --debug --bind 192.168.1.100 --broadcast 192.168.1.255 --listen 192.168.1.100:60001
-ASYNC_TCP = cd examples/async && python3 main.py --debug --tcp --dest 192.168.1.100
+ASYNC = cd examples/async/cli && python3 main.py --debug --bind 192.168.1.100 --broadcast 192.168.1.255 --listen 192.168.1.100:60001
+ASYNC_TCP = cd examples/async/cli && python3 main.py --debug --tcp --dest 192.168.1.100
 
 CONTROLLER ?= 405419896
 CARD ?= 1058400
@@ -20,9 +20,9 @@ update-release:
 format: 
 	black src
 	black examples/cli
-	black examples/async
 	black examples/event-listener
-	black examples/async-event-listener
+	black examples/async/cli
+	black examples/async/event-listener
 	black tests
 	black integration-tests
 
@@ -337,11 +337,76 @@ listen-async: build
 	export UHPPOTED_ENV=DEV && $(ASYNC) listen
 
 all: build
-	# export UHPPOTED_ENV=DEV && $(CMD) all
-	export UHPPOTED_ENV=DEV && $(CMD) all --destination 192.168.1.100:60000 --timeout 0.5
+	export UHPPOTED_ENV=DEV && $(CMD) get-all-controllers
+	export UHPPOTED_ENV=DEV && $(CMD) get-controller             --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) set-ip                     --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-status                 --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-time                   --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) set-time                   --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-listener               --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) set-listener               --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-door-control           --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) set-door-control           --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) open-door                  --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-cards                  --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-card                   --controller $(CONTROLLER) --card $(CARD)
+	export UHPPOTED_ENV=DEV && $(CMD) get-card-by-index          --controller $(CONTROLLER) --index 3
+	export UHPPOTED_ENV=DEV && $(CMD) put-card                   --controller $(CONTROLLER) --card $(CARD)
+	export UHPPOTED_ENV=DEV && $(CMD) delete-card                --controller $(CONTROLLER) --card $(CARD)
+	export UHPPOTED_ENV=DEV && $(CMD) delete-all-cards           --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-event                  --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-event-index            --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) set-event-index            --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) record-special-events      --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-time-profile           --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) set-time-profile           --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) clear-time-profiles        --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) add-task                   --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) refresh-tasklist           --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) clear-tasklist             --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) set-pc-control             --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) set-interlock              --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) activate-keypads           --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) set-door-passcodes         --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-antipassback           --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) set-antipassback           --controller $(CONTROLLER) --antipassback "(1,3):(2,4)"
+	export UHPPOTED_ENV=DEV && $(CMD) restore-default-parameters --controller $(CONTROLLER)
 
 all-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC) all --destination 192.168.1.100:60000 --timeout 0.5
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-all-controllers
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-controller             --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) set-ip                     --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-status                 --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-time                   --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) set-time                   --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-listener               --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) set-listener               --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-door-control           --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) set-door-control           --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) open-door                  --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-cards                  --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-card                   --controller $(CONTROLLER) --card $(CARD)
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-card-by-index          --controller $(CONTROLLER) --index 3
+	export UHPPOTED_ENV=DEV && $(ASYNC) put-card                   --controller $(CONTROLLER) --card $(CARD)
+	export UHPPOTED_ENV=DEV && $(ASYNC) delete-card                --controller $(CONTROLLER) --card $(CARD)
+	export UHPPOTED_ENV=DEV && $(ASYNC) delete-all-cards           --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-event                  --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-event-index            --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) set-event-index            --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) record-special-events      --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-time-profile           --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) set-time-profile           --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) clear-time-profiles        --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) add-task                   --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) refresh-tasklist           --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) clear-tasklist             --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) set-pc-control             --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) set-interlock              --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) activate-keypads           --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) set-door-passcodes         --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-antipassback           --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) set-antipassback           --controller $(CONTROLLER) --antipassback "(1,3):(2,4)"
+	export UHPPOTED_ENV=DEV && $(ASYNC) restore-default-parameters --controller $(CONTROLLER)
 
 event-listener: build
 	export UHPPOTED_ENV=DEV    && \
@@ -350,7 +415,7 @@ event-listener: build
 
 event-listener-async: build
 	export UHPPOTED_ENV=DEV          && \
-	cd examples/async-event-listener && \
+	cd examples/async/event-listener && \
 	python3 main.py --debug --bind 192.168.1.100 --broadcast 192.168.1.255 --listen 192.168.1.100:60001
 
 	

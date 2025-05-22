@@ -17,8 +17,8 @@
 - [x] Replace yapf with black
 - [ ] pylint
       - [x] fix decode::MAC
+      - [x] Remove 'all' command from CLI
       - [ ] move is_inaddr_any to net
-      - [ ] Remove 'all' command from CLI
 
 - [ ] Fix 'all' command
 - (?) ruff

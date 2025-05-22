@@ -77,7 +77,6 @@ def parse_args():
 
     # ... command specific args
     subparsers = parser.add_subparsers(title="subcommands", dest="command")
-    # parsers = {}
 
     for c, v in commands().items():
         subparser = subparsers.add_parser(f"{c}")
@@ -106,16 +105,7 @@ def main():
         print()
         sys.exit(1)
 
-    if cmd == "all":
-        for c, fn in commands().items():
-            if c != "listen":
-                try:
-                    execute(fn, args)
-                except Exception as x:
-                    print()
-                    print(f"*** ERROR  {cmd}: {x}")
-                    print()
-    elif cmd in commands():
+    if cmd in commands():
         try:
             execute(commands()[cmd], args)
         except Exception as x:

@@ -11,7 +11,7 @@ import signal
 from contextlib import suppress
 
 if os.environ["UHPPOTED_ENV"] == "DEV":
-    root = pathlib.Path(__file__).resolve().parents[2]
+    root = pathlib.Path(__file__).resolve().parents[3]
     sys.path.append(os.path.join(root, "src"))
 
 from uhppoted import uhppote_async as uhppote
@@ -223,7 +223,7 @@ async def get_card_by_index(u, dest, timeout, args, protocol="udp"):
 
 def put_card(u, dest, timeout, args, protocol="udp"):
     controller = (CONTROLLER, dest, protocol)
-    card = CARD
+    card = args.card
     start = datetime.datetime.strptime("2024-01-01", "%Y-%m-%d").date()
     end = datetime.datetime.strptime("2024-12-31", "%Y-%m-%d").date()
     door1 = 0  # no access

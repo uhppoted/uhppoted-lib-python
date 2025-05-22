@@ -7,9 +7,9 @@ both `sync` and `async` implementations of the API functions.
 
 A set of basic examples illustrating the use of the library can be found in the [examples](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples) folder:
 - [examples/cli](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/cli) is a basic CLI using the `sync` API
-- [examples/async](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/async) is a basic CLI using the `async` API
 - [examples/event-listener](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/event-listener) is a `sync` event handler with queueing
-- [examples/async-event-listener](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/async-event-listener) is an `async` event handler with queueing
+- [examples/async/cli](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/async/cli) is a basic CLI using the `async` API
+- [examples/async/event-listener](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/async/event-listener) is an `async` event handler with queueing
 
 ## Installation
 
