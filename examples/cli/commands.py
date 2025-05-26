@@ -22,7 +22,6 @@ from uhppoted import uhppote
 DOOR = 3
 MODE = 2
 DELAY = 10
-CARD_INDEX = 3
 EVENT_INDEX = 37
 TIME_PROFILE_ID = 29
 AUTO_SEND = 15

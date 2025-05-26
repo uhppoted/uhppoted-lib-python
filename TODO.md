@@ -8,8 +8,9 @@
 - [ ] pylint
       - [x] fix decode::MAC
       - [x] Remove 'all' command from CLI
+      - [x] make all async CLI functions async
       - [ ] move is_inaddr_any to net
-      - [ ] make all async CLI functions async
+      - [ ] CLI usage()
 
 - (?) integration tests in github workflow
 

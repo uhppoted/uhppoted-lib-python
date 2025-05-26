@@ -38,8 +38,9 @@ integration-tests: build
 vet: 
 
 lint: 
-	pylint --rcfile=.pylintrc  examples/cli
 	pylint --rcfile=.pylintrc  --disable=duplicate-code src
+	pylint --rcfile=.pylintrc  examples/cli
+	pylint --rcfile=.pylintrc  examples/async/cli
 
 build-all: test vet lint
 

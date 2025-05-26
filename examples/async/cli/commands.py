@@ -12,6 +12,7 @@ import pathlib
 import itertools
 import signal
 
+from collections import namedtuple
 from contextlib import suppress
 
 if os.environ["UHPPOTED_ENV"] == "DEV":
@@ -19,14 +20,12 @@ if os.environ["UHPPOTED_ENV"] == "DEV":
     sys.path.append(os.path.join(root, "src"))
 
 # pylint: disable=import-error, wrong-import-position
+import args as Args
 from uhppoted import uhppote_async as uhppote
 
-CONTROLLER = 405419896
 DOOR = 3
 MODE = 2
 DELAY = 10
-CARD = 8165538
-CARD_INDEX = 3
 EVENT_INDEX = 37
 TIME_PROFILE_ID = 29
 AUTO_SEND = 15
@@ -37,47 +36,49 @@ NETMASK = ipaddress.IPv4Address("255.255.255.0")
 GATEWAY = ipaddress.IPv4Address("192.168.1.1")
 LISTENER = (ipaddress.IPv4Address("192.168.1.100"), 60001)
 
+Command = namedtuple("Command", ["f", "args"])
+
 
 def commands():
     """
     Returns a dict that maps a CLI command to the implementation function and command line args.
     """
     return {
-        "get-all-controllers": get_all_controllers,
-        "get-controller": get_controller,
-        "set-ip": set_ip,
-        "get-time": get_time,
-        "set-time": set_time,
-        "get-listener": get_listener,
-        "set-listener": set_listener,
-        "get-door-control": get_door_control,
-        "set-door-control": set_door_control,
-        "get-status": get_status,
-        "open-door": open_door,
-        "get-cards": get_cards,
-        "get-card": get_card,
-        "get-card-by-index": get_card_by_index,
-        "put-card": put_card,
-        "delete-card": delete_card,
-        "delete-all-cards": delete_all_cards,
-        "get-event": get_event,
-        "get-event-index": get_event_index,
-        "set-event-index": set_event_index,
-        "record-special-events": record_special_events,
-        "get-time-profile": get_time_profile,
-        "set-time-profile": set_time_profile,
-        "clear-time-profiles": clear_time_profiles,
-        "add-task": add_task,
-        "refresh-tasklist": refresh_tasklist,
-        "clear-tasklist": clear_tasklist,
-        "set-pc-control": set_pc_control,
-        "set-interlock": set_interlock,
-        "activate-keypads": activate_keypads,
-        "set-door-passcodes": set_door_passcodes,
-        "get-antipassback": get_antipassback,
-        "set-antipassback": set_antipassback,
-        "restore-default-parameters": restore_default_parameters,
-        "listen": listen,
+        "get-all-controllers": Command(get_all_controllers, []),
+        "get-controller": Command(get_controller, [Args.controller]),
+        "set-ip": Command(set_ip, [Args.controller]),
+        "get-time": Command(get_time, [Args.controller]),
+        "set-time": Command(set_time, [Args.controller]),
+        "get-listener": Command(get_listener, [Args.controller]),
+        "set-listener": Command(set_listener, [Args.controller]),
+        "get-door-control": Command(get_door_control, [Args.controller]),
+        "set-door-control": Command(set_door_control, [Args.controller]),
+        "get-status": Command(get_status, [Args.controller]),
+        "open-door": Command(open_door, [Args.controller]),
+        "get-cards": Command(get_cards, [Args.controller]),
+        "get-card": Command(get_card, [Args.controller, Args.card]),
+        "get-card-by-index": Command(get_card_by_index, [Args.controller, Args.index]),
+        "put-card": Command(put_card, [Args.controller, Args.card]),
+        "delete-card": Command(delete_card, [Args.controller, Args.card]),
+        "delete-all-cards": Command(delete_all_cards, [Args.controller]),
+        "get-event": Command(get_event, [Args.controller]),
+        "get-event-index": Command(get_event_index, [Args.controller]),
+        "set-event-index": Command(set_event_index, [Args.controller]),
+        "record-special-events": Command(record_special_events, [Args.controller]),
+        "get-time-profile": Command(get_time_profile, [Args.controller]),
+        "set-time-profile": Command(set_time_profile, [Args.controller]),
+        "clear-time-profiles": Command(clear_time_profiles, [Args.controller]),
+        "add-task": Command(add_task, [Args.controller]),
+        "refresh-tasklist": Command(refresh_tasklist, [Args.controller]),
+        "clear-tasklist": Command(clear_tasklist, [Args.controller]),
+        "set-pc-control": Command(set_pc_control, [Args.controller]),
+        "set-interlock": Command(set_interlock, [Args.controller]),
+        "activate-keypads": Command(activate_keypads, [Args.controller]),
+        "set-door-passcodes": Command(set_door_passcodes, [Args.controller]),
+        "get-antipassback": Command(get_antipassback, [Args.controller]),
+        "set-antipassback": Command(set_antipassback, [Args.controller, Args.antipassback]),
+        "restore-default-parameters": Command(restore_default_parameters, [Args.controller]),
+        "listen": Command(listen, []),
     }
 
 
@@ -92,7 +93,7 @@ async def windmill():
         await asyncio.sleep(0.1)
 
 
-async def execute(f, args):
+async def execute(cmd, args):
     """
     Executes the function corresponding to a CLI command and pretty prints the response (if any).
     """
@@ -111,7 +112,7 @@ async def execute(f, args):
         protocol = "tcp"
 
     u = uhppote.UhppoteAsync(bind_addr, broadcast_addr, listen_addr, debug)
-    task1 = asyncio.create_task(f(u, dest, timeout, args, protocol=protocol))
+    task1 = asyncio.create_task(cmd.f(u, dest, timeout, args, protocol=protocol))
     task2 = asyncio.create_task(windmill())
 
     response = await task1
@@ -131,23 +132,26 @@ async def execute(f, args):
             pprint.pprint(response.__dict__, indent=2, width=1, sort_dicts=False)
 
 
-def get_all_controllers(u, dest, timeout, args, protocol="udp"):  # pylint: disable=unused-argument
+async def get_all_controllers(u, dest, timeout, args, protocol="udp"):  # pylint: disable=unused-argument
     """
     Retrieves a list of found controllers using 'get_all_controllers' API function.
     """
-    return u.get_all_controllers(timeout=timeout)
+    response = await u.get_all_controllers(timeout=timeout)
+
+    return response
 
 
-def get_controller(u, dest, timeout, args, protocol="udp"):
+async def get_controller(u, dest, timeout, args, protocol="udp"):
     """
     Retrieves the information for a controller using the 'get_controller' API function.
     """
     controller = (args.controller, dest, protocol)
+    response = await u.get_controller(controller, timeout=timeout)
 
-    return u.get_controller(controller, timeout=timeout)
+    return response
 
 
-def set_ip(u, dest, timeout, args, protocol="udp"):
+async def set_ip(u, dest, timeout, args, protocol="udp"):
     """
     Sets the controller IPv4 network address, subnet mask and gateway using the 'set_ip' API function.
     """
@@ -156,39 +160,45 @@ def set_ip(u, dest, timeout, args, protocol="udp"):
     netmask = NETMASK
     gateway = GATEWAY
 
-    return u.set_ip(controller, address, netmask, gateway, timeout=timeout)
+    response = await u.set_ip(controller, address, netmask, gateway, timeout=timeout)
+
+    return response
 
 
-def get_time(u, dest, timeout, args, protocol="udp"):
+async def get_time(u, dest, timeout, args, protocol="udp"):
     """
     Retrieves a controller current date/time using the 'get_time' API function.
     """
     controller = (args.controller, dest, protocol)
+    response = await u.get_time(controller, timeout=timeout)
 
-    return u.get_time(controller, timeout=timeout)
+    return response
 
 
-def set_time(u, dest, timeout, args, protocol="udp"):
+async def set_time(u, dest, timeout, args, protocol="udp"):
     """
     Sets the controller date/time using the 'set_time' API function.
     """
     controller = (args.controller, dest, protocol)
     now = datetime.datetime.now()
 
-    return u.set_time(controller, now, timeout=timeout)
+    response = await u.set_time(controller, now, timeout=timeout)
+
+    return response
 
 
-def get_listener(u, dest, timeout, args, protocol="udp"):
+async def get_listener(u, dest, timeout, args, protocol="udp"):
     """
     Retrieves a controller event listener IPv4 address and auto-send interval using
     the 'get_listener' API function.
     """
     controller = (args.controller, dest, protocol)
+    response = await u.get_listener(controller, timeout=timeout)
 
-    return u.get_listener(controller, timeout=timeout)
+    return response
 
 
-def set_listener(u, dest, timeout, args, protocol="udp"):
+async def set_listener(u, dest, timeout, args, protocol="udp"):
     """
     Sets  the controller event listen IPv4 address and auto-send interval using the
     'set_listener' API function.
@@ -197,20 +207,24 @@ def set_listener(u, dest, timeout, args, protocol="udp"):
     (address, port) = LISTENER
     interval = AUTO_SEND
 
-    return u.set_listener(controller, address, port, interval, timeout=timeout)
+    response = await u.set_listener(controller, address, port, interval, timeout=timeout)
+
+    return response
 
 
-def get_door_control(u, dest, timeout, args, protocol="udp"):
+async def get_door_control(u, dest, timeout, args, protocol="udp"):
     """
     Retrieves the unlock delay and control mode for a door using the 'get_door' API function.
     """
     controller = (args.controller, dest, protocol)
     door = DOOR
 
-    return u.get_door_control(controller, door, timeout=timeout)
+    response = await u.get_door_control(controller, door, timeout=timeout)
+
+    return response
 
 
-def set_door_control(u, dest, timeout, args, protocol="udp"):
+async def set_door_control(u, dest, timeout, args, protocol="udp"):
     """
     Sets the unlock delay and control mode for a door using by the 'set_door' API function.
     """
@@ -219,35 +233,41 @@ def set_door_control(u, dest, timeout, args, protocol="udp"):
     mode = MODE
     delay = DELAY
 
-    return u.set_door_control(controller, door, mode, delay, timeout=timeout)
+    response = await u.set_door_control(controller, door, mode, delay, timeout=timeout)
+
+    return response
 
 
-def get_status(u, dest, timeout, args, protocol="udp"):
+async def get_status(u, dest, timeout, args, protocol="udp"):
     """
     Retrieves the controller current state using the 'get_status' API function.
     """
     controller = (args.controller, dest, protocol)
+    response = await u.get_status(controller, timeout=timeout)
 
-    return u.get_status(controller, timeout=timeout)
+    return response
 
 
-def open_door(u, dest, timeout, args, protocol="udp"):
+async def open_door(u, dest, timeout, args, protocol="udp"):
     """
     Unlocks a door using the 'open_door' API function.
     """
     controller = (args.controller, dest, protocol)
     door = DOOR
 
-    return u.open_door(controller, door, timeout=timeout)
+    response = await u.open_door(controller, door, timeout=timeout)
+
+    return response
 
 
-def get_cards(u, dest, timeout, args, protocol="udp"):
+async def get_cards(u, dest, timeout, args, protocol="udp"):
     """
     Retrieves the number of cards stored in a controller usingt the 'get_cards' API function.
     """
     controller = (args.controller, dest, protocol)
+    response = await u.get_cards(controller, timeout=timeout)
 
-    return u.get_cards(controller, timeout=timeout)
+    return response
 
 
 async def get_card(u, dest, timeout, args, protocol="udp"):
@@ -284,40 +304,45 @@ async def get_card_by_index(u, dest, timeout, args, protocol="udp"):
     return response
 
 
-def put_card(u, dest, timeout, args, protocol="udp"):
+async def put_card(u, dest, timeout, args, protocol="udp"):
     """
     Adds or updates the information for an access card on a controller using the 'put_card' API function.
     """
     controller = (args.controller, dest, protocol)
     card = args.card
     start = datetime.datetime.strptime("2025-01-01", "%Y-%m-%d").date()
-    end = datetime.datetime.strptime("2025-122-31", "%Y-%m-%d").date()
+    end = datetime.datetime.strptime("2025-12-31", "%Y-%m-%d").date()
     door1 = 0  # no access
     door2 = 1  # 24/7 access
     door3 = 29  # time_profile
     door4 = 0  # no access
     pin = 7531
 
-    return u.put_card(controller, card, start, end, door1, door2, door3, door4, pin, timeout=timeout)
+    response = await u.put_card(controller, card, start, end, door1, door2, door3, door4, pin, timeout=timeout)
+
+    return response
 
 
-def delete_card(u, dest, timeout, args, protocol="udp"):
+async def delete_card(u, dest, timeout, args, protocol="udp"):
     """
     Deletes an access card from a controller using the 'delete_card' API function.
     """
     controller = (args.controller, dest, protocol)
     card = args.card
 
-    return u.delete_card(controller, card, timeout=timeout)
+    response = await u.delete_card(controller, card, timeout=timeout)
+
+    return response
 
 
-def delete_all_cards(u, dest, timeout, args, protocol="udp"):
+async def delete_all_cards(u, dest, timeout, args, protocol="udp"):
     """
     Deletes all access cards from a controller using the 'delete_all_cards' API function.
     """
     controller = (args.controller, dest, protocol)
+    response = await u.delete_all_cards(controller, timeout=timeout)
 
-    return u.delete_all_cards(controller, timeout=timeout)
+    return response
 
 
 async def get_event(u, dest, timeout, args, protocol="udp"):
@@ -338,26 +363,30 @@ async def get_event(u, dest, timeout, args, protocol="udp"):
     return response
 
 
-def get_event_index(u, dest, timeout, args, protocol="udp"):
+async def get_event_index(u, dest, timeout, args, protocol="udp"):
     """
     Retrieves the current 'user event index' from a controller using the 'get_event_index' API function.
     """
     controller = (args.controller, dest, protocol)
 
-    return u.get_event_index(controller, timeout=timeout)
+    response = await u.get_event_index(controller, timeout=timeout)
+
+    return response
 
 
-def set_event_index(u, dest, timeout, args, protocol="udp"):
+async def set_event_index(u, dest, timeout, args, protocol="udp"):
     """
     Sets the current 'user event index' on a controller using the 'set_event_index' API function.
     """
     controller = (args.controller, dest, protocol)
     index = EVENT_INDEX
 
-    return u.set_event_index(controller, index, timeout=timeout)
+    response = await u.set_event_index(controller, index, timeout=timeout)
+
+    return response
 
 
-def record_special_events(u, dest, timeout, args, protocol="udp"):
+async def record_special_events(u, dest, timeout, args, protocol="udp"):
     """
     Enables/disables door open, door close and door unlock events using the 'record_special_events'
     API function.
@@ -365,7 +394,9 @@ def record_special_events(u, dest, timeout, args, protocol="udp"):
     controller = (args.controller, dest, protocol)
     enabled = True
 
-    return u.record_special_events(controller, enabled, timeout=timeout)
+    response = await u.record_special_events(controller, enabled, timeout=timeout)
+
+    return response
 
 
 async def get_time_profile(u, dest, timeout, args, protocol="udp"):
@@ -382,7 +413,7 @@ async def get_time_profile(u, dest, timeout, args, protocol="udp"):
     return response
 
 
-def set_time_profile(u, dest, timeout, args, protocol="udp"):
+async def set_time_profile(u, dest, timeout, args, protocol="udp"):
     """
     Adds or updates a time profile on a controller using the 'set_time_profile' API function.
     """
@@ -390,113 +421,139 @@ def set_time_profile(u, dest, timeout, args, protocol="udp"):
     profile_id = TIME_PROFILE_ID
     start = datetime.datetime.strptime("2022-01-01", "%Y-%m-%d").date()
     end = datetime.datetime.strptime("2022-12-31", "%Y-%m-%d").date()
-    monday = True
-    tuesday = False
-    wednesday = True
-    thursday = True
-    friday = False
-    saturday = False
-    sunday = True
-    segment1start = datetime.datetime.strptime("08:15", "%H:%M").time()
-    segment1end = datetime.datetime.strptime("11:45", "%H:%M").time()
-    segment2start = datetime.datetime.strptime("12:45", "%H:%M").time()
-    segment2end = datetime.datetime.strptime("17:15", "%H:%M").time()
-    segment3start = datetime.datetime.strptime("19:30", "%H:%M").time()
-    segment3end = datetime.datetime.strptime("22:00", "%H:%M").time()
+    weekdays = {
+        "monday": True,
+        "tuesday": False,
+        "wednesday": True,
+        "thursday": True,
+        "friday": False,
+        "saturday": False,
+        "sunday": True,
+    }
+    segments = {
+        "1": (datetime.datetime.strptime("08:15", "%H:%M").time(), datetime.datetime.strptime("11:45", "%H:%M").time()),
+        "2": (datetime.datetime.strptime("12:45", "%H:%M").time(), datetime.datetime.strptime("17:15", "%H:%M").time()),
+        "3": (datetime.datetime.strptime("19:30", "%H:%M").time(), datetime.datetime.strptime("22:00", "%H:%M").time()),
+    }
     linked_profile_id = 23
 
     # yapf: disable
-    return u.set_time_profile(controller,
-                              profile_id,
-                              start, end,
-                              monday, tuesday, wednesday, thursday, friday, saturday, sunday,
-                              segment1start, segment1end,
-                              segment2start, segment2end,
-                              segment3start, segment3end,
-                              linked_profile_id,
-                              timeout=timeout)
+    response = await u.set_time_profile(controller,
+                                        profile_id,
+                                        start, end,
+                                        weekdays.get('monday',False),
+                                        weekdays.get('tuesday',False),
+                                        weekdays.get('wednesday',False),
+                                        weekdays.get('thursday',False),
+                                        weekdays.get('friday',False),
+                                        weekdays.get('saturday',False),
+                                        weekdays.get('sunday',False),
+                                        segments['1'][0], segments['1'][1],
+                                        segments['2'][0], segments['2'][1],
+                                        segments['3'][0], segments['3'][1],
+                                        linked_profile_id,
+                                        timeout=timeout)
     # yapf: enable
 
+    return response
 
-def clear_time_profiles(u, dest, timeout, args, protocol="udp"):
+
+async def clear_time_profiles(u, dest, timeout, args, protocol="udp"):
     """
     Deletes all time profiles from a controller using the 'clear_time_profiles' API function.
     """
     controller = (args.controller, dest, protocol)
+    response = await u.delete_all_time_profiles(controller, timeout=timeout)
 
-    return u.delete_all_time_profiles(controller, timeout=timeout)
+    return response
 
 
-def add_task(u, dest, timeout, args, protocol="udp"):
+async def add_task(u, dest, timeout, args, protocol="udp"):
     """
     Adds a scheduled task to a controller using the 'add_task' API function.
     """
     controller = (args.controller, dest, protocol)
     start_date = datetime.datetime.strptime("2022-01-01", "%Y-%m-%d").date()
     end_date = datetime.datetime.strptime("2022-12-31", "%Y-%m-%d").date()
-    monday = True
-    tuesday = False
-    wednesday = True
-    thursday = True
-    friday = False
-    saturday = False
-    sunday = True
+    weekdays = {
+        "monday": True,
+        "tuesday": False,
+        "wednesday": True,
+        "thursday": True,
+        "friday": False,
+        "saturday": False,
+        "sunday": True,
+    }
     start_time = datetime.datetime.strptime("08:15", "%H:%M").time()
     door = DOOR
     task_type = 2
     more_cards = 0
 
     # yapf: disable
-    return u.add_task(controller,
-                      start_date, end_date,
-                      monday, tuesday, wednesday, thursday, friday, saturday, sunday,
-                      start_time,
-                      door,
-                      task_type,
-                      more_cards,
-                      timeout=timeout)
+    response = await u.add_task(controller,
+                                start_date, end_date,
+                                weekdays.get('monday',False),
+                                weekdays.get('tuesday',False),
+                                weekdays.get('wednesday',False),
+                                weekdays.get('thursday',False),
+                                weekdays.get('friday',False),
+                                weekdays.get('saturday',False),
+                                weekdays.get('sunday',False),
+                                start_time,
+                                door,
+                                task_type,
+                                more_cards,
+                                timeout=timeout)
     # yapf: enable
 
+    return response
 
-def refresh_tasklist(u, dest, timeout, args, protocol="udp"):
+
+async def refresh_tasklist(u, dest, timeout, args, protocol="udp"):
     """
     Schedules tasks added using 'add_task' for execution using the 'refresh_tasklist' API function.
     """
     controller = (args.controller, dest, protocol)
+    response = await u.refresh_tasklist(controller, timeout=timeout)
 
-    return u.refresh_tasklist(controller, timeout=timeout)
+    return response
 
 
-def clear_tasklist(u, dest, timeout, args, protocol="udp"):
+async def clear_tasklist(u, dest, timeout, args, protocol="udp"):
     """
     Clears the scheduled tasklist from a controller using the 'clear_tasklist' API function.
     """
     controller = (args.controller, dest, protocol)
+    response = await u.clear_tasklist(controller, timeout=timeout)
 
-    return u.clear_tasklist(controller, timeout=timeout)
+    return response
 
 
-def set_pc_control(u, dest, timeout, args, protocol="udp"):
+async def set_pc_control(u, dest, timeout, args, protocol="udp"):
     """
     Enables remote access control using the 'set_pc_control' API function.
     """
     controller = (args.controller, dest, protocol)
     enabled = True
 
-    return u.set_pc_control(controller, enabled, timeout=timeout)
+    response = await u.set_pc_control(controller, enabled, timeout=timeout)
+
+    return response
 
 
-def set_interlock(u, dest, timeout, args, protocol="udp"):
+async def set_interlock(u, dest, timeout, args, protocol="udp"):
     """
     Sets the door interlock mode for a controller using the 'set_interlock' API function.
     """
     controller = (args.controller, dest, protocol)
     interlock = 3
 
-    return u.set_interlock(controller, interlock, timeout=timeout)
+    response = await u.set_interlock(controller, interlock, timeout=timeout)
+
+    return response
 
 
-def activate_keypads(u, dest, timeout, args, protocol="udp"):
+async def activate_keypads(u, dest, timeout, args, protocol="udp"):
     """
     Enables/disables reader keypads on a controller using the 'activate_keypads' API function.
     """
@@ -506,10 +563,12 @@ def activate_keypads(u, dest, timeout, args, protocol="udp"):
     reader3 = False
     reader4 = True
 
-    return u.activate_keypads(controller, reader1, reader2, reader3, reader4, timeout=timeout)
+    response = await u.activate_keypads(controller, reader1, reader2, reader3, reader4, timeout=timeout)
+
+    return response
 
 
-def set_door_passcodes(u, dest, timeout, args, protocol="udp"):
+async def set_door_passcodes(u, dest, timeout, args, protocol="udp"):
     """
     Sets the supervisor passcodes for a door using the 'set_door_passcodes' API function.
     """
@@ -520,36 +579,41 @@ def set_door_passcodes(u, dest, timeout, args, protocol="udp"):
     passcode3 = 999999
     passcode4 = 54321
 
-    return u.set_door_passcodes(controller, door, passcode1, passcode2, passcode3, passcode4, timeout=timeout)
+    response = await u.set_door_passcodes(controller, door, passcode1, passcode2, passcode3, passcode4, timeout=timeout)
+
+    return response
 
 
-def get_antipassback(u, dest, timeout, args, protocol="udp"):
+async def get_antipassback(u, dest, timeout, args, protocol="udp"):
     """
     Retrieves the anti-passback mode from a controller using the 'get_antipassback' API function.
     """
     controller = (args.controller, dest, protocol)
+    response = await u.get_antipassback(controller, timeout=timeout)
 
-    return u.get_antipassback(controller, timeout=timeout)
+    return response
 
 
-def set_antipassback(u, dest, timeout, args, protocol="udp"):
+async def set_antipassback(u, dest, timeout, args, protocol="udp"):
     """
     Sets the anti-passback mode for a controller using the 'set_antipassback' API function.
     """
     controller = (args.controller, dest, protocol)
     antipassback = ANTIPASSBACK
+    response = await u.set_antipassback(controller, antipassback, timeout=timeout)
 
-    return u.set_antipassback(controller, antipassback, timeout=timeout)
+    return response
 
 
-def restore_default_parameters(u, dest, timeout, args, protocol="udp"):
+async def restore_default_parameters(u, dest, timeout, args, protocol="udp"):
     """
     Resets the controller configuration to the manufacturer defaults using the 'restore_default_parameters'
     API function.
     """
     controller = (args.controller, dest, protocol)
+    response = await u.restore_default_parameters(controller, timeout=timeout)
 
-    return u.restore_default_parameters(controller, timeout=timeout)
+    return response
 
 
 async def listen(u, dest, timeout, args, protocol="udp"):  # pylint: disable=unused-argument
@@ -572,7 +636,7 @@ async def listen(u, dest, timeout, args, protocol="udp"):  # pylint: disable=unu
     return None
 
 
-def on_event(event):
+async def on_event(event):
     """
     Pretty prints an event received via the 'listen' API function.
     """
