@@ -3,27 +3,15 @@
 - [x] anti-passback (cf. https://github.com/uhppoted/uhppoted/issues/60)
 - [x] `argparse` args for examples
 - [x] async functions (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/4)
-      - [x] UDP broadcast
-      - [x] connected UDP sockets
-      - [x] TCP
-      - [x] listen
-      - [x] FIXME: if request[1] == 0x96 return None
-      - [x] integration tests
-      - [x] examples
-      - [x] event-listener example
-      - [x] CHANGELOG
-      - [x] README
-
 - [x] Replace yapf with black
+
 - [ ] pylint
       - [x] fix decode::MAC
       - [x] Remove 'all' command from CLI
       - [ ] move is_inaddr_any to net
+      - [ ] make all async CLI functions async
 
-- [ ] Fix 'all' command
-- (?) ruff
 - (?) integration tests in github workflow
-- (?) https://fractalideas.com/blog/sans-io-when-rubber-meets-road/
 
 - [ ] Use site-specific configuration to run examples locally
       - https://docs.python.org/3/library/site.html
@@ -38,3 +26,5 @@
       - https://docs.python.org/3/library/doctest.html#module-doctest
 
 3. Publish from github
+4. Try _ruff_ ?
+5. https://fractalideas.com/blog/sans-io-when-rubber-meets-road/

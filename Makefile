@@ -55,7 +55,7 @@ publish: release
 	python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-	pylint --rcfile=.pylintrc  --disable=duplicate-code src
+	pylint --rcfile=.pylintrc  --disable=duplicate-code examples/async/cli
 
 usage: build
 	$(CMD)
@@ -349,9 +349,9 @@ all: build
 	export UHPPOTED_ENV=DEV && $(CMD) set-door-control           --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(CMD) open-door                  --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(CMD) get-cards                  --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) put-card                   --controller $(CONTROLLER) --card $(CARD)
 	export UHPPOTED_ENV=DEV && $(CMD) get-card                   --controller $(CONTROLLER) --card $(CARD)
 	export UHPPOTED_ENV=DEV && $(CMD) get-card-by-index          --controller $(CONTROLLER) --index 3
-	export UHPPOTED_ENV=DEV && $(CMD) put-card                   --controller $(CONTROLLER) --card $(CARD)
 	export UHPPOTED_ENV=DEV && $(CMD) delete-card                --controller $(CONTROLLER) --card $(CARD)
 	export UHPPOTED_ENV=DEV && $(CMD) delete-all-cards           --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(CMD) get-event                  --controller $(CONTROLLER)
@@ -385,9 +385,9 @@ all-async: build
 	export UHPPOTED_ENV=DEV && $(ASYNC) set-door-control           --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC) open-door                  --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC) get-cards                  --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) put-card                   --controller $(CONTROLLER) --card $(CARD)
 	export UHPPOTED_ENV=DEV && $(ASYNC) get-card                   --controller $(CONTROLLER) --card $(CARD)
 	export UHPPOTED_ENV=DEV && $(ASYNC) get-card-by-index          --controller $(CONTROLLER) --index 3
-	export UHPPOTED_ENV=DEV && $(ASYNC) put-card                   --controller $(CONTROLLER) --card $(CARD)
 	export UHPPOTED_ENV=DEV && $(ASYNC) delete-card                --controller $(CONTROLLER) --card $(CARD)
 	export UHPPOTED_ENV=DEV && $(ASYNC) delete-all-cards           --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC) get-event                  --controller $(CONTROLLER)

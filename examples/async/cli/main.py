@@ -1,16 +1,22 @@
 #!python3
 
+"""
+Implements a simple CLI to demonstrate the basic usage of the uhppoted-lib-python API.
+"""
+
 import asyncio
 import argparse
 import sys
 import traceback
 
-from trace import Trace
 from commands import commands
-from commands import exec
+from commands import execute
 
 
 def parse_args():
+    """
+    Initialises arg_parse with the general and command specific options.
+    """
     parser = argparse.ArgumentParser(description="uhppoted-lib-python example")
 
     parser.add_argument("--bind", type=str, default="0.0.0.0", help="UDP IPv4 bind address. Defaults to 0.0.0.0:0")
@@ -52,7 +58,7 @@ def parse_args():
     subparsers = parser.add_subparsers(title="subcommands", dest="command")
     parsers = {}
 
-    for c in commands().keys():
+    for c in commands():
         parsers[f"{c}"] = subparsers.add_parser(f"{c}")
 
     # ... get-controller
@@ -197,7 +203,11 @@ def parse_args():
     return parser.parse_args()
 
 
+# pylint: disable=broad-exception-caught
 async def main():
+    """
+    Parses the command line and executes the requested command.
+    """
     if len(sys.argv) < 2:
         usage()
         return -1
@@ -208,13 +218,13 @@ async def main():
 
     if args.udp and args.tcp:
         print()
-        print(f"*** ERROR  conflicting UDP/TCP flags - choose one or the other (default is UDP)")
+        print("*** ERROR  conflicting UDP/TCP flags - choose one or the other (default is UDP)")
         print()
         sys.exit(1)
 
     if cmd in commands():
         try:
-            await exec(commands()[cmd], args)
+            await execute(commands()[cmd], args)
         except Exception as x:
             print()
             print(f"*** ERROR  {cmd}: {x}")
@@ -230,6 +240,9 @@ async def main():
 
 
 def usage():
+    """
+    Prints the usage description for the CLI.
+    """
     print()
     print("  Usage: python3 main.py <command>")
     print()

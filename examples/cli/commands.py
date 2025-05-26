@@ -39,7 +39,7 @@ Command = namedtuple("Command", ["f", "args"])
 # fmt: off
 def commands():
     """
-    Returns a dict that maps a CLI command to the implementation function.
+    Returns a dict that maps a CLI command to the implementation function and command line args.
     """
     return {
         "get-all-controllers":        Command(get_all_controllers,        []),
@@ -112,8 +112,7 @@ def execute(cmd, args):
             pprint.pprint(response.__dict__, indent=2, width=1, sort_dicts=False)
 
 
-# pylint: disable=unused-argument
-def get_all_controllers(u, dest, timeout, args, protocol="udp"):
+def get_all_controllers(u, dest, timeout, args, protocol="udp"):  # pylint: disable=unused-argument
     """
     Retrieves a list of found controllers using 'get_all_controllers' API function.
     """
@@ -150,7 +149,6 @@ def get_time(u, dest, timeout, args, protocol="udp"):
     return u.get_time(controller, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def set_time(u, dest, timeout, args, protocol="udp"):
     """
     Sets the controller date/time using the 'set_time' API function.
@@ -161,7 +159,6 @@ def set_time(u, dest, timeout, args, protocol="udp"):
     return u.set_time(controller, now, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def get_listener(u, dest, timeout, args, protocol="udp"):
     """
     Retrieves a controller event listener IPv4 address and auto-send interval using
@@ -172,7 +169,6 @@ def get_listener(u, dest, timeout, args, protocol="udp"):
     return u.get_listener(controller, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def set_listener(u, dest, timeout, args, protocol="udp"):
     """
     Sets  the controller event listen IPv4 address and auto-send interval using the
@@ -185,7 +181,6 @@ def set_listener(u, dest, timeout, args, protocol="udp"):
     return u.set_listener(controller, address, port, interval, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def get_door_control(u, dest, timeout, args, protocol="udp"):
     """
     Retrieves the unlock delay and control mode for a door using the 'get_door' API function.
@@ -196,7 +191,6 @@ def get_door_control(u, dest, timeout, args, protocol="udp"):
     return u.get_door_control(controller, door, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def set_door_control(u, dest, timeout, args, protocol="udp"):
     """
     Sets the unlock delay and control mode for a door using by the 'set_door' API function.
@@ -209,7 +203,6 @@ def set_door_control(u, dest, timeout, args, protocol="udp"):
     return u.set_door_control(controller, door, mode, delay, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def get_status(u, dest, timeout, args, protocol="udp"):
     """
     Retrieves the controller current state using the 'get_status' API function.
@@ -219,7 +212,6 @@ def get_status(u, dest, timeout, args, protocol="udp"):
     return u.get_status(controller, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def open_door(u, dest, timeout, args, protocol="udp"):
     """
     Unlocks a door using the 'open_door' API function.
@@ -230,7 +222,6 @@ def open_door(u, dest, timeout, args, protocol="udp"):
     return u.open_door(controller, door, timeout=timeout)
 
 
-# pylint: disable=unused-argument
 def get_cards(u, dest, timeout, args, protocol="udp"):
     """
     Retrieves the number of cards stored in a controller usingt the 'get_cards' API function.
@@ -558,7 +549,7 @@ def restore_default_parameters(u, dest, timeout, args, protocol="udp"):
     return u.restore_default_parameters(controller, timeout=timeout)
 
 
-def listen(u, dest, timeout, args, protocol="udp"):
+def listen(u, dest, timeout, args, protocol="udp"):  # pylint: disable=unused-argument
     """
     Listens for controller generated events the 'listen' API function.
     """
