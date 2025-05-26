@@ -8,6 +8,7 @@ import unittest
 
 from uhppoted.net import timeout_to_seconds
 from uhppoted.net import disambiguate
+from uhppoted.net import is_inaddr_any
 from uhppoted.net import Controller
 
 
@@ -52,6 +53,21 @@ class TestNet(unittest.TestCase):
 
         for test in tests:
             self.assertEqual(disambiguate(test[0]), test[1])
+
+    def test_is_inaddr_any(self):
+        """
+        Tests disambiguating a controller arg to a 'Controller' named tuple with id, address and
+        protocol fields.
+        """
+        tests = [
+            (None, True),
+            ("", True),
+            (("0.0.0.0", 0), True),
+            (("192.168.1.100", 0), False),
+        ]
+
+        for test in tests:
+            self.assertEqual(is_inaddr_any(test[0]), test[1])
 
 
 if __name__ == "__main__":

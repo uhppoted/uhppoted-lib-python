@@ -58,7 +58,7 @@ class TCP:
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, net.WRITE_TIMEOUT)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, net.READ_TIMEOUT)
 
-            if not is_inaddr_any(self._bind):
+            if not net.is_inaddr_any(self._bind):
                 sock.bind(self._bind)
 
             sock.connect(addr)
@@ -82,22 +82,6 @@ class TCP:
         """
         if self._debug:
             net.dump(packet)
-
-
-def is_inaddr_any(addr):
-    """
-    Checks if an IPv4 address is '0.0.0.0'.
-    """
-    if addr is None:
-        return True
-
-    if f"{addr}" == "":
-        return True
-
-    if addr == (("0.0.0.0", 0)):
-        return True
-
-    return False
 
 
 def _read(sock, timeout=2.5, debug=False):

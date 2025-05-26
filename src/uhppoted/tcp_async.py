@@ -105,7 +105,7 @@ class TCPAsync:
         (host, port) = net.resolve(f"{dest_addr}")
         loop = asyncio.get_running_loop()
 
-        if is_inaddr_any(self._bind):
+        if net.is_inaddr_any(self._bind):
             transport, protocol = await loop.create_connection(lambda: SendProtocol(request, self._debug), host, port)
         else:
             transport, protocol = await loop.create_connection(
@@ -130,19 +130,3 @@ class TCPAsync:
         """
         if self._debug:
             net.dump(packet)
-
-
-def is_inaddr_any(addr):
-    """
-    Checks if an IPv4 address is '0.0.0.0'.
-    """
-    if addr is None:
-        return True
-
-    if f"{addr}" == "":
-        return True
-
-    if addr == (("0.0.0.0", 0)):
-        return True
-
-    return False

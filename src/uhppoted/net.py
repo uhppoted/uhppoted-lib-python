@@ -89,6 +89,22 @@ def disambiguate(v):
     return Controller(None, None, "udp")
 
 
+def is_inaddr_any(addr):
+    """
+    Checks if an IPv4 address is '0.0.0.0'.
+    """
+    if addr is None:
+        return True
+
+    if f"{addr}" == "":
+        return True
+
+    if addr == (("0.0.0.0", 0)):
+        return True
+
+    return False
+
+
 def dump(packet):
     """
     Prints a packet to the console as a formatted hexadecimal string.
