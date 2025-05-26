@@ -56,10 +56,13 @@ publish: release
 	python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-	pylint --rcfile=.pylintrc  --disable=duplicate-code examples/async/cli
+	pylint --rcfile=.pylintrc examples/async/cli
 
 usage: build
-	$(CMD)
+	-export UHPPOTED_ENV=DEV && $(CMD)
+	-export UHPPOTED_ENV=DEV && $(ASYNC)
+	-export UHPPOTED_ENV=DEV && $(CMD)   do-weird-stuff
+	-export UHPPOTED_ENV=DEV && $(ASYNC) do-weird-stuff
 
 get-all-controllers: build
 	export UHPPOTED_ENV=DEV && $(CMD) get-all-controllers

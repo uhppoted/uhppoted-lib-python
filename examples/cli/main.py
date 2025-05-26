@@ -16,7 +16,7 @@ def parse_args():
     """
     Initialises arg_parse with the general and command specific options.
     """
-    parser = argparse.ArgumentParser(description="uhppoted-lib-python example")
+    parser = argparse.ArgumentParser(description="uhppoted-lib-python example", usage=usage())
 
     parser.add_argument(
         "--bind",
@@ -99,6 +99,10 @@ def main():
     cmd = args.command
     debug = args.debug
 
+    if cmd is None:
+        print(usage())
+        sys.exit(1)
+
     if args.udp and args.tcp:
         print()
         print("*** ERROR  conflicting UDP/TCP flags - choose one or the other (default is UDP)")
@@ -122,19 +126,21 @@ def main():
         print()
 
 
-def usage():
+def usage() -> str:
     """
-    Prints the usage description for the CLI.
+    Returns the usage description for the CLI as a string.
     """
-    print()
-    print("  Usage: python3 main.py <command>")
-    print()
-    print("  Supported commands:")
+    lines = []
+    lines.append("")
+    lines.append("  Usage: python3 main.py <options> <command> <args>")
+    lines.append("")
+    lines.append("  Supported commands:")
 
-    for cmd, _ in commands().items():
-        print(f"    {cmd}")
+    for cmd in sorted(commands().keys()):
+        lines.append(f"    {cmd}")
 
-    print()
+    lines.append("")
+    return "\n".join(lines)
 
 
 if __name__ == "__main__":

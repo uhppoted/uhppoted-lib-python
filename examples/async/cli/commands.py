@@ -20,7 +20,7 @@ if os.environ["UHPPOTED_ENV"] == "DEV":
     sys.path.append(os.path.join(root, "src"))
 
 # pylint: disable=import-error, wrong-import-position
-import args as Args
+import cli_args as Args
 from uhppoted import uhppote_async as uhppote
 
 DOOR = 3

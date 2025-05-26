@@ -10,7 +10,7 @@
       - [x] Remove 'all' command from CLI
       - [x] make all async CLI functions async
       - [x] move is_inaddr_any to net
-      - [ ] CLI usage()
+      - [x] CLI usage()
 
 - (?) integration tests in github workflow
 
