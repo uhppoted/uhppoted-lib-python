@@ -5,7 +5,7 @@
 - [x] async functions (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/4)
 - [x] Replace yapf with black
 
-- [ ] pylint
+- [x] pylint
       - [x] fix decode::MAC
       - [x] Remove 'all' command from CLI
       - [x] make all async CLI functions async

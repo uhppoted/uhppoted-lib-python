@@ -4,6 +4,9 @@
 
 # fmt: off
 def messages():
+    """
+    List of test request/responses.
+    """
     return [
         { # get-all-controllers
           'request': [

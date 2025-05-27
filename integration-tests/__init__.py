@@ -1,3 +1,8 @@
+# pylint: disable=invalid-name
+"""
+Sets path for local imports.
+"""
+
 import os
 import sys
 

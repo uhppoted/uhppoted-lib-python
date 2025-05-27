@@ -1,3 +1,5 @@
+# pylint: disable=too-many-public-methods
+
 """
 UHPPOTE function tests.
 
@@ -13,12 +15,12 @@ import datetime
 
 from ipaddress import IPv4Address
 
+# pylint: disable=import-error
 from uhppoted import uhppote
-from uhppoted import structs
 from uhppoted.net import dump
 
+# pylint: disable=relative-beyond-top-level
 from .stub import messages
-from .expected import *
 
 DEST_ADDR = "127.0.0.1:54321"
 TIMEOUT = 0.25
@@ -50,32 +52,35 @@ def handle(sock, bind, debug):
                         time.sleep(0.5)
                         sock.sendto(bytes(m["response"]), addr)
                         break
-    except Exception as x:
+    except Exception:  # pylint: disable=broad-exception-caught
         pass
     finally:
         sock.close()
 
 
 class TestUDPWithTimeout(unittest.TestCase):
+    """
+    Test suite for the UDP transport timeout handling.
+    """
 
     @classmethod
-    def setUpClass(clazz):
+    def setUpClass(cls):
         bind = "0.0.0.0"
         broadcast = "255.255.255.255:60000"
         listen = "0.0.0.0:60001"
         debug = False
 
-        clazz.u = uhppote.Uhppote(bind, broadcast, listen, debug)
-        clazz._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
-        clazz._thread = threading.Thread(target=handle, args=(clazz._sock, ("127.0.0.1", 54321), False))
+        cls.u = uhppote.Uhppote(bind, broadcast, listen, debug)
+        cls._sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
+        cls._thread = threading.Thread(target=handle, args=(cls._sock, ("127.0.0.1", 54321), False))
 
-        clazz._thread.start()
+        cls._thread.start()
         time.sleep(1)
 
     @classmethod
-    def tearDownClass(clazz):
-        clazz._sock.close()
-        clazz._sock = None
+    def tearDownClass(cls):
+        cls._sock.close()
+        cls._sock = None
 
     def test_get_all_controllers(self):
         """
@@ -125,10 +130,10 @@ class TestUDPWithTimeout(unittest.TestCase):
         Tests the set-time function with a timeout.
         """
         controller = (CONTROLLER, DEST_ADDR)
-        time = datetime.datetime(2021, 5, 28, 14, 56, 14)
+        now = datetime.datetime(2021, 5, 28, 14, 56, 14)
 
-        self.u.set_time(controller, time)
-        self.assertRaises(socket.timeout, self.u.set_time, controller, time, timeout=TIMEOUT)
+        self.u.set_time(controller, now)
+        self.assertRaises(socket.timeout, self.u.set_time, controller, now, timeout=TIMEOUT)
 
     def test_get_status(self):
         """
@@ -192,16 +197,6 @@ class TestUDPWithTimeout(unittest.TestCase):
         self.u.open_door(controller, door)
         self.assertRaises(socket.timeout, self.u.open_door, controller, door, timeout=TIMEOUT)
 
-    def test_open_door(self):
-        """
-        Tests the open-door function with a timeout.
-        """
-        controller = (CONTROLLER, DEST_ADDR)
-        door = 3
-
-        self.u.open_door(controller, door)
-        self.assertRaises(socket.timeout, self.u.open_door, controller, door, timeout=TIMEOUT)
-
     def test_get_cards(self):
         """
         Tests the get-cards function with a timeout.
@@ -243,9 +238,9 @@ class TestUDPWithTimeout(unittest.TestCase):
         door2 = 0
         door3 = 29
         door4 = 1
-        PIN = 7531
+        pin = 7531
 
-        self.u.put_card(controller, card, start, end, door1, door2, door3, door4, PIN)
+        self.u.put_card(controller, card, start, end, door1, door2, door3, door4, pin)
         self.assertRaises(
             socket.timeout,
             self.u.put_card,
@@ -257,7 +252,7 @@ class TestUDPWithTimeout(unittest.TestCase):
             door2,
             door3,
             door4,
-            PIN,
+            pin,
             timeout=TIMEOUT,
         )
 
@@ -337,19 +332,20 @@ class TestUDPWithTimeout(unittest.TestCase):
         profile_id = TIME_PROFILE
         start_date = datetime.date(2021, 1, 1)
         end_date = datetime.date(2021, 12, 31)
-        monday = True
-        tuesday = False
-        wednesday = True
-        thursday = False
-        friday = True
-        saturday = False
-        sunday = False
-        segment_1_start = datetime.time(8, 30)
-        segment_1_end = datetime.time(11, 45)
-        segment_2_start = datetime.time(13, 15)
-        segment_2_end = datetime.time(17, 25)
-        segment_3_start = None
-        segment_3_end = None
+        weekdays = {
+            "monday": True,
+            "tuesday": False,
+            "wednesday": True,
+            "thursday": False,
+            "friday": True,
+            "saturday": False,
+            "sunday": False,
+        }
+        segments = {
+            1: (datetime.time(8, 30), datetime.time(11, 45)),
+            2: (datetime.time(13, 15), datetime.time(17, 25)),
+            3: (None, None),
+        }
         linked_profile_id = 3
 
         self.u.set_time_profile(
@@ -357,19 +353,19 @@ class TestUDPWithTimeout(unittest.TestCase):
             profile_id,
             start_date,
             end_date,
-            monday,
-            tuesday,
-            wednesday,
-            thursday,
-            friday,
-            saturday,
-            sunday,
-            segment_1_start,
-            segment_1_end,
-            segment_2_start,
-            segment_2_end,
-            segment_3_start,
-            segment_3_end,
+            weekdays["monday"],
+            weekdays["tuesday"],
+            weekdays["wednesday"],
+            weekdays["thursday"],
+            weekdays["friday"],
+            weekdays["saturday"],
+            weekdays["sunday"],
+            segments[1][0],
+            segments[1][1],
+            segments[2][0],
+            segments[2][1],
+            segments[3][0],
+            segments[3][1],
             linked_profile_id,
         )
 
@@ -380,19 +376,19 @@ class TestUDPWithTimeout(unittest.TestCase):
             profile_id,
             start_date,
             end_date,
-            monday,
-            tuesday,
-            wednesday,
-            thursday,
-            friday,
-            saturday,
-            sunday,
-            segment_1_start,
-            segment_1_end,
-            segment_2_start,
-            segment_2_end,
-            segment_3_start,
-            segment_3_end,
+            weekdays["monday"],
+            weekdays["tuesday"],
+            weekdays["wednesday"],
+            weekdays["thursday"],
+            weekdays["friday"],
+            weekdays["saturday"],
+            weekdays["sunday"],
+            segments[1][0],
+            segments[1][1],
+            segments[2][0],
+            segments[2][1],
+            segments[3][0],
+            segments[3][1],
             linked_profile_id,
             timeout=TIMEOUT,
         )
@@ -554,8 +550,6 @@ class TestUDPWithTimeout(unittest.TestCase):
         """
         controller = (CONTROLLER, DEST_ADDR)
         antipassback = 2
-
-        response = self.u.set_antipassback(controller, antipassback)
 
         self.u.set_antipassback(controller, antipassback)
         self.assertRaises(socket.timeout, self.u.set_antipassback, controller, antipassback, timeout=TIMEOUT)

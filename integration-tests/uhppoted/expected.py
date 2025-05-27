@@ -6,6 +6,7 @@ import datetime
 
 from ipaddress import IPv4Address
 
+# pylint: disable=import-error
 from uhppoted import structs
 
 GetControllersResponse = [
@@ -48,7 +49,7 @@ GetControllerResponse = structs.GetControllerResponse(
     date=datetime.date(2018, 11, 5),
 )
 
-SetIPResponse = True
+SetIPResponse = True  # pylint: disable=invalid-name
 
 GetTimeResponse = structs.GetTimeResponse(controller=405419896, datetime=datetime.datetime(2021, 5, 28, 13, 51, 30))
 

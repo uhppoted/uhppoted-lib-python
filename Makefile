@@ -45,6 +45,8 @@ lint:
 	pylint --rcfile=.pylintrc examples/async/event-listener
 	pylint --rcfile=.pylintrc tests
 	pylint --rcfile=.pylintrc tests/uhppoted
+	pylint --rcfile=.pylintrc integration-tests
+	pylint --rcfile=.pylintrc --disable=duplicate-code integration-tests/uhppoted
 
 build-all: test vet lint
 
@@ -60,7 +62,7 @@ publish: release
 	python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-	pylint --rcfile=.pylintrc integratiobn-tests
+	python3 -m unittest integration-tests/uhppoted/udp_connected.py 
 
 usage: build
 	-export UHPPOTED_ENV=DEV && $(CMD)
