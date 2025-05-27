@@ -95,8 +95,7 @@ class UhppoteAsync:
 
         return None
 
-    # pylint: disable=too-many-arguments, too-many-positional-arguments
-    async def set_ip(self, controller, address, netmask, gateway, timeout=2.5):
+    async def set_ip(self, controller, address, netmask, gateway, timeout=2.5): # pylint: disable=too-many-arguments, too-many-positional-arguments
         """
         Sets the controller IPv4 address, netmask and gateway address.
 
@@ -254,7 +253,7 @@ class UhppoteAsync:
 
         return None
 
-    async def set_listener(self, controller, address, port, interval=0, timeout=2.5):
+    async def set_listener(self, controller, address, port, interval=0, timeout=2.5): # pylint: disable=too-many-arguments, too-many-positional-arguments
         """
         Sets an access controller event listener IPv4 address and port.
 
@@ -320,7 +319,7 @@ class UhppoteAsync:
 
         return None
 
-    async def set_door_control(self, controller, door, mode, delay, timeout=2.5):
+    async def set_door_control(self, controller, door, mode, delay, timeout=2.5): # pylint: disable=too-many-arguments, too-many-positional-arguments
         """
         Sets the door delay and control mode for an access controller door.
 
@@ -479,10 +478,19 @@ class UhppoteAsync:
 
         return None
 
-    # pylint: disable=too-many-locals
     async def put_card(
-        self, controller, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin, timeout=2.5
-    ):
+        self,
+        controller,
+        card_number,
+        start_date,
+        end_date,
+        door_1,
+        door_2,
+        door_3,
+        door_4,
+        pin,
+        timeout=2.5
+    ): # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
         """
         Adds (or updates) a card record stored on the access controller.
             Parameters:
@@ -746,7 +754,6 @@ class UhppoteAsync:
 
         return None
 
-    # pylint: disable=too-many-locals
     async def set_time_profile(
         self,
         controller,
@@ -768,7 +775,7 @@ class UhppoteAsync:
         segment_3_end,
         linked_profile_id,
         timeout=2.5,
-    ):
+    ): # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
         """
         Creates (or updates) a time profile on an access conntroller.
 
@@ -866,7 +873,7 @@ class UhppoteAsync:
 
         return None
 
-    # pylint: disable=too-many-locals
+
     async def add_task(
         self,
         controller,
@@ -884,7 +891,7 @@ class UhppoteAsync:
         task_type,
         more_cards,
         timeout=2.5,
-    ):
+    ): # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
         """
         Creates a scheduled task on an access conntroller.
 
@@ -1091,7 +1098,7 @@ class UhppoteAsync:
 
         return None
 
-    async def activate_keypads(self, controller, reader1, reader2, reader3, reader4, timeout=2.5):
+    async def activate_keypads(self, controller, reader1, reader2, reader3, reader4, timeout=2.5): # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
         """
         Enables (or disables) the keypad associated with an access reader.
 
@@ -1126,7 +1133,7 @@ class UhppoteAsync:
 
         return None
 
-    async def set_door_passcodes(self, controller, door, passcode1, passcode2, passcode3, passcode4, timeout=2.5):
+    async def set_door_passcodes(self, controller, door, passcode1, passcode2, passcode3, passcode4, timeout=2.5): # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
         """
         Sets up to four supervisor passcodes for a door. The passcodes override any other access
         restrictions and a valid passcode is in the range [0..999999], with 0 corresponding to

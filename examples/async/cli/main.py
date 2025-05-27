@@ -65,7 +65,6 @@ def parse_args():
     return parser.parse_args()
 
 
-# pylint: disable=broad-exception-caught
 async def main():
     """
     Parses the command line and executes the requested command.
@@ -91,7 +90,7 @@ async def main():
     if cmd in commands():
         try:
             await execute(commands()[cmd], args)
-        except Exception as x:
+        except Exception as x: # pylint: disable=broad-exception-caught
             print()
             print(f"*** ERROR  {cmd}: {x}")
             print()
