@@ -305,7 +305,9 @@ def get_card_by_index_request(controller, card_index):
     return packet
 
 
-def put_card_request(controller, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin): # pylint: disable=too-many-arguments, too-many-positional-arguments
+def put_card_request(
+    controller, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin
+):  # pylint: disable=too-many-arguments, too-many-positional-arguments
     """
     Encodes a put-card request.
 
@@ -512,7 +514,7 @@ def set_time_profile_request(
     segment_3_start,
     segment_3_end,
     linked_profile_id,
-): # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
+):  # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
     """
     Encodes a set-time-profile request.
 
@@ -627,7 +629,7 @@ def add_task_request(
     door,
     task_type,
     more_cards,
-): # pylint: disable=too-many-arguments, too-many-positional-arguments
+):  # pylint: disable=too-many-arguments, too-many-positional-arguments
     """
     Encodes an add-task request.
 
@@ -807,7 +809,9 @@ def activate_keypads_request(controller, reader1, reader2, reader3, reader4):
     return packet
 
 
-def set_door_passcodes_request(device_id, door, passcode1, passcode2, passcode3, passcode4): # pylint: disable=too-many-arguments, too-many-positional-arguments
+def set_door_passcodes_request(
+    device_id, door, passcode1, passcode2, passcode3, passcode4
+):  # pylint: disable=too-many-arguments, too-many-positional-arguments
     """
     Encodes a set-door-passcodes request.
 
@@ -943,7 +947,7 @@ def pack_uint32(v, packet, offset):
     struct.pack_into("<L", packet, offset, v)
 
 
-def pack_IPv4(v, packet, offset): # pylint: disable=invalid-name
+def pack_IPv4(v, packet, offset):  # pylint: disable=invalid-name
     """
     'in-place' packs an IPv4Address value 4-byte address into the packet at the offset.
 
@@ -982,7 +986,7 @@ def pack_datetime(v, packet, offset):
     packet[offset : offset + 7] = bytes.fromhex(bcd)
 
 
-def pack_HHmm(v, packet, offset): # pylint: disable=invalid-name
+def pack_HHmm(v, packet, offset):  # pylint: disable=invalid-name
     """
     'in-place' packs a short time value as a 2-byte BCD encoded HHmm value into the packet at the offset.
 

@@ -264,7 +264,7 @@ def get_card_by_index(u, dest, timeout, args, protocol="udp"):
     return response
 
 
-def put_card(u, dest, timeout, args, protocol="udp"): # pylint: disable=unused-argument
+def put_card(u, dest, timeout, args, protocol="udp"):  # pylint: disable=unused-argument
     """
     Adds or updates the information for an access card on a controller using the 'put_card' API function.
     """

@@ -65,7 +65,7 @@ class SetTimeResponse:
 
 
 @dataclass
-class GetStatusResponse: # pylint: disable=too-many-instance-attributes
+class GetStatusResponse:  # pylint: disable=too-many-instance-attributes
     """
     Container class for the decoded response from a get-status request.
 
@@ -219,7 +219,7 @@ class GetCardsResponse:
 
 
 @dataclass
-class GetCardResponse: # pylint: disable=too-many-instance-attributes
+class GetCardResponse:  # pylint: disable=too-many-instance-attributes
     """
     Container class for the decoded response from a get-card request.
 
@@ -248,7 +248,7 @@ class GetCardResponse: # pylint: disable=too-many-instance-attributes
 
 
 @dataclass
-class GetCardByIndexResponse: # pylint: disable=too-many-instance-attributes
+class GetCardByIndexResponse:  # pylint: disable=too-many-instance-attributes
     """
     Container class for the decoded response from a get-card-by-index request.
 
@@ -318,7 +318,7 @@ class DeleteAllCardsResponse:
 
 
 @dataclass
-class GetEventResponse: # pylint: disable=too-many-instance-attributes
+class GetEventResponse:  # pylint: disable=too-many-instance-attributes
     """
     Container class for the decoded response from a get-event request.
 
@@ -388,7 +388,7 @@ class RecordSpecialEventsResponse:
 
 
 @dataclass
-class GetTimeProfileResponse: # pylint: disable=too-many-instance-attributes
+class GetTimeProfileResponse:  # pylint: disable=too-many-instance-attributes
     """
     Container class for the decoded response from a get-time-profile request.
 

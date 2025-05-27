@@ -111,7 +111,7 @@ def main():
     if cmd in commands():
         try:
             execute(commands()[cmd], args)
-        except Exception as x: # pylint: disable=broad-exception-caught
+        except Exception as x:  # pylint: disable=broad-exception-caught
             print()
             print(f"*** ERROR  {cmd}: {x}")
             print()
