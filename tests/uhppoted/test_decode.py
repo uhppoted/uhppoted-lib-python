@@ -7,11 +7,15 @@ Tests the packet decoding functions.
 import unittest
 import datetime
 
+# pylint: disable=import-error
 from ipaddress import IPv4Address
 from uhppoted import decode
 
 
 class TestDecode(unittest.TestCase):
+    """
+    Test suite for the message decoder.
+    """
 
     def test_get_controller_response(self):
         """

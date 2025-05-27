@@ -6,6 +6,7 @@ Tests the internal conversion functions.
 
 import unittest
 
+# pylint: disable=import-error
 from uhppoted.net import timeout_to_seconds
 from uhppoted.net import disambiguate
 from uhppoted.net import is_inaddr_any
@@ -13,6 +14,9 @@ from uhppoted.net import Controller
 
 
 class TestNet(unittest.TestCase):
+    """
+    Test suite for the network utility package.
+    """
 
     def test_timeout_to_seconds(self):
         """

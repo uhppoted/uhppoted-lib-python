@@ -5,13 +5,16 @@ Tests the packet encoding functions.
 """
 
 import unittest
-import datetime
 
+# pylint: disable=import-error
 from ipaddress import IPv4Address
 from uhppoted import encode
 
 
 class TestEncode(unittest.TestCase):
+    """
+    Test suite for the message encoder.
+    """
 
     def test_set_listener_request(self):
         """

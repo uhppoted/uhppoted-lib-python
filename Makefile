@@ -39,10 +39,12 @@ vet:
 
 lint: 
 	pylint --rcfile=.pylintrc  --disable=duplicate-code src
-	pylint --rcfile=.pylintrc  examples/cli
-	pylint --rcfile=.pylintrc  examples/event-listener
-	pylint --rcfile=.pylintrc  examples/async/cli
-	pylint --rcfile=.pylintrc  examples/async/event-listener
+	pylint --rcfile=.pylintrc examples/cli
+	pylint --rcfile=.pylintrc examples/event-listener
+	pylint --rcfile=.pylintrc examples/async/cli
+	pylint --rcfile=.pylintrc examples/async/event-listener
+	pylint --rcfile=.pylintrc tests
+	pylint --rcfile=.pylintrc tests/uhppoted
 
 build-all: test vet lint
 
@@ -58,8 +60,7 @@ publish: release
 	python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-	pylint --rcfile=.pylintrc examples/event-listener
-	pylint --rcfile=.pylintrc examples/event-listener
+	pylint --rcfile=.pylintrc integratiobn-tests
 
 usage: build
 	-export UHPPOTED_ENV=DEV && $(CMD)
