@@ -28,7 +28,6 @@ CARD = 8165538
 CARD_INDEX = 2
 EVENT_INDEX = 29
 TIME_PROFILE = 29
-NO_TIMEOUT = struct.pack("ll", 0, 0)  # (infinite)
 
 
 def handle(sock, bind, debug):

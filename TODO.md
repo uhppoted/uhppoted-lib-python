@@ -4,16 +4,9 @@
 - [x] `argparse` args for examples
 - [x] async functions (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/4)
 - [x] Replace yapf with black
-
 - [x] pylint
-      - [x] fix decode::MAC
-      - [x] Remove 'all' command from CLI
-      - [x] make all async CLI functions async
-      - [x] move is_inaddr_any to net
-      - [x] CLI usage()
 
-- (?) integration tests in github workflow
-
+- [ ] integration tests in github workflow
 - [ ] Use site-specific configuration to run examples locally
       - https://docs.python.org/3/library/site.html
 

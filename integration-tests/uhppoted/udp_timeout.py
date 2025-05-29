@@ -3,7 +3,7 @@
 """
 UHPPOTE function tests.
 
-End-to-end tests for the uhppote functions.
+End-to-end tests for the uhppote UDP transport function timeout.
 """
 
 import unittest
@@ -29,7 +29,6 @@ CARD = 8165538
 CARD_INDEX = 2
 EVENT_INDEX = 29
 TIME_PROFILE = 29
-NO_TIMEOUT = struct.pack("ll", 0, 0)  # (infinite)
 
 
 def handle(sock, bind, debug):
@@ -409,13 +408,15 @@ class TestUDPWithTimeout(unittest.TestCase):
         controller = (CONTROLLER, DEST_ADDR)
         start_date = datetime.date(2021, 1, 1)
         end_date = datetime.date(2021, 12, 31)
-        monday = True
-        tuesday = False
-        wednesday = True
-        thursday = False
-        friday = True
-        saturday = False
-        sunday = False
+        weekdays = {
+            "monday": True,
+            "tuesday": False,
+            "wednesday": True,
+            "thursday": False,
+            "friday": True,
+            "saturday": False,
+            "sunday": False,
+        }
         start_time = datetime.time(8, 30)
         door = 3
         task_type = 4
@@ -425,13 +426,13 @@ class TestUDPWithTimeout(unittest.TestCase):
             controller,
             start_date,
             end_date,
-            monday,
-            tuesday,
-            wednesday,
-            thursday,
-            friday,
-            saturday,
-            sunday,
+            weekdays["monday"],
+            weekdays["tuesday"],
+            weekdays["wednesday"],
+            weekdays["thursday"],
+            weekdays["friday"],
+            weekdays["saturday"],
+            weekdays["sunday"],
             start_time,
             door,
             task_type,
@@ -444,13 +445,13 @@ class TestUDPWithTimeout(unittest.TestCase):
             controller,
             start_date,
             end_date,
-            monday,
-            tuesday,
-            wednesday,
-            thursday,
-            friday,
-            saturday,
-            sunday,
+            weekdays["monday"],
+            weekdays["tuesday"],
+            weekdays["wednesday"],
+            weekdays["thursday"],
+            weekdays["friday"],
+            weekdays["saturday"],
+            weekdays["sunday"],
             start_time,
             door,
             task_type,

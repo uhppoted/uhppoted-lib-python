@@ -3,12 +3,11 @@
 """
 UHPPOTE function tests.
 
-End-to-end tests for the uhppote functions.
+End-to-end tests for the uhppote TCP transport function timeout.
 """
 
 import unittest
 import socket
-import struct
 import threading
 import time
 import datetime
@@ -29,7 +28,6 @@ CARD = 8165538
 CARD_INDEX = 2
 EVENT_INDEX = 29
 TIME_PROFILE = 29
-NO_TIMEOUT = struct.pack("ll", 0, 0)  # (infinite)
 
 
 def handle(sock, bind, debug):

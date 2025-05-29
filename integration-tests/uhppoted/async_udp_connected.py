@@ -29,7 +29,6 @@ CARD = 8165538
 CARD_INDEX = 2
 EVENT_INDEX = 29
 TIME_PROFILE = 29
-NO_TIMEOUT = struct.pack("ll", 0, 0)  # (infinite)
 
 
 def handle(sock, bind, debug):
@@ -244,15 +243,15 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         """
         controller = (CONTROLLER, DEST_ADDR)
         card = 123456789
-        start = datetime.date(2023, 1, 1)
-        end = datetime.date(2025, 12, 31)
+        start_date = datetime.date(2023, 1, 1)
+        end_date = datetime.date(2025, 12, 31)
         door1 = 1
         door2 = 0
         door3 = 29
         door4 = 1
         pin = 7531
 
-        response = await self.u.put_card(controller, card, start, end, door1, door2, door3, door4, pin)
+        response = await self.u.put_card(controller, card, start_date, end_date, door1, door2, door3, door4, pin)
 
         self.assertEqual(response, expected.PutCardResponse)
 
