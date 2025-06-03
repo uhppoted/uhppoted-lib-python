@@ -1289,7 +1289,7 @@ class UhppoteAsync:
                 if asyncio.iscoroutine(result):
                     asyncio.create_task(result)
             except BaseException as exc:  # pylint: disable=broad-exception-caught
-                print(f"   *** ERROR {exc}")
+                print(f"   *** ERROR {exc}", flush=True)
 
         task = asyncio.create_task(self._udp.listen(handler))
 
