@@ -1282,7 +1282,7 @@ class Uhppote:
             try:
                 on_event(decode.event(packet))
             except BaseException as exc:  # pylint: disable=broad-exception-caught
-                print(f"   *** ERROR {exc}")
+                print(f"   *** ERROR {exc}", flush=True)
 
         self._udp.listen(handler)
 

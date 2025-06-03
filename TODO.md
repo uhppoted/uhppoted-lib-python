@@ -5,10 +5,14 @@
 - [x] async functions (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/4)
 - [x] Replace yapf with black
 - [x] pylint
+- [x] `print(..., flush=True)`
+- [ ] UDP dropping packets (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/10)
 
 - [ ] integration tests in github workflow
+- [ ] Replace `print(exc)` with proper logging
 - [ ] Use site-specific configuration to run examples locally
       - https://docs.python.org/3/library/site.html
+      - (?) custom pyproject.toml (a la home-assistant)
 
 ## TODO
 1. (?) Automatically set-listener address

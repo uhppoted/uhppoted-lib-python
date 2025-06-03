@@ -126,4 +126,4 @@ def dump(packet):
 
         print(f"   {offset:08x}  {p}  {q}")
 
-    print()
+    print("", flush=True)
