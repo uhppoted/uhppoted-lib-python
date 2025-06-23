@@ -6,7 +6,7 @@
 - [x] Replace yapf with black
 - [x] pylint
 - [x] `print(..., flush=True)`
-- [ ] UDP dropping packets (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/10)
+- [x] UDP dropping packets (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/10)
 
 - [ ] integration tests in github workflow
 - [ ] Replace `print(exc)` with proper logging

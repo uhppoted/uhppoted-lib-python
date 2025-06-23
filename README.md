@@ -184,6 +184,14 @@ pprint(record.__dict__, indent=2, width=1)
 ```
 4. The `async` implementation does not enable either `SO_REUSEADDR` or `SO_REUSEPORT`.
 
+5. Docker _bridge mode_ networking (_MacOS_ and _Windows_) appears to drop received UDP packets at an unreasonably high rate,
+   which causes a high rate of timeouts when issuing multiple simultaneous requests. It needs to be managed at an application
+   level, e.g.:
+   - use a task queue to rate limit requests
+   - bind to a fixed port and queue non-overlapping requests to a managed _uhppoted_ resource 
+   - use the TCP transport (if supported by the controllers)
+
+
 **API**
 
 - [`get_controllers`](#get_controllers)
