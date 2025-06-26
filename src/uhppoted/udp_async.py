@@ -56,9 +56,6 @@ class BroadcastProtocol(asyncio.Protocol):
         """
         Returns the collected replies after a delay.
         """
-        # await asyncio.sleep(timeout)
-        # return self._replies
-
         try:
             await asyncio.wait_for(self._done, timeout)
         except asyncio.TimeoutError:
