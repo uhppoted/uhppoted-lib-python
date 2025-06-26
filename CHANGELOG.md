@@ -6,6 +6,8 @@
 1. `get/set-antipassback` API function to get/set the anti-passback mode for a controller.
 2. Duplicate `async` API with `async` implementations for all API functions.
 
+### Updated
+1. Added check to prevent UDP broadcast-to-self.
 
 ## [0.8.10](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.8.10) - 2025-01-29
 

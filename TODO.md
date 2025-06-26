@@ -7,6 +7,9 @@
 - [x] pylint
 - [x] `print(..., flush=True)`
 - [x] UDP dropping packets (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/10)
+- [x] check UDP bind port is not 60000 (cf. https://github.com/uhppoted/uhppoted/issues/59)
+   - [x] fail with error
+   - [x] CHANGELOG
 
 - [ ] integration tests in github workflow
 - [ ] Replace `print(exc)` with proper logging

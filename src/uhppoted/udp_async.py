@@ -13,7 +13,7 @@ from . import net
 
 class BroadcastProtocol(asyncio.Protocol):
     """
-    asycnio protocol implementation for UDP broadcast single request/multiple response.
+    asyncio protocol implementation for UDP broadcast single request/multiple response.
     """
 
     def __init__(self, request, dest, debug=False):
@@ -26,6 +26,18 @@ class BroadcastProtocol(asyncio.Protocol):
 
     def connection_made(self, transport):
         self._transport = transport
+
+        # NTS: avoid broadcast-to-self
+        if sock := transport.get_extra_info("socket"):
+            _, src_port = sock.getsockname()
+            _, dest_port = self._dest
+            if src_port == dest_port:
+                self._done.set_exception(
+                    RuntimeError(f"invalid UDP bind address (port {src_port} reserved for broadcast)")
+                )
+                self._transport.close()
+                return
+
         self._transport.sendto(self._request, self._dest)
 
     def datagram_received(self, packet, _addr):
@@ -44,7 +56,17 @@ class BroadcastProtocol(asyncio.Protocol):
         """
         Returns the collected replies after a delay.
         """
-        await asyncio.sleep(timeout)
+        # await asyncio.sleep(timeout)
+        # return self._replies
+
+        try:
+            await asyncio.wait_for(self._done, timeout)
+        except asyncio.TimeoutError:
+            return self._replies
+
+        if self._done.exception():
+            raise self._done.exception()
+
         return self._replies
 
 

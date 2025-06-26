@@ -60,6 +60,13 @@ class UDP:
 
         try:
             sock.bind(self._bind)
+
+            # NTS: avoid broadcast-to-self
+            _, src_port = sock.getsockname()
+            _, dest_port = self._broadcast
+            if src_port == dest_port:
+                raise RuntimeError(f"invalid UDP bind address (port {src_port} reserved for broadcast)")
+
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, net.WRITE_TIMEOUT)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, net.READ_TIMEOUT)
