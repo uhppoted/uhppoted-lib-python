@@ -58,8 +58,8 @@ release: build-all integration-tests
 publish: release
 	echo "Releasing version $(VERSION)"
 	gh release create "$(VERSION)" dist/*.tar.gz --draft --prerelease --title "$(VERSION)-beta" --notes-file release-notes.md
-	python3 -m twine upload --repository testpypi -u __token__ --skip-existing --verbose dist/*
-	python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
+	. .venv/bin/activate; python3 -m twine upload --repository testpypi -u __token__ --skip-existing --verbose dist/*
+	. .venv/bin/activate; python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
 	python3 -m unittest integration-tests/uhppoted/async_tcp_timeout.py 
