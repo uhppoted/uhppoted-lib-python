@@ -38,22 +38,22 @@ integration-tests: build
 vet: 
 
 lint: 
-	pylint --rcfile=.pylintrc  --disable=duplicate-code src
-	pylint --rcfile=.pylintrc examples/cli
-	pylint --rcfile=.pylintrc examples/event-listener
-	pylint --rcfile=.pylintrc examples/async/cli
-	pylint --rcfile=.pylintrc examples/async/event-listener
-	pylint --rcfile=.pylintrc tests
-	pylint --rcfile=.pylintrc tests/uhppoted
-	pylint --rcfile=.pylintrc integration-tests
-	pylint --rcfile=.pylintrc --disable=duplicate-code integration-tests/uhppoted
+	. .venv/bin/activate; pylint --rcfile=.pylintrc  --disable=duplicate-code src
+	. .venv/bin/activate; pylint --rcfile=.pylintrc examples/cli
+	. .venv/bin/activate; pylint --rcfile=.pylintrc examples/event-listener
+	. .venv/bin/activate; pylint --rcfile=.pylintrc examples/async/cli
+	. .venv/bin/activate; pylint --rcfile=.pylintrc examples/async/event-listener
+	. .venv/bin/activate; pylint --rcfile=.pylintrc tests
+	. .venv/bin/activate; pylint --rcfile=.pylintrc tests/uhppoted
+	. .venv/bin/activate; pylint --rcfile=.pylintrc integration-tests
+	. .venv/bin/activate; pylint --rcfile=.pylintrc --disable=duplicate-code integration-tests/uhppoted
 
 build-all: test vet lint
 
 release: build-all integration-tests
 	rm -rf dist/*
-	python3 -m build
-	python3 -m twine check dist/* 
+	. .venv/bin/activate; python3 -m build
+	. .venv/bin/activate; python3 -m twine check dist/* 
 
 publish: release
 	echo "Releasing version $(VERSION)"

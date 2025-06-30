@@ -8,6 +8,8 @@
 
 ### Updated
 1. Added check to prevent UDP broadcast-to-self.
+2. Switched to _black_ formatter.
+3. Fixed all pylint warnings.
 
 
 ## [0.8.10](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.8.10) - 2025-01-29

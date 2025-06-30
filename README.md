@@ -21,9 +21,13 @@ pip install uhppoted
 
 #### Current Release
 
-**[v0.8.10](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.8.10) - 2025-01-29**
+**[v0.8.11](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.8.11) - 2025-07-01**
 
-1. Added event _auto-send interval_ to the `get-listener` and `set-listener` API function.
+1. Added `async` implementation of API.
+2. Added `get/set-antipassback` API function to get/set the anti-passback mode for a controller.
+3. Added check to prevent UDP broadcast-to-self.
+4. Switched to _black_ formatter.
+
 
 ## API
 

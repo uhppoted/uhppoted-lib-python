@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: uhppoted
-Version: 0.8.10
+Version: 0.8.11
 Summary: Python API for the UHPPOTE TCP/IP access controllers
 Author-email: uhppoted <uhppoted.development@gmail.com>
 Project-URL: Homepage, https://github.com/uhppoted/uhppoted-lib-python
@@ -14,15 +14,24 @@ License-File: LICENSE
 Provides-Extra: dev
 Requires-Dist: toml~=0.10.2; extra == "dev"
 Requires-Dist: yapf~=0.32.0; extra == "dev"
+Requires-Dist: black~=0.25.1; extra == "dev"
+Requires-Dist: build~=1.2.2; extra == "dev"
+Requires-Dist: twine~=6.1.0; extra == "dev"
 Provides-Extra: test
+Dynamic: license-file
 
 ![build](https://github.com/uhppoted/uhppoted-lib-python/workflows/build/badge.svg)
 
 # uhppoted-lib-python
 
-Python wrapper around the request/response API for the UHPPOTE TCP/IP access controllers. 
+Python wrapper around the request/response API for the UHPPOTE TCP/IP access controllers. As of _v0.8.11_, the library includes
+both `sync` and `async` implementations of the API functions. 
 
-A demo CLI illustrating the use of the API can be found in the [examples/cli](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/cli) folder.
+A set of basic examples illustrating the use of the library can be found in the [examples](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples) folder:
+- [examples/cli](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/cli) is a basic CLI using the `sync` API
+- [examples/event-listener](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/event-listener) is a `sync` event handler with queueing
+- [examples/async/cli](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/async/cli) is a basic CLI using the `async` API
+- [examples/async/event-listener](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/async/event-listener) is an `async` event handler with queueing
 
 ## Installation
 
@@ -34,26 +43,26 @@ pip install uhppoted
 
 #### Current Release
 
-**[v0.8.10](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.8.10) - 2025-01-29**
+**[v0.8.11](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.8.11) - 2025-07-01**
 
-1. Added event _auto-send interval_ to the `get-listener` and `set-listener` API function.
+1. Added `async` implementation of API.
+2. Added `get/set-antipassback` API function to get/set the anti-passback mode for a controller.
+3. Added check to prevent UDP broadcast-to-self.
+4. Switched to _black_ formatter.
+
 
 ## API
+
+### `sync` API
 
 Invoking an API function requires an instance of the `Uhppote` class initialised with the information required
 to access a controller:
 
 ```
 class Uhppote:
-    def __init__(self, uhppote=None):
+    def __init__(self, bind='0.0.0.0', broadcast='255.255.255.255:60000', listen="0.0.0.0:60001", debug=False):
 
-where uhppote is an instance of 
-
-class UHPPOTE:
-    bind: str
-    broadcast: str
-    listen: str
-    debug: bool
+where:
 
 bind        IPv4 address to which to bind the UDP socket. Defaults to 0.0.0.0
 broadcast   IPv4 address:port for broadcast UDP packets. Defaults to 255.255.255.255:60000
@@ -108,10 +117,74 @@ pprint(record.__dict__, indent=2, width=1)
   'version': 'v8.92'}
 ```
 
+### `async` API
+
+Invoking an API function requires an instance of the `UhppoteAsync` class initialised with the information required
+to access a controller:
+
+```
+class UhppoteAsync:
+    def __init__(self, bind='0.0.0.0', broadcast='255.255.255.255:60000', listen="0.0.0.0:60001", debug=False):
+
+where:
+
+bind        IPv4 address to which to bind the UDP socket. Defaults to 0.0.0.0
+broadcast   IPv4 address:port for broadcast UDP packets. Defaults to 255.255.255.255:60000
+listen      IPv4 address:port for events from controller (unused). Defaults to 0.0.0.0:60001
+debug       Displays the controller requests/responses if true.
+```
+
+e.g.:
+```
+from uhppoted import uhppote_async as uhppote
+from pprint import pprint
+
+bind = '0.0.0.0'
+broadcast = '255.255.255.255:60000'
+listen = '0.0.0.0:60001'
+debug = True
+
+u = uhppote.UhppoteAsync(bind, broadcast, listen, debug)
+record = await u.get_controller(405419896)
+
+pprint(record.__dict__, indent=2, width=1)
+```
+```
+>>> from uhppoted import uhppote_async as uhppote
+>>> from pprint import pprint
+>>> 
+>>> bind = '0.0.0.0'
+>>> broadcast = '255.255.255.255:60000'
+>>> listen = '0.0.0.0:60001'
+>>> debug = True
+>>> 
+>>> u = uhppote.Uhppote(bind, broadcast, listen, debug)
+>>> record = await u.get_controller(405419896)
+   00000000  17 94 00 00 78 37 2a 18  00 00 00 00 00 00 00 00
+   00000010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+   00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+   00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+
+   00000000  17 94 00 00 78 37 2a 18  c0 a8 01 64 ff ff ff 00
+   00000010  c0 a8 01 01 00 12 23 34  45 56 08 92 20 18 11 05
+   00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+   00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+
+>>> 
+>>> pprint(record.__dict__, indent=2, width=1)
+{ 'controller': 405419896,
+  'date': datetime.date(2018, 11, 5),
+  'gateway': IPv4Address('192.168.1.1'),
+  'ip_address': IPv4Address('192.168.1.100'),
+  'mac_address': '00:12:23:34::45:56',
+  'subnet_mask': IPv4Address('255.255.255.0'),
+  'version': 'v8.92'}
+```
+
 ### Notes
 1. All API functions raise an `Exception` if the call fails for any reason whatsoever.
 2. All API functions (other than `get_controllers` and `listen`) take a `controller` that may be either:
-   - a _uint32_s controller serial number (legacy)
+   - a _uint32_ controller serial number (legacy)
    - a tuple comprising `(id,address,protocol)`, where
        - `id` is the (required) controller serial number
        - `address` is the (optional) controller IPv4 address or address:port
@@ -125,7 +198,7 @@ pprint(record.__dict__, indent=2, width=1)
    get_controller((405419896, '192.168.1.100:60000'))
    get_controller((405419896)
 
-   Defaults to UDP and udp broadcast if the controller cannot be disambiguated.
+   Defaults to UDP and UDP broadcast if the controller cannot be disambiguated.
 ```
 
 3. All API functions (other than `listen`) take an optional `timeout` kwarg that sets the time limit (in seconds)
@@ -135,6 +208,53 @@ pprint(record.__dict__, indent=2, width=1)
 
    Defaults to 2.5s.
 ```
+4. The `async` implementation does not enable either `SO_REUSEADDR` or `SO_REUSEPORT`.
+
+5. Docker _bridge mode_ networking (_MacOS_ and _Windows_) appears to drop received UDP packets at an unreasonably high rate,
+   which causes a high rate of timeouts when issuing multiple simultaneous requests. It needs to be managed at an application
+   level, e.g.:
+   - use a task queue to rate limit requests
+   - bind to a fixed port and queue non-overlapping requests to a managed _uhppoted_ resource 
+   - use the TCP transport (if supported by the controllers)
+
+
+**API**
+
+- [`get_controllers`](#get_controllers)
+- [`get_controller`](#get_controller)
+- [`set_address`](#set_address)
+- [`get_status`](#get_status)
+- [`get_time`](#get_time)
+- [`set_time`](#set_time)
+- [`get_listener`](#get_listener)
+- [`set_listener`](#set_listener)
+- [`get_door_control`](#get_door_control)
+- [`set_door_control`](#set_door_control)
+- [`open_door`](#open_door)
+- [`get_cards`](#get_cards)
+- [`get_card`](#get_card)
+- [`get_card_by_index`](#get_card_by_index)
+- [`put_card`](#put_card)
+- [`delete_card`](#delete_card)
+- [`delete_cards`](#delete_cards)
+- [`get_event_index`](#get_event_index)
+- [`set_event_index`](#set_event_index)
+- [`get_event`](#get_event)
+- [`record_special_events`](#record_special_events)
+- [`get_time_profile`](#get_time_profile)
+- [`set_time_profile`](#set_time_profile)
+- [`clear_time_profiles`](#clear_time_profiles)
+- [`add_task`](#add_task)
+- [`refresh_tasklist`](#refresh_tasklist)
+- [`clear_tasklist`](#clear_tasklist)
+- [`set_pc_control`](#set_pc_control)
+- [`set_interlock`](#set_interlock)
+- [`activate_keypads`](#activate_keypads)
+- [`set_door_passcodes`](#set_door_passcodes)
+- [`get_antipassback`](#get_antipassback)
+- [`set_antipassback`](#set_antipassback)
+- [`restore_default_parameters`](#restore_default_parameters)
+- [`listen`](#listen)
 
 ### `get_controllers`
 ```
@@ -450,12 +570,12 @@ set_interlock(controller, interlock)
 
 controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
 interlock   uint8         controller door interlock mode
-                          0: no interlock
-                          1: doors 1&2
-                          2: doors 3&4
-                          3: doors 1&2,3&4
-                          4: doors 1&2&3
-                          8: doors 1&2&3&4
+                          - 0: no interlock
+                          - 1: doors 1&2
+                          - 2: doors 3&4
+                          - 3: doors 1&2,3&4
+                          - 4: doors 1&2&3
+                          - 8: doors 1&2&3&4
 
 
 Raises an Exception if the call failed for any reason.
@@ -485,6 +605,38 @@ passcode1   uint32        supervisor passcode 1 [0..999999] (0 is 'no code')
 passcode2   uint32        supervisor passcode 2 [0..999999] (0 is 'no code')
 passcode3   uint32        supervisor passcode 3 [0..999999] (0 is 'no code')
 passcode4   uint32        supervisor passcode 4 [0..999999] (0 is 'no code')
+
+
+Raises an Exception if the call failed for any reason.
+```
+
+### `get_antipassback`
+
+Retrieves the anti-passback mode from the controller.
+
+```
+get_antipassback(controller)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+
+
+Raises an Exception if the call failed for any reason.
+```
+
+### `set_antipassback`
+
+Sets the controller anti-passback mode.
+
+```
+set_antipassback(controller, antipassback)
+
+controller    uint32|tuple  controller serial number or (id, address, protocol) tuple
+antipassback  uint8         anti-passback mode:
+                            - 0: disabled
+                            - 1: (1:2);(3:4)
+                            - 2: (1,3);(2,4)
+                            - 3: 1:(2,3)
+                            - 4: 1:(2,3,4)
 
 
 Raises an Exception if the call failed for any reason.
@@ -1082,6 +1234,39 @@ class SetDoorPasscodesResponse:
     ok: bool
 ```
 
+### `GetAntiPassbackResponse`
+
+Container class for the decoded response to a get-antipassback request.
+
+    Fields:
+        controller   (uint32)  Controller serial number.
+        antipassback (uint8)   Anti-passback mode:
+                               - 0: disabled
+                               - 1: (1:2);(3:4)
+                               - 2: (1,3):(2,4)
+                               - 3: 1:(2,3)
+                               - 4: 1:(2,3,4)
+```
+@dataclass
+class GetAntiPassbackResponse:
+    controller: int
+    antipassback: int
+```
+
+### `SetAntiPassbackResponse`
+
+Container class for the decoded response to a set-antipassback request.
+
+    Fields:
+        controller  (uint32)  Controller serial number.
+        ok          (bool)    Succeeded/failed.
+```
+@dataclass
+class SetAntiPassbackResponse:
+    controller: int
+    ok: bool
+```
+
 ### `RestoreDefaultParametersResponse`
 
 Container class for the decoded response to a restore-default-parameters request.
@@ -1152,3 +1337,4 @@ class Event:
     system_error: int
     special_info: int
     sequence_no: int
+```
