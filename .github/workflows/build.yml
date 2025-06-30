@@ -23,15 +23,14 @@ jobs:
     - name: Install Python packages
       run: pip install toml yapf black pylint
 
+    - name: Check out code
+      uses: actions/checkout@v4
+
     - name: Create (dummy) .venv virtual environment
       run: |
          pwd
          python -m venv .venv
          ls -la
-
-
-    - name: Check out code
-      uses: actions/checkout@v4
 
     - name: Build
       run: |
