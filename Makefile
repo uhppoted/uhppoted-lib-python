@@ -18,13 +18,13 @@ update:
 update-release:
 
 format: 
-	black src
-	black examples/cli
-	black examples/event-listener
-	black examples/async/cli
-	black examples/async/event-listener
-	black tests
-	black integration-tests
+	. .venv/bin/activate; black src
+	. .venv/bin/activate; black examples/cli
+	. .venv/bin/activate; black examples/event-listener
+	. .venv/bin/activate; black examples/async/cli
+	. .venv/bin/activate; black examples/async/event-listener
+	. .venv/bin/activate; black tests
+	. .venv/bin/activate; black integration-tests
 
 build: format
 	python3 -m compileall .
