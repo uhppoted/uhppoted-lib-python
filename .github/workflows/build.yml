@@ -20,10 +20,11 @@ jobs:
         python-version: ^3.10
       id: python
 
-    - name: Install Python packages and create (dummy) .venv virtual environment
-      run: |
-         pip install toml yapf black pylint
-         python -m venv .venv
+    - name: Install Python packages
+      run: pip install toml yapf black pylint
+
+    - name: Create (dummy) .venv virtual environment
+      run: python -m venv .venv
 
     - name: Check out code
       uses: actions/checkout@v4
