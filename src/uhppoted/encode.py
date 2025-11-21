@@ -936,7 +936,7 @@ def pack_uint16(v, packet, offset):
 
 def pack_uint32(v, packet, offset):
     """
-    'in-place' packs a uint16 value as a 4-byte little endian value into the packet
+    'in-place' packs a uint32 value as a 4-byte little endian value into the packet
     at the offset.
 
         Parameters:

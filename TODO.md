@@ -1,16 +1,9 @@
 # TODO
 
-- [x] anti-passback (cf. https://github.com/uhppoted/uhppoted/issues/60)
-- [x] `argparse` args for examples
-- [x] async functions (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/4)
-- [x] Replace yapf with black
-- [x] pylint
-- [x] `print(..., flush=True)`
-- [x] UDP dropping packets (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/10)
-- [x] check UDP bind port is not 60000 (cf. https://github.com/uhppoted/uhppoted/issues/59)
-   - [x] fail with error
-   - [x] CHANGELOG
-
+- [ ] `set-ip`
+   - [ ] Fix integration test
+   - [ ] encode unit test
+   
 - [ ] integration tests in github workflow
 - [ ] Replace `print(exc)` with proper logging
 - [ ] Use site-specific configuration to run examples locally
