@@ -7,6 +7,8 @@ import datetime
 from ipaddress import IPv4Address
 
 # pylint: disable=import-error
+# pylint: disable=invalid-name
+
 from uhppoted import structs
 
 GetControllersResponse = [

@@ -1,5 +1,12 @@
 # TODO
 
+- [ ] github CI build
+```
+. .venv/bin/activate; pylint --rcfile=.pylintrc --disable=duplicate-code integration-tests/uhppoted
+************* Module expected
+integration-tests/uhppoted/expected.py:12:0: C0103: Constant name "GetControllersResponse" doesn't conform to UPPER_CASE naming style (invalid-name)
+```
+
 - [ ] `set-ip`
    - [ ] Fix integration test
    - [ ] encode unit test
