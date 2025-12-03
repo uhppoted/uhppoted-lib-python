@@ -6,8 +6,6 @@ Implements an async Python wrapper around the UHPPOTE TCP/IP access controller A
 
 import asyncio
 
-from contextlib import suppress
-
 from . import decode
 from . import encode
 from . import tcp_async as tcp
@@ -1269,7 +1267,7 @@ class UhppoteAsync:
 
         return None
 
-    async def listen(self, on_event):
+    async def listen(self, on_event, close=None):
         """
         Establishes a listener for events from the access controllers by binding to the UDP listen
         address from the constructor.
@@ -1278,11 +1276,14 @@ class UhppoteAsync:
                on_event  (function)  Handler function for received events, with a function signature
                                      f(event).
 
+               close     (asyncio.Event) Optional signal to close listening socket and stop listening
+                                         for events.
+
             Returns:
                None
         """
 
-        def handler(packet):
+        def dispatch(packet):
             try:
                 event = decode.event(packet)
                 result = on_event(event)
@@ -1291,18 +1292,7 @@ class UhppoteAsync:
             except BaseException as exc:  # pylint: disable=broad-exception-caught
                 print(f"   *** ERROR {exc}", flush=True)
 
-        task = asyncio.create_task(self._udp.listen(handler))
-
-        try:
-            await asyncio.sleep(float("inf"))
-        except asyncio.CancelledError:
-            pass
-        finally:
-            task.cancel()
-            with suppress(asyncio.CancelledError):
-                await task
-
-        return None
+        await self._udp.listen(dispatch, close)
 
     async def _send(self, request, dest_addr, timeout, protocol):
         """

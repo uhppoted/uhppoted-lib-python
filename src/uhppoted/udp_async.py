@@ -235,14 +235,16 @@ class UDPAsync:
         finally:
             transport.close()
 
-    async def listen(self, on_event):
+    async def listen(self, on_event, close=None):
         """
         Binds to the listen address from the constructor and invokes the events handler for
         any received 64 byte UDP packets. Invalid'ish packets are silently discarded.
 
             Parameters:
-               on_event  (function)  Handler function for received events, with a function signature
-                                     f(packet).
+               on_event  (function)      Handler function for received events, with a function signature
+                                         fn(packet).
+               close     (asyncio.Event) Optional signal to close listening socket and stop listening
+                                         for events.
 
             Returns:
                None.
@@ -251,6 +253,7 @@ class UDPAsync:
                Error  For any socket related errors.
         """
         loop = asyncio.get_running_loop()
+        stop = close if close is not None else asyncio.Event()
 
         transport, _ = await loop.create_datagram_endpoint(
             lambda: EventProtocol(on_event, self._debug),
@@ -259,7 +262,7 @@ class UDPAsync:
         )
 
         try:
-            await asyncio.sleep(float("inf"))
+            await stop.wait()
         except asyncio.CancelledError:
             pass
         finally:

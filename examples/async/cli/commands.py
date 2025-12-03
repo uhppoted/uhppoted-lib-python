@@ -31,10 +31,10 @@ TIME_PROFILE_ID = 29
 AUTO_SEND = 15
 ANTIPASSBACK = 2
 
-ADDRESS = ipaddress.IPv4Address("192.168.1.100")
+ADDRESS = ipaddress.IPv4Address("192.168.1.125")
 NETMASK = ipaddress.IPv4Address("255.255.255.0")
 GATEWAY = ipaddress.IPv4Address("192.168.1.1")
-LISTENER = (ipaddress.IPv4Address("192.168.1.100"), 60001)
+LISTENER = (ipaddress.IPv4Address("192.168.1.125"), 60001)
 
 Command = namedtuple("Command", ["f", "args"])
 
@@ -621,19 +621,10 @@ async def listen(u, dest, timeout, args, protocol="udp"):  # pylint: disable=unu
     Listens for controller generated events the 'listen' API function.
     """
     close = asyncio.Event()
-    task = asyncio.create_task(u.listen(on_event))
-
     loop = asyncio.get_running_loop()
     loop.add_signal_handler(signal.SIGINT, close.set)
 
-    try:
-        await close.wait()
-    finally:
-        task.cancel()
-        with suppress(asyncio.CancelledError):
-            await task
-
-    return None
+    await u.listen(on_event, close=close)
 
 
 async def on_event(event):

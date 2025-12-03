@@ -1,8 +1,8 @@
 DIST ?= development
-CMD   = cd examples/cli && python3 main.py --debug --bind 192.168.1.100 --broadcast 192.168.1.255 --listen 192.168.1.100:60001
-TCP   = cd examples/cli && python3 main.py --debug --tcp --dest 192.168.1.100
-ASYNC = cd examples/async/cli && python3 main.py --debug --bind 192.168.1.100 --broadcast 192.168.1.255 --listen 192.168.1.100:60001
-ASYNC_TCP = cd examples/async/cli && python3 main.py --debug --tcp --dest 192.168.1.100
+CMD   = cd examples/cli && python3 main.py --debug --bind 192.168.1.125 --broadcast 192.168.1.255 --listen 192.168.1.125:60001
+TCP   = cd examples/cli && python3 main.py --debug --tcp --dest 192.168.1.125
+ASYNC = cd examples/async/cli && python3 main.py --debug --bind 192.168.1.125 --broadcast 192.168.1.255 --listen 192.168.1.125:60001
+ASYNC_TCP = cd examples/async/cli && python3 main.py --debug --tcp --dest 192.168.1.125
 
 CONTROLLER ?= 405419896
 CARD ?= 1058400
@@ -421,11 +421,11 @@ all-async: build
 event-listener: build
 	export UHPPOTED_ENV=DEV    && \
 	cd examples/event-listener && \
-	python3 main.py --debug --bind 192.168.1.100 --broadcast 192.168.1.255 --listen 192.168.1.100:60001
+	python3 main.py --debug --bind 192.168.1.1`25` --broadcast 192.168.1.255 --listen 192.168.1.125:60001
 
 event-listener-async: build
 	export UHPPOTED_ENV=DEV          && \
 	cd examples/async/event-listener && \
-	python3 main.py --debug --bind 192.168.1.100 --broadcast 192.168.1.255 --listen 192.168.1.100:60001
+	python3 main.py --bind 192.168.1.125 --broadcast 192.168.1.255 --listen 192.168.1.125:60001 --host 192.168.1.125:60001
 
 	

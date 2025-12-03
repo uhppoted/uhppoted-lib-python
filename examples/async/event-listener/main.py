@@ -2,6 +2,7 @@
 Implements an async event listener that pushes received events on to a queue for processing separately.
 """
 
+import argparse
 import asyncio
 import ipaddress
 import os
@@ -9,8 +10,6 @@ import pathlib
 import pprint
 import signal
 import sys
-
-from contextlib import suppress
 
 if os.environ.get("UHPPOTED_ENV", "") == "DEV":
     root = pathlib.Path(__file__).resolve().parents[3]
@@ -27,22 +26,48 @@ async def main():
     Sets the access controller(s) event listener address:port and then listens for received events on a thread.
     """
     controllers = [405419896, 303986753, 201020304]  # controller serial numbers
-    host_addr = ipaddress.IPv4Address("192.168.1.100")  # IPv4 address of host machine
+    host_addr = "192.168.1.100"  # IPv4 address of host machine
     host_port = 60001  # port on which to listen for events
 
-    bind_addr = "0.0.0.0"  # either INADDR_ANY (0.0.0.0) or the host IPv4 address
-    broadcast_addr = (
-        "255.255.255.255:60000"  # either the broadcast address for INADDR_ANY or the host IP broadcast address
+    bind_addr = "0.0.0.0"  # INADDR_ANY (0.0.0.0) or the host IPv4 address
+    broadcast_addr = "255.255.255.255:60000"  # broadcast address for INADDR_ANY or the host IP broadcast address
+    listen_addr = f"0.0.0.0:{host_port}"  # INADDR_ANY (0.0.0.0) or the host IP IPv4 address
+
+    parser = argparse.ArgumentParser(description="Queued event listener example")
+    parser.add_argument(
+        "--bind",
+        type=str,
+        default=bind_addr,
+        help="IPv4 bind address for host machine (e.g. 192.168.1.125). Defaults to 0.0.0.0",
     )
-    listen_addr = f"0.0.0.0:{host_port}"  # either INADDR_ANY (0.0.0.0) or the host IP IPv4 address
-    debug = False
+    parser.add_argument(
+        "--broadcast",
+        type=str,
+        default=broadcast_addr,
+        help="IPv4 broadcast address for host machine (e.g. 192.168.1.255). Defaults to 255.255.255.255",
+    )
+    parser.add_argument(
+        "--listen",
+        type=str,
+        default=listen_addr,
+        help="IPv4 listen address:port for host machine (e.g. 192.168.1.125:60001). Defaults to 0.0.0.0:60001",
+    )
+    parser.add_argument(
+        "--host",
+        type=str,
+        default=f"{host_addr}:{host_port}",
+        help="IPv4 address for controller event listener (e.g. 192.168.1.125:60001)",
+    )
+    parser.add_argument("--debug", action="store_true", help="enables debugging messages")
+
+    args = parser.parse_args()
 
     try:
         # base configuration for UHPPOTE driver
-        u = uhppote.UhppoteAsync(bind_addr, broadcast_addr, listen_addr, debug)
+        u = uhppote.UhppoteAsync(args.bind, args.broadcast, args.listen, args.debug)
 
         # # set the IPv4 address and UDP port to which the controller should send events
-        tasks = [asyncio.create_task(set_listener(u, controller, host_addr, host_port)) for controller in controllers]
+        tasks = [asyncio.create_task(set_listener(u, controller, args.host)) for controller in controllers]
 
         await asyncio.gather(*tasks)
 
@@ -66,12 +91,14 @@ async def main():
         print()
 
 
-async def set_listener(u, controller, address, port):
+async def set_listener(u, controller, addr_port):
     """
     Sets  the controller event listen IPv4 address and auto-send interval using the
     'set_listener' API function.
     """
-    return await u.set_listener(controller, address, port)
+    addr, port = addr_port.split(":")
+
+    return await u.set_listener(controller, ipaddress.IPv4Address(addr), int(port))
 
 
 async def record_special_events(u, controller):
@@ -89,20 +116,10 @@ async def listen(u, q):
     print("INFO   listening for events")
 
     close = asyncio.Event()
-    #   task = asyncio.create_task(u.listen(lambda e: on_event(e, q)))
-    task = asyncio.create_task(u.listen(lambda e: on_event_async(e, q)))
-
     loop = asyncio.get_running_loop()
     loop.add_signal_handler(signal.SIGINT, close.set)
 
-    try:
-        await close.wait()
-    finally:
-        task.cancel()
-        with suppress(asyncio.CancelledError):
-            await task
-
-    return None
+    await u.listen(lambda e: on_event(e, q), close=close)
 
 
 def on_event(event, q):
