@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Updated
+1. Fixed logic in async _event-listener_ to return socket _create_ errors to invoking function.
+
 
 ## [0.8.11](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.8.11) - 2025-07-01
 

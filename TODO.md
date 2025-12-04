@@ -6,8 +6,8 @@
    - [x] Fix 'uhppote-async.listen'
    - [x] Fix CLI _listen_
    - [x] Fix example event listener
-   - [ ] Integration test
-   - [ ] CHANGELOG
+   - [x] integration test
+   - [x] CHANGELOG
    - [ ] README
 
 

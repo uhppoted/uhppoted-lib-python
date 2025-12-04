@@ -62,7 +62,7 @@ publish: release
 	. .venv/bin/activate; python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-	python3 -m unittest integration-tests/uhppoted/async_tcp_timeout.py 
+	python3 -m unittest integration-tests/uhppoted/async_listen.py 
 
 usage: build
 	-export UHPPOTED_ENV=DEV && $(CMD)
