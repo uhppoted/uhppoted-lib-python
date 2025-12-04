@@ -6,7 +6,6 @@ UHPPOTE function tests.
 End-to-end tests for the uhppote UDP async transport function timeout.
 """
 
-import asyncio
 import unittest
 import socket
 import struct
@@ -101,7 +100,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.get_controller(controller)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.get_controller(controller, timeout=TIMEOUT)
 
     # NTS: set_ip returns immediately
@@ -126,7 +125,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.get_time(controller)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.get_time(controller, timeout=TIMEOUT)
 
     async def test_set_time(self):
@@ -140,7 +139,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.set_time(controller, now)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.set_time(controller, now, timeout=TIMEOUT)
 
     async def test_get_status(self):
@@ -153,7 +152,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.get_status(controller)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.get_status(controller, timeout=TIMEOUT)
 
     async def test_get_listener(self):
@@ -166,7 +165,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.get_listener(controller)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.get_listener(controller, timeout=TIMEOUT)
 
     async def test_set_listener(self):
@@ -182,7 +181,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.set_listener(controller, address, port, interval)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.set_listener(controller, address, port, timeout=TIMEOUT)
 
     async def test_get_door_control(self):
@@ -196,7 +195,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.get_door_control(controller, door)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.get_door_control(controller, door, timeout=TIMEOUT)
 
     async def test_set_door_control(self):
@@ -212,7 +211,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.set_door_control(controller, door, mode, delay)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.set_door_control(controller, door, mode, delay, timeout=TIMEOUT)
 
     async def test_open_door(self):
@@ -226,7 +225,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.open_door(controller, door)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.open_door(controller, door, timeout=TIMEOUT)
 
     async def test_get_cards(self):
@@ -239,7 +238,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.get_cards(controller)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.get_cards(controller, timeout=TIMEOUT)
 
     async def test_get_card(self):
@@ -253,7 +252,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.get_card(controller, card)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.get_card(controller, card, timeout=TIMEOUT)
 
     async def test_get_card_by_index(self):
@@ -267,7 +266,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.get_card_by_index(controller, index)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.get_card_by_index(controller, index, timeout=TIMEOUT)
 
     async def test_put_card(self):
@@ -288,7 +287,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.put_card(controller, card, start_date, end_date, door1, door2, door3, door4, pin)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.put_card(
                 controller, card, start_date, end_date, door1, door2, door3, door4, pin, timeout=TIMEOUT
             )
@@ -304,7 +303,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.delete_card(controller, card)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.delete_card(controller, card, timeout=TIMEOUT)
 
     async def test_delete_all_cards(self):
@@ -317,7 +316,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.delete_all_cards(controller)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.delete_all_cards(controller, timeout=TIMEOUT)
 
     async def test_get_event(self):
@@ -331,7 +330,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.get_event(controller, index)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.get_event(controller, index, timeout=TIMEOUT)
 
     async def test_get_event_index(self):
@@ -344,7 +343,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.get_event_index(controller)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.get_event_index(controller, timeout=TIMEOUT)
 
     async def test_set_event_index(self):
@@ -358,7 +357,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.set_event_index(controller, index)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.set_event_index(controller, index, timeout=TIMEOUT)
 
     async def test_record_special_events(self):
@@ -372,7 +371,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.record_special_events(controller, enabled)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.record_special_events(controller, enabled, timeout=TIMEOUT)
 
     async def test_get_time_profile(self):
@@ -386,7 +385,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.get_time_profile(controller, profile)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.get_time_profile(controller, profile, timeout=TIMEOUT)
 
     async def test_set_time_profile(self):
@@ -436,7 +435,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         )
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.set_time_profile(
                 controller,
                 profile_id,
@@ -469,7 +468,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.delete_all_time_profiles(controller)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.delete_all_time_profiles(controller, timeout=TIMEOUT)
 
     async def test_add_task(self):
@@ -512,7 +511,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         )
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.add_task(
                 controller,
                 start_date,
@@ -541,7 +540,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.refresh_tasklist(controller)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.refresh_tasklist(controller, timeout=TIMEOUT)
 
     async def test_clear_tasklist(self):
@@ -554,7 +553,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.clear_tasklist(controller)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.clear_tasklist(controller, timeout=TIMEOUT)
 
     async def test_set_pc_control(self):
@@ -568,7 +567,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.set_pc_control(controller, enable)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.set_pc_control(controller, enable, timeout=TIMEOUT)
 
     async def test_set_interlock(self):
@@ -582,7 +581,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.set_interlock(controller, interlock)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.set_interlock(controller, interlock, timeout=TIMEOUT)
 
     async def test_activate_keypads(self):
@@ -599,7 +598,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.activate_keypads(controller, reader1, reader2, reader3, reader4)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.activate_keypads(controller, reader1, reader2, reader3, reader4, timeout=TIMEOUT)
 
     async def test_set_door_passcodes(self):
@@ -617,7 +616,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.set_door_passcodes(controller, door, passcode1, passcode2, passcode3, passcode4)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.set_door_passcodes(
                 controller, door, passcode1, passcode2, passcode3, passcode4, timeout=TIMEOUT
             )
@@ -632,7 +631,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.get_antipassback(controller)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.get_antipassback(controller, timeout=TIMEOUT)
 
     async def test_set_antipassback(self):
@@ -646,7 +645,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.set_antipassback(controller, antipassback)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.set_antipassback(controller, antipassback, timeout=TIMEOUT)
 
     async def test_restore_default_parameters(self):
@@ -659,5 +658,5 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         await self.u.restore_default_parameters(controller)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
-        with self.assertRaises(asyncio.TimeoutError):
+        with self.assertRaises(TimeoutError):
             await self.u.restore_default_parameters(controller, timeout=TIMEOUT)
