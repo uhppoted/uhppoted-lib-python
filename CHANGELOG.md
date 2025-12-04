@@ -5,7 +5,7 @@
 ### Updated
 1. Fixed bug in `async` _event-listener_ implementation that swallowed a socket `address in use` error.
 2. Added optional `close` event signal to `async` _event-listener_.
-3. Fixed changed `TimeoutError` in _async_ integration tests.
+3. Fixed changed `TimeoutError` type in _async_ integration tests.
 
 
 ## [0.8.11](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.8.11) - 2025-07-01
