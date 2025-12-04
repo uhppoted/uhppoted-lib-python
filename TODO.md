@@ -1,15 +1,14 @@
 # TODO
 
 
-- [ ] async event listener does not report 'OSError: [Errno 48] Address already in use' (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/16)
+- [x] async event listener does not report 'OSError: [Errno 48] Address already in use' (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/16)
    - [x] Fix `udp.listen`
    - [x] Fix 'uhppote-async.listen'
    - [x] Fix CLI _listen_
    - [x] Fix example event listener
    - [x] integration test
    - [x] CHANGELOG
-   - [ ] README
-
+   - [x] README
 
 
 - [ ] github CI build

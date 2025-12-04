@@ -3,7 +3,8 @@
 ## Unreleased
 
 ### Updated
-1. Fixed logic in async _event-listener_ to return socket _create_ errors to invoking function.
+1. Fixed bug in `async` _event-listener_ implementation that swallowed a socket `address in use` error.
+2. Added optional `close` event signal to `async` _event-listener_.
 
 
 ## [0.8.11](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.8.11) - 2025-07-01

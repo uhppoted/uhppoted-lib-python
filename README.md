@@ -632,11 +632,13 @@ Raises an Exception if the call failed for any reason.
 
 ### `listen`
 ```
-listen(handler)
+listen(handler, close)
 
 handler  event handling callback function of the form
          def on_event(event):
               ...
+
+close    optional asyncio.Event to shutdown the listener socket.
 
 Raises an Exception if the call failed for any reason.
 ```
@@ -644,7 +646,7 @@ Raises an Exception if the call failed for any reason.
 `listen` is a blocking call that will invoke the `handler` function for each received event, e.g.:
 ```
     ...
-    u.listen(on_event)
+    u.listen(on_event, close)
 
 def on_event(event):
     if event != None:
