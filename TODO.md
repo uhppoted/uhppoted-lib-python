@@ -1,9 +1,5 @@
 # TODO
 
-
-- [x] async event listener does not report 'OSError: [Errno 48] Address already in use' (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/16)
-- [x] Fix changed `TimeoutError` in _async_ integration tests
-
 - [ ] github CI build
 ```
 . .venv/bin/activate; pylint --rcfile=.pylintrc --disable=duplicate-code integration-tests/uhppoted
