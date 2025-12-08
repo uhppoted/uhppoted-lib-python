@@ -23,7 +23,7 @@ pip install uhppoted
 
 **[v0.8.11.2](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.8.11.2) - 2025-12-08**
 
-1. Added optional `on_error` callback parameterto `async` _event-listener_. Both the `close` and `on_error`
+1. Added optional `on_error` callback parameter to `async` _event-listener_. Both the `close` and `on_error`
    parameters are now _kwargs_.
 
 
