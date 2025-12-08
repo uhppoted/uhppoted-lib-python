@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [0.8.11.2](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.8.11.1) - 2025-12-08
+## [0.8.11.2](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.8.11.2) - 2025-12-08
 
 ### Updated
 1. Added optional _on_error_ handler to `async` _event-listener_ implementation.
