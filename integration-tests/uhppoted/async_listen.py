@@ -156,8 +156,13 @@ class TestAsyncListen(unittest.IsolatedAsyncioTestCase):
         """
         Tests the event listener.
         """
-        expected = EXPECTED
+        expected = {
+            "events": EXPECTED,
+            "errors": ["invalid reply function code (ff)"],
+        }
+
         events = []
+        errors = []
         close = asyncio.Event()
 
         async def stop():
@@ -168,6 +173,10 @@ class TestAsyncListen(unittest.IsolatedAsyncioTestCase):
             if event is not None:
                 events.append(event)
 
+        async def on_error(error):
+            if error is not None:
+                errors.append(f"{error}")
+
         async def send():
             for evt in EVENTS:
                 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
@@ -175,13 +184,14 @@ class TestAsyncListen(unittest.IsolatedAsyncioTestCase):
                 await asyncio.sleep(0.1)
 
         stopping = asyncio.create_task(stop())
-        listener = asyncio.create_task(self.u.listen(on_event, close=close))
+        listener = asyncio.create_task(self.u.listen(on_event, on_error=on_error, close=close))
         await asyncio.sleep(0.1)
         sender = asyncio.create_task(send())
 
         await asyncio.gather(stopping, listener, sender)
 
-        self.assertEqual(events, expected)
+        self.assertEqual(events, expected["events"])
+        self.assertEqual(errors, expected["errors"])
 
     async def test_address_in_use(self):
         """

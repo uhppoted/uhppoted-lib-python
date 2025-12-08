@@ -1267,14 +1267,19 @@ class UhppoteAsync:
 
         return None
 
-    async def listen(self, on_event, close=None):
+    async def listen(self, on_event, *, on_error=None, close=None):
         """
         Establishes a listener for events from the access controllers by binding to the UDP listen
         address from the constructor.
 
             Parameters:
-               on_event  (function)  Handler function for received events, with a function signature
-                                     f(event).
+               on_event  (callable)  Handler function for received events, with a function signature
+                                     on_event(event) -> None or awaitable. If the handler returns a
+                                     coroutine, it is scheduled as a task.
+
+               on_error (callable, optional)  Optional error handler with signature
+                                              on_error(exception) -> None or awaitable. Errors and warnings are
+                                              silently discarded if omitted.
 
                close     (asyncio.Event) Optional signal to close listening socket and stop listening
                                          for events.
@@ -1290,7 +1295,10 @@ class UhppoteAsync:
                 if asyncio.iscoroutine(result):
                     asyncio.create_task(result)
             except BaseException as exc:  # pylint: disable=broad-exception-caught
-                print(f"   *** ERROR {exc}", flush=True)
+                if on_error is not None:
+                    err = on_error(exc)
+                    if asyncio.iscoroutine(err):
+                        asyncio.create_task(err)
 
         await self._udp.listen(dispatch, close)
 

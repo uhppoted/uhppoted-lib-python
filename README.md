@@ -638,27 +638,64 @@ Raises an Exception if the call failed for any reason.
 ```
 
 ### `listen`
-```
-listen(handler, close)
+Please note that the _sync_ and _async_ `listen` functions are **different**. 
 
-handler  event handling callback function of the form
-         def on_event(event):
+#### _sync_
+
+`listen` is a blocking call that will invoke the `handler` function for each received event, e.g.:
+
+```
+def listen(handler)
+
+on_event  received events callback function, of the form
+          def on_event(event):
+              ...
+```
+```
+    def on_event(event):
+        if event != None:
+            pprint(event.__dict__, indent=2, width=1)
+
+    ...
+    u.listen(on_event)
+    ...
+
+```
+
+#### _async_
+
+`listen` is a non-blocking call that will invoke the `handler` function for each received event.
+```
+async def listen(handler, on_error=None, close=None)
+
+on_event  received events callback function, of the form
+          def on_event(event):
+              ...
+
+on_error  optional event handling error callback function, of the form
+          def on_error(error):
               ...
 
 close    optional asyncio.Event to shutdown the listener socket.
 
 Raises an Exception if the call failed for any reason.
-```
 
-`listen` is a blocking call that will invoke the `handler` function for each received event, e.g.:
 ```
-    ...
-    u.listen(on_event, close)
+e.g.:
+```
+    def on_event(event):
+        if event != None:
+            pprint(event.__dict__, indent=2, width=1)
 
-def on_event(event):
-    if event != None:
-        pprint(event.__dict__, indent=2, width=1)
+    def on_error(error):
+        if error != None:
+            print(f"ERROR {error}", flush=True)
+
+    close = asyncio.Event()
     ...
+    await u.listen(on_event, on_error=on_error, close=close)
+    ...
+
 ```
 
 ## Types

@@ -1,6 +1,12 @@
 # CHANGELOG
 
-## Unreleased
+## [0.8.11.2](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.8.11.1) - 2025-12-08
+
+### Updated
+1. Added optional _on_error_ handler to `async` _event-listener_ implementation.
+
+
+## [0.8.11.1](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.8.11.1) - 2025-12-04
 
 ### Updated
 1. Fixed bug in `async` _event-listener_ implementation that swallowed a socket `address in use` error.

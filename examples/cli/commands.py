@@ -27,10 +27,10 @@ TIME_PROFILE_ID = 29
 AUTO_SEND = 15
 ANTIPASSBACK = 2
 
-ADDRESS = ipaddress.IPv4Address("192.168.1.100")
+ADDRESS = ipaddress.IPv4Address("192.168.1.125")
 NETMASK = ipaddress.IPv4Address("255.255.255.0")
 GATEWAY = ipaddress.IPv4Address("192.168.1.1")
-LISTENER = (ipaddress.IPv4Address("192.168.1.100"), 60001)
+LISTENER = (ipaddress.IPv4Address("192.168.1.125"), 60001)
 
 Command = namedtuple("Command", ["f", "args"])
 

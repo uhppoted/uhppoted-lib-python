@@ -119,7 +119,7 @@ async def listen(u, q):
     loop = asyncio.get_running_loop()
     loop.add_signal_handler(signal.SIGINT, close.set)
 
-    await u.listen(lambda e: on_event(e, q), close=close)
+    await u.listen(lambda e: on_event(e, q), on_error=on_error, close=close)
 
 
 def on_event(event, q):
@@ -132,6 +132,14 @@ def on_event(event, q):
             asyncio.create_task(q.put(event))
         else:
             print(f"WARN   *** event queue full - discarding event {event.event_index}")
+
+
+def on_error(error):
+    """
+    Prints a warning message for the error.
+    """
+    if error is not None:
+        print(f"WARN   {error}", flush=True)
 
 
 async def on_event_async(event, q):

@@ -11,6 +11,7 @@ import sys
 import pathlib
 import itertools
 import signal
+import re
 
 from collections import namedtuple
 from contextlib import suppress
@@ -34,7 +35,6 @@ ANTIPASSBACK = 2
 ADDRESS = ipaddress.IPv4Address("192.168.1.125")
 NETMASK = ipaddress.IPv4Address("255.255.255.0")
 GATEWAY = ipaddress.IPv4Address("192.168.1.1")
-LISTENER = (ipaddress.IPv4Address("192.168.1.125"), 60001)
 
 Command = namedtuple("Command", ["f", "args"])
 
@@ -50,7 +50,7 @@ def commands():
         "get-time": Command(get_time, [Args.controller]),
         "set-time": Command(set_time, [Args.controller]),
         "get-listener": Command(get_listener, [Args.controller]),
-        "set-listener": Command(set_listener, [Args.controller]),
+        "set-listener": Command(set_listener, [Args.controller, Args.listener]),
         "get-door-control": Command(get_door_control, [Args.controller]),
         "set-door-control": Command(set_door_control, [Args.controller]),
         "get-status": Command(get_status, [Args.controller]),
@@ -204,7 +204,7 @@ async def set_listener(u, dest, timeout, args, protocol="udp"):
     'set_listener' API function.
     """
     controller = (args.controller, dest, protocol)
-    (address, port) = LISTENER
+    (address, port) = addr_port(args.listener)
     interval = AUTO_SEND
 
     response = await u.set_listener(controller, address, port, interval, timeout=timeout)
@@ -624,7 +624,7 @@ async def listen(u, dest, timeout, args, protocol="udp"):  # pylint: disable=unu
     loop = asyncio.get_running_loop()
     loop.add_signal_handler(signal.SIGINT, close.set)
 
-    await u.listen(on_event, close=close)
+    await u.listen(on_event, on_error=on_error, close=close)
 
 
 async def on_event(event):
@@ -633,3 +633,22 @@ async def on_event(event):
     """
     if event is not None:
         pprint.pprint(event.__dict__, indent=2, width=1)
+
+
+async def on_error(error):
+    """
+    Prints an error message for 'listen' errors and warnings.
+    """
+    if error is not None:
+        print(f"*** ERROR {error}", flush=True)
+
+
+def addr_port(v):
+    """
+    Converts an IPv4 address:port string to and (IPvAddress, port) tuple.
+    """
+    match = re.match(r"(.*?):([0-9]+)", f"{v}")
+    if match:
+        return (ipaddress.IPv4Address(match.group(1)), int(match.group(2)))
+
+    raise ValueError(f"invalid address:port {v}")
