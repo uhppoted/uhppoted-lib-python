@@ -20,7 +20,6 @@ classifiers = [
 [project.optional-dependencies]
 dev = [
     "toml ~=0.10.2",
-    "yapf ~=0.32.0",
     "black ~=0.25.1",
     "build ~=1.2.2",
     "twine ~=6.1.0",
@@ -28,14 +27,9 @@ dev = [
 test = [
 ]
 
-
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
-
-[tool.yapfignore]
-based_on_style = "pep8"
-column_limit = 120
 
 [tool.black]
 line-length = 120

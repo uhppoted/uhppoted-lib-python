@@ -886,7 +886,7 @@ class UhppoteAsync:
         timeout=2.5,
     ):  # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
         """
-        Creates a scheduled task on an access conntroller.
+        Creates a scheduled task on an access controller.
 
             Parameters:
                controller (uint32|tuple)  Controller serial number or tuple with (controller_id,address,protocol)

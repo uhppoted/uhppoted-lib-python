@@ -482,7 +482,7 @@ class Uhppote:
 
     def put_card(
         self, controller, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin, timeout=2.5
-    ):  # pylint: disable=too-many-arguments, too-many-positional-arguments,, too-many-locals
+    ):  # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
         """
         Adds (or updates) a card record stored on the access controller.
             Parameters:
@@ -769,7 +769,7 @@ class Uhppote:
         timeout=2.5,
     ):  # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
         """
-        Creates (or updates) a time profile on an access conntroller.
+        Creates (or updates) a time profile on an access controller.
 
             Parameters:
                controller (uint32|tuple)  Controller serial number or tuple with (controller_id,address,protocol)

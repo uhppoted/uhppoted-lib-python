@@ -1,7 +1,6 @@
 
 [dev]
 toml~=0.10.2
-yapf~=0.32.0
 black~=0.25.1
 build~=1.2.2
 twine~=6.1.0

@@ -13,7 +13,6 @@ Description-Content-Type: text/markdown
 License-File: LICENSE
 Provides-Extra: dev
 Requires-Dist: toml~=0.10.2; extra == "dev"
-Requires-Dist: yapf~=0.32.0; extra == "dev"
 Requires-Dist: black~=0.25.1; extra == "dev"
 Requires-Dist: build~=1.2.2; extra == "dev"
 Requires-Dist: twine~=6.1.0; extra == "dev"

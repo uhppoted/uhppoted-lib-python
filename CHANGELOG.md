@@ -3,6 +3,9 @@
 ## Unreleased
 
 
+### Updated
+1. Removed legacy `#yapf` directives.
+
 
 ## [0.8.11.2](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.8.11.2) - 2025-12-08
 

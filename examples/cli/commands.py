@@ -386,23 +386,27 @@ def set_time_profile(u, dest, timeout, args, protocol="udp"):
     }
     linked_profile_id = 23
 
-    # yapf: disable
-    return u.set_time_profile(controller,
-                              profile_id,
-                              start, end,
-                              weekdays.get('monday',False),
-                              weekdays.get('tuesday',False),
-                              weekdays.get('wednesday',False),
-                              weekdays.get('thursday',False),
-                              weekdays.get('friday',False),
-                              weekdays.get('saturday',False),
-                              weekdays.get('sunday',False),
-                              segments['1'][0], segments['1'][1],
-                              segments['2'][0], segments['2'][1],
-                              segments['3'][0], segments['3'][1],
-                              linked_profile_id,
-                              timeout=timeout)
-    # yapf: enable
+    return u.set_time_profile(
+        controller,
+        profile_id,
+        start,
+        end,
+        weekdays.get("monday", False),
+        weekdays.get("tuesday", False),
+        weekdays.get("wednesday", False),
+        weekdays.get("thursday", False),
+        weekdays.get("friday", False),
+        weekdays.get("saturday", False),
+        weekdays.get("sunday", False),
+        segments["1"][0],
+        segments["1"][1],
+        segments["2"][0],
+        segments["2"][1],
+        segments["3"][0],
+        segments["3"][1],
+        linked_profile_id,
+        timeout=timeout,
+    )
 
 
 def clear_time_profiles(u, dest, timeout, args, protocol="udp"):
@@ -435,22 +439,23 @@ def add_task(u, dest, timeout, args, protocol="udp"):
     task_type = 2
     more_cards = 0
 
-    # yapf: disable
-    return u.add_task(controller,
-                      start_date, end_date,
-                      weekdays.get('monday',False),
-                      weekdays.get('tuesday',False),
-                      weekdays.get('wednesday',False),
-                      weekdays.get('thursday',False),
-                      weekdays.get('friday',False),
-                      weekdays.get('saturday',False),
-                      weekdays.get('sunday',False),
-                      start_time,
-                      door,
-                      task_type,
-                      more_cards,
-                      timeout=timeout)
-    # yapf: enable
+    return u.add_task(
+        controller,
+        start_date,
+        end_date,
+        weekdays.get("monday", False),
+        weekdays.get("tuesday", False),
+        weekdays.get("wednesday", False),
+        weekdays.get("thursday", False),
+        weekdays.get("friday", False),
+        weekdays.get("saturday", False),
+        weekdays.get("sunday", False),
+        start_time,
+        door,
+        task_type,
+        more_cards,
+        timeout=timeout,
+    )
 
 
 def refresh_tasklist(u, dest, timeout, args, protocol="udp"):

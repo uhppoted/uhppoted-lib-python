@@ -57,11 +57,11 @@ def get_controller_response(packet):
             packet  (bytearray)  64 byte UDP packet.
 
         Returns:
-            GetControllerResponse initialised from the UDP packet.
+            GetControllerResponse: initialised from the UDP packet.
 
         Raises:
-            ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
-                       the incorrect message type.
+           ValueError: If the packet is not 64 bytes, has an invalid start-of-message byte,
+                       or has an incorrect message type.
     """
     if len(packet) != 64:
         raise ValueError(f"invalid reply packet length ({len(packet)})")
@@ -1099,7 +1099,7 @@ def event(packet):
     if packet[1] != codec.LISTEN_EVENT:
         raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
-    # yapf: disable
+    # fmt: off
     return Event(
         unpack_uint32(packet, 4),       # controller
         unpack_uint32(packet, 8),       # event index
@@ -1126,7 +1126,7 @@ def event(packet):
         unpack_uint8(packet, 48),       # special info
         unpack_uint32(packet, 40),      # sequence no
     )
-    # yapf: enable
+    # fmt: on
 
 
 def unpack_uint8(packet, offset):

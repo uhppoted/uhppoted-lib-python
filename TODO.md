@@ -1,5 +1,8 @@
 # TODO
 
+- [ ] Fix `# pylint: disable` https://github.com/uhppoted/uhppoted-lib-python/issues/9
+
+
 - [ ] github CI build
 ```
 . .venv/bin/activate; pylint --rcfile=.pylintrc --disable=duplicate-code integration-tests/uhppoted
