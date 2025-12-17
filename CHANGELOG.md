@@ -3,6 +3,9 @@
 ## Unreleased
 
 
+### Added
+1. `get-card-record` and `get-card-record-by-index` convenience API functions.
+
 ### Updated
 1. Removed legacy `#yapf` directives.
 

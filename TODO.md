@@ -1,6 +1,8 @@
 # TODO
 
 - [ ] Fix `# pylint: disable` https://github.com/uhppoted/uhppoted-lib-python/issues/9
+    - [x] get-card-record
+    - [x] get-card-record-by-index
 
 
 - [ ] github CI build

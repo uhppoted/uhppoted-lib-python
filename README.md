@@ -224,7 +224,9 @@ pprint(record.__dict__, indent=2, width=1)
 - [`open_door`](#open_door)
 - [`get_cards`](#get_cards)
 - [`get_card`](#get_card)
+- [`get_card_record`](#get_card_record)
 - [`get_card_by_index`](#get_card_by_index)
+- [`get_card_record_by_index`](#get_card_record_by_index)
 - [`put_card`](#put_card)
 - [`delete_card`](#delete_card)
 - [`delete_cards`](#delete_cards)
@@ -391,6 +393,18 @@ get_card(controller, card)
 controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
 card        uint32        card number
 
+Returns a GetCardResponse dataclass instance with the response from the controller if the call succeeded.
+
+Raises an Exception if the call failed for any reason.
+```
+
+### `get_card_record`
+```
+get_card_record(controller, card)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+card        uint32        card number
+
 Returns a Card dataclass instance with the controller card information if the call succeeded.
 
 Raises an Exception if the call failed for any reason.
@@ -399,6 +413,18 @@ Raises an Exception if the call failed for any reason.
 ### `get_card_by_index`
 ```
 get_card_by_index(controller, index)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+index       uint32        index of card to retrieve
+
+Returns a GetCardByIndexResponse dataclass instance with the response from the controller if the call succeeded.
+
+Raises an Exception if the call failed for any reason.
+```
+
+### `get_card_record_by_index`
+```
+get_card_record_by_index(controller, index)
 
 controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
 index       uint32        index of card to retrieve
@@ -1367,4 +1393,28 @@ class Event:
     system_error: int
     special_info: int
     sequence_no: int
+```
+
+### `Card`
+
+Container class for a controller card record.
+
+       Fields:
+          card         (uint32)  Card number.
+          start_date   (date)    Date from which card is valid.
+          end_date     (date)    Date after which card is no longer valid.
+          permissions  (dict)    Maps doors [1..4] to permissions [0..255], where:
+                                 - 0 is no access
+                                 - 1 is unrestricted 24/7  access
+                                 - 2..255 is the time profile ID used to restrict access
+          pin          (uint32)  Keypad PIN code (0 if none).
+
+```
+@dataclass(frozen=True)
+class Card:
+    card: int
+    start_date: datetime.date
+    end_date: datetime.date
+    permissions: Mapping[int, int]
+    pin: int
 ```

@@ -11,6 +11,7 @@ from . import encode
 from . import tcp_async as tcp
 from . import udp_async as udp
 from .net import disambiguate
+from .structs import Card
 
 
 class UhppoteAsync:
@@ -451,6 +452,48 @@ class UhppoteAsync:
 
         return None
 
+    async def get_card_record(self, controller, card_number, timeout=2.5):
+        """
+        Retrieves the card access record for a card number from the access controller.
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (controller_id,address,protocol)
+                                          fields. The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'controller_id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
+                                             to 'udp'.
+
+               card_number (uint32)  Access card number.
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               Card  Card record initialised from the response from the controller.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        """
+        (controller_id, addr, protocol) = disambiguate(controller)
+        request = encode.get_card_request(controller_id, card_number)
+
+        if reply := await self._send(request, addr, timeout, protocol):
+            if response := decode.get_card_response(reply):
+                return Card(
+                    response.card_number,
+                    response.start_date,
+                    response.end_date,
+                    {
+                        1: response.door_1,
+                        2: response.door_2,
+                        3: response.door_3,
+                        4: response.door_4,
+                    },
+                    response.pin,
+                )
+
+        return None
+
     async def get_card_by_index(self, controller, card_index, timeout=2.5):
         """
         Retrieves the card access record for a card record from the access controller.
@@ -479,6 +522,48 @@ class UhppoteAsync:
 
         if reply is not None:
             return decode.get_card_by_index_response(reply)
+
+        return None
+
+    async def get_card_record_by_index(self, controller, card_index, timeout=2.5):
+        """
+        Retrieves the card access record for a card record from the access controller.
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (controller_id,address,protocol)
+                                          fields. The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'controller_id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
+                                             to 'udp'.
+
+               index       (uint32)  Controller card list record number.
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               Card  Card record initialised from the response from the controller.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        """
+        (controller_id, addr, protocol) = disambiguate(controller)
+        request = encode.get_card_by_index_request(controller_id, card_index)
+
+        if reply := await self._send(request, addr, timeout, protocol):
+            if response := decode.get_card_by_index_response(reply):
+                return Card(
+                    response.card_number,
+                    response.start_date,
+                    response.end_date,
+                    {
+                        1: response.door_1,
+                        2: response.door_2,
+                        3: response.door_3,
+                        4: response.door_4,
+                    },
+                    response.pin,
+                )
 
         return None
 

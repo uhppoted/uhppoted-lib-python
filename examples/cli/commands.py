@@ -54,7 +54,9 @@ def commands():
         "open-door":                  Command(open_door,                  [Args.controller]),
         "get-cards":                  Command(get_cards,                  [Args.controller]),
         "get-card":                   Command(get_card,                   [Args.controller, Args.card]),
+        "get-card-record":            Command(get_card_record,            [Args.controller, Args.card]),
         "get-card-by-index":          Command(get_card_by_index,          [Args.controller, Args.index]),
+        "get-card-record-by-index":   Command(get_card_record_by_index,   [Args.controller, Args.index]),
         "put-card":                   Command(put_card,                   [Args.controller, Args.card]),
         "delete-card":                Command(delete_card,                [Args.controller, Args.card]),
         "delete-all-cards":           Command(delete_all_cards,           [Args.controller]),
@@ -239,16 +241,31 @@ def get_card(u, dest, timeout, args, protocol="udp"):
     card = args.card
 
     response = u.get_card(controller, card, timeout=timeout)
-    if response.card_number == 0:
+    if response.card == 0:
         raise ValueError(f"card {card} not found")
 
     return response
 
 
+def get_card_record(u, dest, timeout, args, protocol="udp"):
+    """
+    Returns the card record for an access card from a controller by card number, using the
+    'get_card_record' API function.
+    """
+    controller = (args.controller, dest, protocol)
+    card = args.card
+
+    record = u.get_card_record(controller, card, timeout=timeout)
+    if record and record.card == 0:
+        raise ValueError(f"card {card} not found")
+
+    return record
+
+
 def get_card_by_index(u, dest, timeout, args, protocol="udp"):
     """
     Returns the information for an access card from a controller by record index, using the
-    'get_card' API function.
+    'get_card_by_index' API function.
     """
     controller = (args.controller, dest, protocol)
     index = args.index
@@ -262,6 +279,25 @@ def get_card_by_index(u, dest, timeout, args, protocol="udp"):
         raise ValueError(f"card @ index {index} deleted")
 
     return response
+
+
+def get_card_record_by_index(u, dest, timeout, args, protocol="udp"):
+    """
+    Returns the card record for an access card from a controller by record index, using the
+    'get_card_record_by_index' API function.
+    """
+    controller = (args.controller, dest, protocol)
+    index = args.index
+
+    record = u.get_card_record_by_index(controller, index, timeout=timeout)
+
+    if record and record.card == 0:
+        raise ValueError(f"card @ index {index} not found")
+
+    if record and record.card == 0xFFFFFFFF:
+        raise ValueError(f"card @ index {index} deleted")
+
+    return record
 
 
 def put_card(u, dest, timeout, args, protocol="udp"):  # pylint: disable=unused-argument

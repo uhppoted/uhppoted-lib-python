@@ -110,6 +110,19 @@ GetCardResponse = structs.GetCardResponse(
     pin=7531,
 )
 
+GetCardRecord = structs.Card(
+    8165538,
+    datetime.date(2023, 1, 1),
+    datetime.date(2023, 12, 31),
+    {
+        1: 1,
+        2: 0,
+        3: 29,
+        4: 1,
+    },
+    7531,
+)
+
 GetCardByIndexResponse = structs.GetCardByIndexResponse(
     controller=405419896,
     card_number=8165539,
@@ -120,6 +133,19 @@ GetCardByIndexResponse = structs.GetCardByIndexResponse(
     door_3=29,
     door_4=1,
     pin=7531,
+)
+
+GetCardRecordByIndex = structs.Card(
+    8165539,
+    datetime.date(2023, 1, 1),
+    datetime.date(2023, 12, 31),
+    {
+        1: 1,
+        2: 0,
+        3: 29,
+        4: 1,
+    },
+    7531,
 )
 
 PutCardResponse = structs.PutCardResponse(controller=405419896, stored=True)

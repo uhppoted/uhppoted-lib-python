@@ -236,6 +236,17 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(response, expected.GetCardResponse)
 
+    async def test_get_card_record(self):
+        """
+        Tests the get-card-record function with defaults.
+        """
+        controller = CONTROLLER
+        card = CARD
+
+        record = await self.u.get_card_record(controller, card)
+
+        self.assertEqual(record, expected.GetCardRecord)
+
     async def test_get_card_by_index(self):
         """
         Tests the get-card-by-index function with defaults.
@@ -246,6 +257,17 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         response = await self.u.get_card_by_index(controller, index)
 
         self.assertEqual(response, expected.GetCardByIndexResponse)
+
+    async def test_get_card_record_by_index(self):
+        """
+        Tests the get-card-record-by-index function with defaults.
+        """
+        controller = CONTROLLER
+        index = CARD_INDEX
+
+        record = await self.u.get_card_record_by_index(controller, index)
+
+        self.assertEqual(record, expected.GetCardRecordByIndex)
 
     async def test_put_card(self):
         """

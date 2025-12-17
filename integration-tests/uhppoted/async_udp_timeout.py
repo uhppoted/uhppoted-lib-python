@@ -255,6 +255,20 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(TimeoutError):
             await self.u.get_card(controller, card, timeout=TIMEOUT)
 
+    async def test_get_card_record(self):
+        """
+        Tests the get-card-record function with a timeout
+        """
+        controller = (CONTROLLER, DEST_ADDR)
+        card = CARD
+
+        start = time.time()
+        await self.u.get_card_record(controller, card)
+        self.assertTrue(0.5 <= time.time() - start <= 2.5)
+
+        with self.assertRaises(TimeoutError):
+            await self.u.get_card_record(controller, card, timeout=TIMEOUT)
+
     async def test_get_card_by_index(self):
         """
         Tests the get-card-by-index function with a timeout
@@ -268,6 +282,20 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
 
         with self.assertRaises(TimeoutError):
             await self.u.get_card_by_index(controller, index, timeout=TIMEOUT)
+
+    async def test_get_card_record_by_index(self):
+        """
+        Tests the get-card-record-by-index function with a timeout
+        """
+        controller = (CONTROLLER, DEST_ADDR)
+        index = CARD_INDEX
+
+        start = time.time()
+        await self.u.get_card_record_by_index(controller, index)
+        self.assertTrue(0.5 <= time.time() - start <= 2.5)
+
+        with self.assertRaises(TimeoutError):
+            await self.u.get_card_record_by_index(controller, index, timeout=TIMEOUT)
 
     async def test_put_card(self):
         """

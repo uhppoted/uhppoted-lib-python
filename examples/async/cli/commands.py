@@ -38,48 +38,51 @@ GATEWAY = ipaddress.IPv4Address("192.168.1.1")
 
 Command = namedtuple("Command", ["f", "args"])
 
-
+# fmt: off
 def commands():
     """
     Returns a dict that maps a CLI command to the implementation function and command line args.
     """
     return {
-        "get-all-controllers": Command(get_all_controllers, []),
-        "get-controller": Command(get_controller, [Args.controller]),
-        "set-ip": Command(set_ip, [Args.controller]),
-        "get-time": Command(get_time, [Args.controller]),
-        "set-time": Command(set_time, [Args.controller]),
-        "get-listener": Command(get_listener, [Args.controller]),
-        "set-listener": Command(set_listener, [Args.controller, Args.listener]),
-        "get-door-control": Command(get_door_control, [Args.controller]),
-        "set-door-control": Command(set_door_control, [Args.controller]),
-        "get-status": Command(get_status, [Args.controller]),
-        "open-door": Command(open_door, [Args.controller]),
-        "get-cards": Command(get_cards, [Args.controller]),
-        "get-card": Command(get_card, [Args.controller, Args.card]),
-        "get-card-by-index": Command(get_card_by_index, [Args.controller, Args.index]),
-        "put-card": Command(put_card, [Args.controller, Args.card]),
-        "delete-card": Command(delete_card, [Args.controller, Args.card]),
-        "delete-all-cards": Command(delete_all_cards, [Args.controller]),
-        "get-event": Command(get_event, [Args.controller]),
-        "get-event-index": Command(get_event_index, [Args.controller]),
-        "set-event-index": Command(set_event_index, [Args.controller]),
-        "record-special-events": Command(record_special_events, [Args.controller]),
-        "get-time-profile": Command(get_time_profile, [Args.controller]),
-        "set-time-profile": Command(set_time_profile, [Args.controller]),
-        "clear-time-profiles": Command(clear_time_profiles, [Args.controller]),
-        "add-task": Command(add_task, [Args.controller]),
-        "refresh-tasklist": Command(refresh_tasklist, [Args.controller]),
-        "clear-tasklist": Command(clear_tasklist, [Args.controller]),
-        "set-pc-control": Command(set_pc_control, [Args.controller]),
-        "set-interlock": Command(set_interlock, [Args.controller]),
-        "activate-keypads": Command(activate_keypads, [Args.controller]),
-        "set-door-passcodes": Command(set_door_passcodes, [Args.controller]),
-        "get-antipassback": Command(get_antipassback, [Args.controller]),
-        "set-antipassback": Command(set_antipassback, [Args.controller, Args.antipassback]),
+        "get-all-controllers":        Command(get_all_controllers,        []),
+        "get-controller":             Command(get_controller,             [Args.controller]),
+        "set-ip":                     Command(set_ip,                     [Args.controller]),
+        "get-time":                   Command(get_time,                   [Args.controller]),
+        "set-time":                   Command(set_time,                   [Args.controller]),
+        "get-listener":               Command(get_listener,               [Args.controller]),
+        "set-listener":               Command(set_listener,               [Args.controller, Args.listener]),
+        "get-door-control":           Command(get_door_control,           [Args.controller]),
+        "set-door-control":           Command(set_door_control,           [Args.controller]),
+        "get-status":                 Command(get_status,                 [Args.controller]),
+        "open-door":                  Command(open_door,                  [Args.controller]),
+        "get-cards":                  Command(get_cards,                  [Args.controller]),
+        "get-card":                   Command(get_card,                   [Args.controller, Args.card]),
+        "get-card-record":            Command(get_card_record,            [Args.controller, Args.card]),
+        "get-card-by-index":          Command(get_card_by_index,          [Args.controller, Args.index]),
+        "get-card-record-by-index":   Command(get_card_record_by_index,   [Args.controller, Args.index]),
+        "put-card":                   Command(put_card,                   [Args.controller, Args.card]),
+        "delete-card":                Command(delete_card,                [Args.controller, Args.card]),
+        "delete-all-cards":           Command(delete_all_cards,           [Args.controller]),
+        "get-event":                  Command(get_event,                  [Args.controller]),
+        "get-event-index":            Command(get_event_index,            [Args.controller]),
+        "set-event-index":            Command(set_event_index,            [Args.controller]),
+        "record-special-events":      Command(record_special_events,      [Args.controller]),
+        "get-time-profile":           Command(get_time_profile,           [Args.controller]),
+        "set-time-profile":           Command(set_time_profile,           [Args.controller]),
+        "clear-time-profiles":        Command(clear_time_profiles,        [Args.controller]),
+        "add-task":                   Command(add_task,                   [Args.controller]),
+        "refresh-tasklist":           Command(refresh_tasklist,           [Args.controller]),
+        "clear-tasklist":             Command(clear_tasklist,             [Args.controller]),
+        "set-pc-control":             Command(set_pc_control,             [Args.controller]),
+        "set-interlock":              Command(set_interlock,              [Args.controller]),
+        "activate-keypads":           Command(activate_keypads,           [Args.controller]),
+        "set-door-passcodes":         Command(set_door_passcodes,         [Args.controller]),
+        "get-antipassback":           Command(get_antipassback,           [Args.controller]),
+        "set-antipassback":           Command(set_antipassback,           [Args.controller, Args.antipassback]),
         "restore-default-parameters": Command(restore_default_parameters, [Args.controller]),
-        "listen": Command(listen, []),
+        "listen":                     Command(listen,                     []),
     }
+# fmt: on
 
 
 async def windmill():
@@ -285,10 +288,25 @@ async def get_card(u, dest, timeout, args, protocol="udp"):
     return response
 
 
+async def get_card_record(u, dest, timeout, args, protocol="udp"):
+    """
+    Returns the card record for an access card from a controller by card number, using the
+    'get_card' API function.
+    """
+    controller = (args.controller, dest, protocol)
+    card = args.card
+
+    record = await u.get_card_record(controller, card, timeout=timeout)
+    if record and record.card == 0:
+        raise ValueError(f"card {card} not found")
+
+    return record
+
+
 async def get_card_by_index(u, dest, timeout, args, protocol="udp"):
     """
     Returns the information for an access card from a controller by record index, using the
-    'get_card' API function.
+    'get_card_by_index' API function.
     """
     controller = (args.controller, dest, protocol)
     index = args.index
@@ -302,6 +320,25 @@ async def get_card_by_index(u, dest, timeout, args, protocol="udp"):
         raise ValueError(f"card @ index {index} deleted")
 
     return response
+
+
+async def get_card_record_by_index(u, dest, timeout, args, protocol="udp"):
+    """
+    Returns the card record for an access card from a controller by record index, using the
+    'get_card_record_by_index' API function.
+    """
+    controller = (args.controller, dest, protocol)
+    index = args.index
+
+    record = await u.get_card_record_by_index(controller, index, timeout=timeout)
+
+    if record and record.card == 0:
+        raise ValueError(f"card @ index {index} not found")
+
+    if record and record.card == 0xFFFFFFFF:
+        raise ValueError(f"card @ index {index} deleted")
+
+    return record
 
 
 async def put_card(u, dest, timeout, args, protocol="udp"):

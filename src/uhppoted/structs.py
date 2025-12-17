@@ -7,6 +7,8 @@ import datetime
 from ipaddress import IPv4Address
 from dataclasses import dataclass
 from typing import NewType
+from types import MappingProxyType
+from collections.abc import Mapping
 
 PIN = NewType("PIN", int)
 
@@ -227,7 +229,6 @@ class GetCardResponse:  # pylint: disable=too-many-instance-attributes
           controller  (uint32)  Controller serial number.
           card_number (uint32)  Card number.
           start_date  (date)    Card 'valid from' date.
-          end_date    (date)    Card 'valid until' date.
           end_date    (date)    Card 'valid until' date.
           door_1      (uint8)   Card access permissions for door 1 (0: none, 1: all, 2-254: time profile ID)
           door_2      (uint8)   Card access permissions for door 2 (0: none, 1: all, 2-254: time profile ID)
@@ -662,3 +663,40 @@ class Event:  # pylint: disable=too-many-instance-attributes
     system_error: int
     special_info: int
     sequence_no: int
+
+
+@dataclass(frozen=True)
+class Card:
+    """
+    Container class for a card record
+
+       Fields:
+          card         (uint32)  Card number.
+          start_date   (date)    Date from which card is valid.
+          end_date     (date)    Date after which card is no longer valid.
+          permissions  (dict)    Maps doors [1..4] to permissions [0..255], where:
+                                 - 0 is no access
+                                 - 1 is unrestricted 24/7  access
+                                 - 2..255 is the time profile ID used to restrict access
+          pin          (uint32)  Keypad PIN code (0 if none).
+    """
+
+    card: int
+    start_date: datetime.date
+    end_date: datetime.date
+    permissions: Mapping[int, int]
+    pin: int
+
+    def __post_init__(self):
+        permissions = {
+            1: 0,
+            2: 0,
+            3: 0,
+            4: 0,
+        }
+
+        for k, v in self.permissions.items():
+            if 1 <= k <= 4 and 0 <= v <= 255:
+                permissions[k] = v
+
+        object.__setattr__(self, "permissions", MappingProxyType(permissions))

@@ -175,17 +175,33 @@ get-card: build
 	export UHPPOTED_ENV=DEV && $(CMD) get-card --controller $(CONTROLLER) --card $(CARD)
 	export UHPPOTED_ENV=DEV && $(TCP) get-card --controller $(CONTROLLER) --card $(CARD)
 
+get-card-record: build
+	export UHPPOTED_ENV=DEV && $(CMD) get-card-record --controller $(CONTROLLER) --card $(CARD)
+	export UHPPOTED_ENV=DEV && $(TCP) get-card-record --controller $(CONTROLLER) --card $(CARD)
+
 get-card-async: build
 	export UHPPOTED_ENV=DEV && $(ASYNC)     get-card --controller $(CONTROLLER) --card $(CARD)
 	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-card --controller $(CONTROLLER) --card $(CARD)
+
+get-card-record-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     get-card-record --controller $(CONTROLLER) --card $(CARD)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-card-record --controller $(CONTROLLER) --card $(CARD)
 
 get-card-by-index: build
 	export UHPPOTED_ENV=DEV && $(CMD) get-card-by-index --controller $(CONTROLLER) --index 3
 	export UHPPOTED_ENV=DEV && $(TCP) get-card-by-index --controller $(CONTROLLER) --index 3
 
+get-card-record-by-index: build
+	export UHPPOTED_ENV=DEV && $(CMD) get-card-record-by-index --controller $(CONTROLLER) --index 3
+	export UHPPOTED_ENV=DEV && $(TCP) get-card-record-by-index --controller $(CONTROLLER) --index 3
+
 get-card-by-index-async: build
 	export UHPPOTED_ENV=DEV && $(ASYNC)     get-card-by-index --controller $(CONTROLLER) --index 3
 	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-card-by-index --controller $(CONTROLLER) --index 3
+
+get-card-record-by-index-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     get-card-record-by-index --controller $(CONTROLLER) --index 3
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-card-record-by-index --controller $(CONTROLLER) --index 3
 
 put-card: build
 	export UHPPOTED_ENV=DEV && $(CMD) put-card --controller $(CONTROLLER) --card $(CARD)

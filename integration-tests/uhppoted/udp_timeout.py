@@ -215,15 +215,25 @@ class TestUDPWithTimeout(unittest.TestCase):
         self.u.get_card(controller, card)
         self.assertRaises(socket.timeout, self.u.get_card, controller, card, timeout=TIMEOUT)
 
-    def test_get_card_by_index(self):
+    def test_get_card_record(self):
         """
-        Tests the get-card-by-index function with a timeout
+        Tests the get-card-record function with a timeout
+        """
+        controller = (CONTROLLER, DEST_ADDR)
+        card = CARD
+
+        self.u.get_card_record(controller, card)
+        self.assertRaises(socket.timeout, self.u.get_card_record, controller, card, timeout=TIMEOUT)
+
+    def test_get_card_record_by_index(self):
+        """
+        Tests the get-card-record-by-index function with a timeout
         """
         controller = (CONTROLLER, DEST_ADDR)
         index = CARD_INDEX
 
-        self.u.get_card_by_index(controller, index)
-        self.assertRaises(socket.timeout, self.u.get_card_by_index, controller, index, timeout=TIMEOUT)
+        self.u.get_card_record_by_index(controller, index)
+        self.assertRaises(socket.timeout, self.u.get_card_record_by_index, controller, index, timeout=TIMEOUT)
 
     def test_put_card(self):
         """
