@@ -150,6 +150,8 @@ GetCardRecordByIndex = structs.Card(
 
 PutCardResponse = structs.PutCardResponse(controller=405419896, stored=True)
 
+PutCardRecordResponse = True
+
 DeleteCardResponse = structs.DeleteCardResponse(controller=405419896, deleted=True)
 
 DeleteAllCardsResponse = structs.DeleteAllCardsResponse(controller=405419896, deleted=True)

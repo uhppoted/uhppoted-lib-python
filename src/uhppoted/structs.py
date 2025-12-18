@@ -700,3 +700,9 @@ class Card:
                 permissions[k] = v
 
         object.__setattr__(self, "permissions", MappingProxyType(permissions))
+
+    def permission(self, door: int) -> int:
+        """
+        Returns permission for door [1..4], defaulting to 0.
+        """
+        return self.permissions.get(door, 0)

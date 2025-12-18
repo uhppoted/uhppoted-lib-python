@@ -23,6 +23,7 @@ if os.environ["UHPPOTED_ENV"] == "DEV":
 # pylint: disable=import-error, wrong-import-position
 import cli_args as Args
 from uhppoted import uhppote_async as uhppote
+from uhppoted import structs
 
 DOOR = 3
 MODE = 2
@@ -61,6 +62,7 @@ def commands():
         "get-card-by-index":          Command(get_card_by_index,          [Args.controller, Args.index]),
         "get-card-record-by-index":   Command(get_card_record_by_index,   [Args.controller, Args.index]),
         "put-card":                   Command(put_card,                   [Args.controller, Args.card]),
+        "put-card-record":            Command(put_card_record,            [Args.controller, Args.card]),
         "delete-card":                Command(delete_card,                [Args.controller, Args.card]),
         "delete-all-cards":           Command(delete_all_cards,           [Args.controller]),
         "get-event":                  Command(get_event,                  [Args.controller]),
@@ -355,9 +357,28 @@ async def put_card(u, dest, timeout, args, protocol="udp"):
     door4 = 0  # no access
     pin = 7531
 
-    response = await u.put_card(controller, card, start, end, door1, door2, door3, door4, pin, timeout=timeout)
+    return await u.put_card(controller, card, start, end, door1, door2, door3, door4, pin, timeout=timeout)
 
-    return response
+
+async def put_card_record(u, dest, timeout, args, protocol="udp"):  # pylint: disable=unused-argument
+    """
+    Adds or updates the information for an access card on a controller using the 'put_card_record' API function.
+    """
+    controller = (args.controller, dest, protocol)
+    card = structs.Card(
+        args.card,
+        datetime.datetime.strptime("2024-01-01", "%Y-%m-%d").date(),
+        datetime.datetime.strptime("2024-12-31", "%Y-%m-%d").date(),
+        {
+            1: 0,  # no access
+            2: 1,  # 24/7 access
+            3: 29,  # time profile #29
+            4: 0,  # no access
+        },
+        7531,
+    )
+
+    return await u.put_card_record(controller, card, timeout=timeout)
 
 
 async def delete_card(u, dest, timeout, args, protocol="udp"):

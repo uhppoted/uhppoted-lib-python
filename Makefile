@@ -207,9 +207,15 @@ put-card: build
 	export UHPPOTED_ENV=DEV && $(CMD) put-card --controller $(CONTROLLER) --card $(CARD)
 	export UHPPOTED_ENV=DEV && $(TCP) put-card --controller $(CONTROLLER) --card $(CARD)
 
+put-card-record: build
+	export UHPPOTED_ENV=DEV && $(CMD) put-card-record --controller $(CONTROLLER) --card $(CARD)
+
 put-card-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     put-card --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) put-card --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC)     put-card --controller $(CONTROLLER) --card $(CARD)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) put-card --controller $(CONTROLLER) --card $(CARD)
+
+put-card-record-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC) put-card-record --controller $(CONTROLLER) --card $(CARD)
 
 delete-card: build
 	export UHPPOTED_ENV=DEV && $(CMD) delete-card --controller $(CONTROLLER) --card $(CARD)

@@ -17,6 +17,7 @@ from ipaddress import IPv4Address
 # pylint: disable=import-error
 from uhppoted import uhppote
 from uhppoted.net import dump
+from uhppoted.structs import Card
 
 # pylint: disable=relative-beyond-top-level
 from .stub import messages
@@ -267,6 +268,27 @@ class TestUhppoteWithTCP(unittest.TestCase):
         response = self.u.put_card(controller, card, start, end, door1, door2, door3, door4, pin)
 
         self.assertEqual(response, expected.PutCardResponse)
+
+    def test_put_card_record(self):
+        """
+        Tests the put-card-record function with defaults.
+        """
+        controller = (CONTROLLER, DEST_ADDR, "tcp")
+        card = Card(
+            123456789,
+            datetime.date(2023, 1, 1),
+            datetime.date(2025, 12, 31),
+            {
+                1: 1,
+                3: 29,
+                4: 1,
+            },
+            7531,
+        )
+
+        response = self.u.put_card_record(controller, card)
+
+        self.assertEqual(response, expected.PutCardRecordResponse)
 
     def test_delete_card(self):
         """

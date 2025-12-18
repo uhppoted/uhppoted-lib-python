@@ -18,6 +18,7 @@ from ipaddress import IPv4Address
 # pylint: disable=import-error
 from uhppoted import uhppote_async as uhppote
 from uhppoted.net import dump
+from uhppoted.structs import Card
 
 # pylint: disable=relative-beyond-top-level
 from .stub import messages
@@ -276,6 +277,27 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         response = await self.u.put_card(controller, card, start_date, end_date, door1, door2, door3, door4, pin)
 
         self.assertEqual(response, expected.PutCardResponse)
+
+    async def test_put_card_record(self):
+        """
+        Tests the put-card-record function with defaults.
+        """
+        controller = (CONTROLLER, DEST_ADDR)
+        card = Card(
+            123456789,
+            datetime.date(2023, 1, 1),
+            datetime.date(2025, 12, 31),
+            {
+                1: 1,
+                3: 29,
+                4: 1,
+            },
+            7531,
+        )
+
+        response = await self.u.put_card_record(controller, card)
+
+        self.assertEqual(response, expected.PutCardRecordResponse)
 
     async def test_delete_card(self):
         """

@@ -343,6 +343,35 @@ def put_card_request(
     return packet
 
 
+def put_card_record_request(controller, card):
+    """
+    Encodes a put-card-record request.
+
+        Parameters:
+            controller  (uint32)  Controller serial number.
+            card        (Card)    Card record.
+
+        Returns:
+            64 byte UDP packet.
+    """
+    packet = bytearray(64)
+
+    packet[0] = codec.SOM
+    packet[1] = codec.PUT_CARD
+
+    pack_uint32(controller, packet, 4)
+    pack_uint32(card.card, packet, 8)
+    pack_date(card.start_date, packet, 12)
+    pack_date(card.end_date, packet, 16)
+    pack_uint8(card.permission(1), packet, 20)
+    pack_uint8(card.permission(2), packet, 21)
+    pack_uint8(card.permission(3), packet, 22)
+    pack_uint8(card.permission(4), packet, 23)
+    pack_pin(card.pin, packet, 24)
+
+    return packet
+
+
 def delete_card_request(controller, card_number):
     """
     Encodes a delete-card request.

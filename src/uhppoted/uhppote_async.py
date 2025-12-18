@@ -609,6 +609,37 @@ class UhppoteAsync:
 
         return None
 
+    async def put_card_record(self, controller, card, timeout=2.5):
+        """
+        Adds (or updates) a card record stored on the access controller.
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (controller_id,address,protocol)
+                                          fields. The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'controller_id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
+                                             to 'udp'.
+
+               card        (Card)  Card record.
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               ok (bool)  Returns True if the card record was added or updated successfully.
+
+            Raises:
+               Exception  If the request failed for any reason.
+        """
+        (controller_id, addr, protocol) = disambiguate(controller)
+        request = encode.put_card_record_request(controller_id, card)
+
+        if reply := await self._send(request, addr, timeout, protocol):
+            if response := decode.put_card_response(reply):
+                return response.stored
+
+        return False
+
     async def delete_card(self, controller, card_number, timeout=2.5):
         """
         Deletes the card record from the access controller.

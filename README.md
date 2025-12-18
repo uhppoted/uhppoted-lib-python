@@ -447,6 +447,20 @@ door2       uint8         Door 2 access (0: none, 1: all, 2-254: time profile)
 door3       uint8         Door 3 access (0: none, 1: all, 2-254: time profile)
 door4       uint8         Door 4 access (0: none, 1: all, 2-254: time profile)
 
+Returns a PutCardResponse dataclass instance with the response from the controller if the call succeeded.
+
+Raises an Exception if the call failed for any reason.
+```
+
+### `put_card_record`
+```
+put_card_record(controller, card)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+card        Card          Card struct initialised with the card information
+
+Returns True if the card was added/updated on the controller, False otherwise.
+
 Raises an Exception if the call failed for any reason.
 ```
 

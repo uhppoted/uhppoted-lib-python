@@ -4,11 +4,14 @@ UHPPOTE request packet encoder unit tests.
 Tests the packet encoding functions.
 """
 
+import datetime
 import unittest
 
 # pylint: disable=import-error
 from ipaddress import IPv4Address
 from uhppoted import encode
+
+from uhppoted.structs import Card
 
 
 class TestEncode(unittest.TestCase):
@@ -47,6 +50,35 @@ class TestEncode(unittest.TestCase):
         # fmt: on
 
         request = encode.set_listener_request(405419896, IPv4Address("192.168.1.100"), 60001)
+
+        self.assertEqual(request, expected)
+
+    def test_put_card_record_request(self):
+        """
+        Tests message encoding for a put-card-record request.
+        """
+        # fmt: off
+        expected = bytearray([
+            0x17, 0x50, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0xa0, 0x7a, 0x99, 0x00, 0x20, 0x25, 0x01, 0x01,
+            0x20, 0x25, 0x12, 0x31, 0x01, 0x00, 0x11, 0x01, 0x3f, 0x42, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        ])
+        # fmt: on
+
+        card = Card(
+            10058400,
+            datetime.date(2025, 1, 1),
+            datetime.date(2025, 12, 31),
+            {
+                1: 1,
+                3: 17,
+                4: 1,
+            },
+            999999,
+        )
+
+        request = encode.put_card_record_request(405419896, card)
 
         self.assertEqual(request, expected)
 
