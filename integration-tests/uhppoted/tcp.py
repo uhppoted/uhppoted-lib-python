@@ -137,6 +137,15 @@ class TestUhppoteWithTCP(unittest.TestCase):
 
         self.assertEqual(response, expected.GetStatusResponse)
 
+    def test_get_status_record(self):
+        """
+        Tests the get-status-record function with a valid dest_addr.
+        """
+        controller = (CONTROLLER, DEST_ADDR, "tcp")
+        record = self.u.get_status_record(controller)
+
+        self.assertEqual(record, expected.GetStatusRecord)
+
     def test_get_listener(self):
         """
         Tests the get-listener function with defaults.

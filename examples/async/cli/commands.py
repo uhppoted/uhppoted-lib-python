@@ -55,6 +55,7 @@ def commands():
         "get-door-control":           Command(get_door_control,           [Args.controller]),
         "set-door-control":           Command(set_door_control,           [Args.controller]),
         "get-status":                 Command(get_status,                 [Args.controller]),
+        "get-status-record":          Command(get_status_record,          [Args.controller]),
         "open-door":                  Command(open_door,                  [Args.controller]),
         "get-cards":                  Command(get_cards,                  [Args.controller]),
         "get-card":                   Command(get_card,                   [Args.controller, Args.card]),
@@ -251,6 +252,15 @@ async def get_status(u, dest, timeout, args, protocol="udp"):
     response = await u.get_status(controller, timeout=timeout)
 
     return response
+
+
+async def get_status_record(u, dest, timeout, args, protocol="udp"):
+    """
+    Retrieves the controller current state using the 'get_status' API function.
+    """
+    controller = (args.controller, dest, protocol)
+
+    return await u.get_status_record(controller, timeout=timeout)
 
 
 async def open_door(u, dest, timeout, args, protocol="udp"):

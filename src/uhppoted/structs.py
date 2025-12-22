@@ -706,3 +706,95 @@ class Card:
         Returns permission for door [1..4], defaulting to 0.
         """
         return self.permissions.get(door, 0)
+
+
+@dataclass(frozen=True)
+class SystemInfo:
+    """
+    Container class for the status record system field.
+
+       Fields:
+          datetime  (datetime)  Access controller system date/time.
+          info      (uint8)     Absolutely no idea.
+          error     (uint8)     System error code.
+    """
+
+    datetime: datetime.datetime
+    info: int
+    error: int
+
+
+@dataclass(frozen=True)
+class Door:
+    """
+    Container class for a status record door entry.
+
+       Fields:
+          unlocked  (bool)   True if door unlocked.
+          open      (bool)   True if door is open.
+          button    (bool)   True if door button pressed.
+    """
+
+    unlocked: bool
+    open: bool
+    button: bool
+
+
+@dataclass(frozen=True)
+class Alarms:
+    """
+    Container class for a status record alarms field.
+
+       Fields:
+          fire         (bool)   True if the fire alarm flag is set.
+          lock_forced  (bool)   True if a door lock has been forced.
+          flags        (uint8)  Bitfield of inputs.
+    """
+
+    fire: bool
+    lock_forced: bool
+    flags: int
+
+
+@dataclass(frozen=True)
+class EventRecord:  # pylint: disable=too-many-instance-attributes
+    """
+    Container class for an event record.
+
+       Fields:
+          index           (int)       Event record index.
+          type            (int)       Event type
+          timestamp       (datetime)  Event timestamp.
+          card            (int)       Card number for swipe events.
+          door            (int)       Door ID [1..4] for door/swipe events.
+          direction       (int)       IN/OUT for door/swipe events.
+          access_granted  (bool)      True if access was granted.
+          reason          (int)       Event reason code.
+    """
+
+    index: int
+    type: int
+    timestamp: datetime.datetime
+    card: int
+    door: int
+    direction: int
+    access_granted: bool
+    reason: int
+
+
+@dataclass
+class StatusRecord:
+    """
+    Container class for a status record.
+
+       Fields:
+          system  (SystemStatus)   Access controller system date/time, error, etc.
+          doors   (dict)           Maps doors [1..4] to { unlocked, button, open }
+          alarms  (Alarms)         Alarm flags.
+          event   (EventRecord)    Most recent event.
+    """
+
+    system: SystemInfo
+    doors: Mapping[int, Door]
+    alarms: Alarms
+    event: EventRecord

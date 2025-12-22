@@ -63,7 +63,8 @@ publish: release
 	. .venv/bin/activate; python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-	python3 -m unittest integration-tests/uhppoted/async_listen.py
+	python3 -m unittest integration-tests/uhppoted/udp_default.py -k test_get_status_record
+# 	python3 -m unittest integration-tests/uhppoted/async_listen.py
 # 	python3 -m unittest integration-tests/uhppoted/async_udp_timeout.py -k test_get_all_controllers
 # 	python3 -m unittest integration-tests/uhppoted/async_udp_timeout.py -k test_get_controller
 # 	python3 -m unittest integration-tests/uhppoted/async_udp_timeout.py
@@ -103,9 +104,15 @@ get-status: build
 	export UHPPOTED_ENV=DEV && $(CMD) get-status --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) get-status --controller $(CONTROLLER)
 
+get-status-record: build
+	export UHPPOTED_ENV=DEV && $(CMD) get-status-record --controller $(CONTROLLER)
+
 get-status-async: build
 	export UHPPOTED_ENV=DEV && $(ASYNC)     get-status --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-status --controller $(CONTROLLER)
+
+get-status-record-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-status-record --controller $(CONTROLLER)
 
 get-time: build
 	export UHPPOTED_ENV=DEV && $(CMD) get-time --controller $(CONTROLLER)

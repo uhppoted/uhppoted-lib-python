@@ -84,6 +84,35 @@ GetStatusResponse = structs.GetStatusResponse(
     sequence_no=0,
 )
 
+GetStatusRecord = structs.StatusRecord(
+    system=structs.SystemInfo(
+        datetime=datetime.datetime(2021, 5, 28, 15, 14, 46),
+        info=0,
+        error=0,
+    ),
+    doors={
+        1: structs.Door(unlocked=False, open=False, button=False),
+        2: structs.Door(unlocked=False, open=False, button=False),
+        3: structs.Door(unlocked=False, open=False, button=False),
+        4: structs.Door(unlocked=False, open=False, button=False),
+    },
+    alarms=structs.Alarms(
+        fire=False,
+        lock_forced=False,
+        flags=0,
+    ),
+    event=structs.EventRecord(
+        index=69,
+        type=2,
+        timestamp=datetime.datetime(2019, 8, 10, 10, 28, 32),
+        card=0,
+        door=1,
+        direction=1,
+        access_granted=True,
+        reason=44,
+    ),
+)
+
 GetListenerResponse = structs.GetListenerResponse(
     controller=405419896, address=IPv4Address("192.168.1.100"), port=60001, interval=15
 )

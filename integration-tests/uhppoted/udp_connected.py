@@ -132,6 +132,15 @@ class TestUDPWithDestAddr(unittest.TestCase):
 
         self.assertEqual(response, expected.GetStatusResponse)
 
+    def test_get_status_record(self):
+        """
+        Tests the get-status-record function with a valid dest_addr.
+        """
+        controller = (CONTROLLER, DEST_ADDR)
+        record = self.u.get_status_record(controller)
+
+        self.assertEqual(record, expected.GetStatusRecord)
+
     def test_get_listener(self):
         """
         Tests the get-listener function with a valid dest_addr.
@@ -255,7 +264,7 @@ class TestUDPWithDestAddr(unittest.TestCase):
         """
         Tests the put-card-record function with defaults.
         """
-        controller = CONTROLLER
+        controller = (CONTROLLER, DEST_ADDR)
         card = Card(
             123456789,
             datetime.date(2023, 1, 1),

@@ -4,6 +4,8 @@
 Implements a Python wrapper around the UHPPOTE TCP/IP access controller API.
 """
 
+import datetime
+
 from . import decode
 from . import encode
 from . import tcp
@@ -11,6 +13,11 @@ from . import udp
 from .net import disambiguate
 
 from .structs import Card
+from .structs import StatusRecord
+from .structs import EventRecord
+from .structs import SystemInfo
+from .structs import Door
+from .structs import Alarms
 
 
 class Uhppote:
@@ -158,7 +165,7 @@ class Uhppote:
 
         return None
 
-    def set_time(self, controller, datetime, timeout=2.5):
+    def set_time(self, controller, date_time, timeout=2.5):
         """
         Sets the access controller current date/time.
 
@@ -172,7 +179,7 @@ class Uhppote:
                                           - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
                                              to 'udp'.
 
-               datetime   (dateime)  Date/time to set.
+               date_time   (dateime)  Date/time to set.
                timeout    (float)    Optional operation timeout (in seconds). Defaults to 2.5s.
 
             Returns:
@@ -183,7 +190,7 @@ class Uhppote:
                           access controller cannot be decoded.
         """
         (controller_id, addr, protocol) = disambiguate(controller)
-        request = encode.set_time_request(controller_id, datetime)
+        request = encode.set_time_request(controller_id, date_time)
         reply = self._send(request, addr, timeout, protocol)
 
         if reply is not None:
@@ -219,6 +226,88 @@ class Uhppote:
 
         if reply is not None:
             return decode.get_status_response(reply)
+
+        return None
+
+    def get_status_record(self, controller, timeout=2.5):
+        """
+        Retrieves the current status of an access controller.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (controller_id,address,protocol)
+                                          fields. The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'controller_id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
+                                             to 'udp'.
+
+               timeout    (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               StatusRecord  Current controller status.
+
+            Raises:
+               Exception  If the response from the access controller cannot be decoded.
+        """
+        (controller_id, addr, protocol) = disambiguate(controller)
+        request = encode.get_status_request(controller_id)
+
+        if reply := self._send(request, addr, timeout, protocol):
+            if response := decode.get_status_response(reply):
+                sysinfo = SystemInfo(
+                    datetime=datetime.datetime.combine(response.system_date, response.system_time),
+                    info=response.special_info,
+                    error=response.system_error,
+                )
+
+                doors = {
+                    1: Door(
+                        unlocked=response.relays & 0x01,
+                        open=response.door_1_open,
+                        button=response.door_1_button,
+                    ),
+                    2: Door(
+                        unlocked=response.relays & 0x02,
+                        open=response.door_2_open,
+                        button=response.door_2_button,
+                    ),
+                    3: Door(
+                        unlocked=response.relays & 0x04,
+                        open=response.door_3_open,
+                        button=response.door_3_button,
+                    ),
+                    4: Door(
+                        unlocked=response.relays & 0x08,
+                        open=response.door_4_open,
+                        button=response.door_4_button,
+                    ),
+                }
+
+                alarms = Alarms(
+                    fire=bool(response.inputs & 0x01),
+                    lock_forced=bool(response.inputs & 0x02),
+                    flags=response.inputs,
+                )
+
+                event = EventRecord(
+                    index=response.event_index,
+                    type=response.event_type,
+                    timestamp=response.event_timestamp,
+                    card=response.event_card,
+                    door=response.event_door,
+                    direction=response.event_direction,
+                    access_granted=response.event_access_granted,
+                    reason=response.event_reason,
+                )
+
+                return StatusRecord(
+                    system=sysinfo,
+                    doors=doors,
+                    alarms=alarms,
+                    event=event,
+                )
 
         return None
 

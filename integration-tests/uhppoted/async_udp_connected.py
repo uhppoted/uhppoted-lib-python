@@ -138,6 +138,15 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(response, expected.GetStatusResponse)
 
+    async def test_get_status_record(self):
+        """
+        Tests the get-status-record function with a valid dest_addr.
+        """
+        controller = (CONTROLLER, DEST_ADDR)
+        record = await self.u.get_status_record(controller)
+
+        self.assertEqual(record, expected.GetStatusRecord)
+
     async def test_get_listener(self):
         """
         Tests the get-listener function with a valid dest_addr.

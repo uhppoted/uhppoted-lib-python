@@ -4,7 +4,7 @@
     - [x] get-card-record
     - [x] get-card-record-by-index
     - [x] put-card-record
-
+    - [x] get-status-record
 
 - [ ] github CI build
 ```
@@ -28,10 +28,6 @@ integration-tests/uhppoted/expected.py:12:0: C0103: Constant name "GetController
    - https://stackoverflow.com/questions/5281409/get-destination-address-of-a-received-udp-packet
    - https://stackoverflow.com/questions/39059418/python-sockets-how-can-i-get-the-ip-address-of-a-socket-after-i-bind-it-to-an
 
-2. Unit/integration tests
-      - https://hypothesis.readthedocs.io/en/latest/index.html
-      - https://docs.python.org/3/library/doctest.html#module-doctest
-
-3. Publish from github
-4. Try _ruff_ ?
-5. https://fractalideas.com/blog/sans-io-when-rubber-meets-road/
+2. Publish from github
+3. Try _ruff_ ?
+4. https://fractalideas.com/blog/sans-io-when-rubber-meets-road/

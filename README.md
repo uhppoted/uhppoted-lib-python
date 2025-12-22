@@ -215,6 +215,7 @@ pprint(record.__dict__, indent=2, width=1)
 - [`get_controller`](#get_controller)
 - [`set_address`](#set_address)
 - [`get_status`](#get_status)
+- [`get_status_record`](#get_status_record)
 - [`get_time`](#get_time)
 - [`set_time`](#set_time)
 - [`get_listener`](#get_listener)
@@ -293,6 +294,18 @@ valid event, the event fields are set to `None`.
 Raises an Exception if the call failed for any reason.
 ```
 
+### `get_status_record`
+```
+get_status_record(controller)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+
+Returns a `StatusRecord` with the controller status information. If the response does not contain a
+valid event, the event field is set to `None`.
+
+Raises an Exception if the call failed for any reason.
+```
+
 ### `get_time`
 ```
 get_time(controller)
@@ -306,10 +319,10 @@ Raises an Exception if the call failed for any reason.
 
 ### `set_time`
 ```
-set_time(controller, datetime)
+set_time(controller, date_time)
 
 controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
-datetime    datetime      date/time
+date_time   datetime      date/time
 
 Returns a `SetTimeResponse` with the current controller date and time.
 
@@ -1432,3 +1445,82 @@ class Card:
     permissions: Mapping[int, int]
     pin: int
 ```
+
+
+### `Card`
+
+Container class for a controller status record.
+
+    Fields:
+        system  (SystemStatus)   Access controller system date/time, error, etc.
+        doors   (dict)           Maps doors [1..4] to { unlocked, button, open }
+        alarms  (Alarms)         Alarm flags.
+        event   (EventRecord)    Most recent event.
+    
+        SystemStatus:
+            datetime  (datetime)  Access controller system date/time.
+            info      (uint8)     Absolutely no idea.
+            error     (uint8)     System error code.
+    
+        Door:
+            unlocked  (bool)   True if door unlocked.
+            open      (bool)   True if door is open.
+            button    (bool)   True if door button pressed.
+    
+        Alarms:
+            fire         (bool)   True if the fire alarm flag is set.
+            lock_forced  (bool)   True if a door lock has been forced.
+            flags        (uint8)  Bitfield of inputs.
+    
+        EventRecord:
+            index           (int)       Event record index.
+            type            (int)       Event type
+            timestamp       (datetime)  Event timestamp.
+            card            (int)       Card number for swipe events.
+            door            (int)       Door ID [1..4] for door/swipe events.
+            direction       (int)       IN/OUT for door/swipe events.
+            access_granted  (bool)      True if access was granted.
+            reason          (int)       Event reason code.
+
+```
+@dataclass
+class StatusRecord:
+    system: SystemInfo
+    doors: Mapping[int, Door]
+    alarms: Alarms
+    event: EventRecord
+
+
+@dataclass(frozen=True)
+class SystemInfo:
+    datetime: datetime.datetime
+    info: int
+    error: int
+
+
+@dataclass(frozen=True)
+class Door:
+    unlocked: bool
+    open: bool
+    button: bool
+
+
+@dataclass(frozen=True)
+class Alarms:
+    fire: bool
+    lock_forced: bool
+    flags: int
+
+
+@dataclass(frozen=True)
+class EventRecord:  # pylint: disable=too-many-instance-attributes
+    index: int
+    type: int
+    timestamp: datetime.datetime
+    card: int
+    door: int
+    direction: int
+    access_granted: bool
+    reason: int
+```
+
