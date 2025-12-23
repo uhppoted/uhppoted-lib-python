@@ -5,6 +5,7 @@ ASYNC = cd examples/async/cli && python3 main.py --debug --bind 192.168.1.125 --
 ASYNC_TCP = cd examples/async/cli && python3 main.py --debug --tcp --dest 192.168.1.125
 
 CONTROLLER ?= 405419896
+EVENT ?= 37
 LISTENER ?= 192.168.1.125:60001
 CARD ?= 1058400
 
@@ -63,7 +64,7 @@ publish: release
 	. .venv/bin/activate; python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-	python3 -m unittest integration-tests/uhppoted/udp_default.py -k test_get_status_record
+	python3 -m unittest integration-tests/uhppoted/*.py -k test_get_event_record
 # 	python3 -m unittest integration-tests/uhppoted/async_listen.py
 # 	python3 -m unittest integration-tests/uhppoted/async_udp_timeout.py -k test_get_all_controllers
 # 	python3 -m unittest integration-tests/uhppoted/async_udp_timeout.py -k test_get_controller
@@ -241,12 +242,18 @@ delete-all-cards-async: build
 	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) delete-all-cards --controller $(CONTROLLER)
 
 get-event: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-event --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) get-event --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-event --controller $(CONTROLLER) --index $(EVENT)
+	export UHPPOTED_ENV=DEV && $(TCP) get-event --controller $(CONTROLLER) --index $(EVENT)
+
+get-event-record: build
+	export UHPPOTED_ENV=DEV && $(CMD) get-event-record --controller $(CONTROLLER) --index $(EVENT)
 
 get-event-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     get-event --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-event --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC)     get-event --controller $(CONTROLLER) --index $(EVENT)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-event --controller $(CONTROLLER) --index $(EVENT)
+
+get-event-record-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-event-record --controller $(CONTROLLER) --index $(EVENT)
 
 get-event-index: build
 	export UHPPOTED_ENV=DEV && $(CMD) get-event-index --controller $(CONTROLLER)

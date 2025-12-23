@@ -7,6 +7,8 @@
     - `get-card-record`
     - `get-card-record-by-index`
     - `put-card-record`
+    - `get-status-record`
+    - `get-event-record`
 
 ### Updated
 1. Removed legacy `#yapf` directives.

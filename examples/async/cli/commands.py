@@ -66,7 +66,8 @@ def commands():
         "put-card-record":            Command(put_card_record,            [Args.controller, Args.card]),
         "delete-card":                Command(delete_card,                [Args.controller, Args.card]),
         "delete-all-cards":           Command(delete_all_cards,           [Args.controller]),
-        "get-event":                  Command(get_event,                  [Args.controller]),
+        "get-event":                  Command(get_event,                  [Args.controller, Args.index]),
+        "get-event-record":           Command(get_event_record,           [Args.controller, Args.index]),
         "get-event-index":            Command(get_event_index,            [Args.controller]),
         "set-event-index":            Command(set_event_index,            [Args.controller]),
         "record-special-events":      Command(record_special_events,      [Args.controller]),
@@ -418,7 +419,7 @@ async def get_event(u, dest, timeout, args, protocol="udp"):
     Retrieves the information for an event from a controller using the 'get_event' API function.
     """
     controller = (args.controller, dest, protocol)
-    index = EVENT_INDEX
+    index = args.index
 
     response = await u.get_event(controller, index, timeout=timeout)
 
@@ -429,6 +430,16 @@ async def get_event(u, dest, timeout, args, protocol="udp"):
         raise ValueError(f"event @ index {index} not found")
 
     return response
+
+
+async def get_event_record(u, dest, timeout, args, protocol="udp"):
+    """
+    Retrieves the information for an event from a controller using the 'get_event' API function.
+    """
+    controller = (args.controller, dest, protocol)
+    index = args.index
+
+    return await u.get_event_record(controller, index, timeout=timeout)
 
 
 async def get_event_index(u, dest, timeout, args, protocol="udp"):

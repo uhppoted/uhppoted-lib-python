@@ -763,7 +763,7 @@ class EventRecord:  # pylint: disable=too-many-instance-attributes
 
        Fields:
           index           (int)       Event record index.
-          type            (int)       Event type
+          kind            (int)       Event type
           timestamp       (datetime)  Event timestamp.
           card            (int)       Card number for swipe events.
           door            (int)       Door ID [1..4] for door/swipe events.
@@ -773,7 +773,7 @@ class EventRecord:  # pylint: disable=too-many-instance-attributes
     """
 
     index: int
-    type: int
+    kind: int
     timestamp: datetime.datetime
     card: int
     door: int

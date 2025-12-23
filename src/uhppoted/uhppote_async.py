@@ -20,6 +20,9 @@ from .structs import SystemInfo
 from .structs import Door
 from .structs import Alarms
 
+from .errors import EventNotFound
+from .errors import EventOverwritten
+
 
 class UhppoteAsync:
     """
@@ -294,7 +297,7 @@ class UhppoteAsync:
 
                 event = EventRecord(
                     index=response.event_index,
-                    type=response.event_type,
+                    kind=response.event_type,
                     timestamp=response.event_timestamp,
                     card=response.event_card,
                     door=response.event_door,
@@ -818,6 +821,55 @@ class UhppoteAsync:
 
         if reply is not None:
             return decode.get_event_response(reply)
+
+        return None
+
+    async def get_event_record(self, controller, event_index, timeout=2.5):
+        """
+        Retrieves a stored event from the access controller.
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (controller_id,address,protocol)
+                                          fields. The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'controller_id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
+                                             to 'udp'.
+
+               event_index (uint32)  Index of event in controller list.
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+
+            Returns:
+               EventRecord  Event information (as a record).
+
+            Raises:
+               EventNotFound     If the event_index is greater than the last event stored on the controller.
+               EventOverwritten  If the event_index is less than the first event stored on the controller.
+               Exception         If the response from the access controller cannot be decoded.
+        """
+        (controller_id, addr, protocol) = disambiguate(controller)
+        request = encode.get_event_request(controller_id, event_index)
+
+        if reply := await self._send(request, addr, timeout, protocol):
+            if response := decode.get_event_response(reply):
+                if response.event_type == 0x00:
+                    raise EventNotFound(f"event record {event_index} not found")
+
+                if response.event_type == 0xFF:
+                    raise EventOverwritten(f"event record {event_index} overwritten")
+
+                return EventRecord(
+                    index=response.index,
+                    kind=response.event_type,
+                    timestamp=response.timestamp,
+                    card=response.card,
+                    door=response.door,
+                    direction=response.direction,
+                    access_granted=response.access_granted,
+                    reason=response.reason,
+                )
 
         return None
 

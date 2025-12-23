@@ -18,6 +18,8 @@ from ipaddress import IPv4Address
 from uhppoted import uhppote_async as uhppote
 from uhppoted.net import dump
 from uhppoted.structs import Card
+from uhppoted.errors import EventNotFound
+from uhppoted.errors import EventOverwritten
 
 # pylint: disable=relative-beyond-top-level
 from .stub import messages
@@ -28,6 +30,8 @@ CONTROLLER = 405419896
 CARD = 8165538
 CARD_INDEX = 2
 EVENT_INDEX = 29
+EVENT_INDEX_NOT_FOUND = 200
+EVENT_INDEX_OVERWRITTEN = 73
 TIME_PROFILE = 29
 
 
@@ -327,6 +331,37 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         response = await self.u.get_event(controller, index)
 
         self.assertEqual(response, expected.GetEventResponse)
+
+    async def test_get_event_record(self):
+        """
+        Tests the get-event-record function with defaults.
+        """
+        controller = (CONTROLLER, DEST_ADDR, "tcp")
+        index = EVENT_INDEX
+
+        record = await self.u.get_event_record(controller, index)
+
+        self.assertEqual(record, expected.GetEventRecord)
+
+    async def test_get_event_record_not_found(self):
+        """
+        Tests the get-event-record function for a non-existent record.
+        """
+        controller = (CONTROLLER, DEST_ADDR, "tcp")
+        index = EVENT_INDEX_NOT_FOUND
+
+        with self.assertRaises(EventNotFound):
+            await self.u.get_event_record(controller, index)
+
+    async def test_get_event_record_overwritten(self):
+        """
+        Tests the get-event-record function for a record that has been overwritten.
+        """
+        controller = (201020304, DEST_ADDR, "tcp")
+        index = EVENT_INDEX_OVERWRITTEN
+
+        with self.assertRaises(EventOverwritten):
+            await self.u.get_event_record(controller, index)
 
     async def test_get_event_index(self):
         """

@@ -103,7 +103,7 @@ GetStatusRecord = structs.StatusRecord(
     ),
     event=structs.EventRecord(
         index=69,
-        type=2,
+        kind=2,
         timestamp=datetime.datetime(2019, 8, 10, 10, 28, 32),
         card=0,
         door=1,
@@ -194,6 +194,17 @@ GetEventResponse = structs.GetEventResponse(
     direction=1,
     card=0,
     timestamp=datetime.datetime(2019, 8, 3, 10, 34, 29),
+    reason=0,
+)
+
+GetEventRecord = structs.EventRecord(
+    index=29,
+    kind=2,
+    timestamp=datetime.datetime(2019, 8, 3, 10, 34, 29),
+    card=0,
+    door=1,
+    direction=1,
+    access_granted=True,
     reason=0,
 )
 

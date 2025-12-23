@@ -234,6 +234,7 @@ pprint(record.__dict__, indent=2, width=1)
 - [`get_event_index`](#get_event_index)
 - [`set_event_index`](#set_event_index)
 - [`get_event`](#get_event)
+- [`get_event_record`](#get_event_record)
 - [`record_special_events`](#record_special_events)
 - [`get_time_profile`](#get_time_profile)
 - [`set_time_profile`](#set_time_profile)
@@ -496,6 +497,33 @@ controller  uint32|tuple  controller serial number or (id, address, protocol) tu
 Raises an Exception if the call failed for any reason.
 ```
 
+### `get_event`
+```
+get_event(controller, index)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+index       uint32        index of event to retrieve
+
+Returns an event dataclass instance with the controller event stored at the index.
+
+Raises an Exception if the call failed for any reason.
+```
+
+### `get_event_record`
+```
+get_event_record(controller, index)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+index       uint32        index of event to retrieve
+
+Returns an EventRecord dataclass instance with the controller event stored at the index.
+
+Raises:
+- EventNotFound     if the index is greater than the last stored event
+- EventOverwritten  if the index is less than the first stored event
+- Exception         if the request failed for any other reason (e.g. timeout)
+```
+
 ### `get_event_index`
 ```
 get_event_index(controller)
@@ -513,18 +541,6 @@ set_event_index(controller, index)
 
 controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
 index       uint32        controller event index
-
-Raises an Exception if the call failed for any reason.
-```
-
-### `get_event`
-```
-get_event(controller, index)
-
-controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
-index       uint32        index of event to retrieve
-
-Returns an event dataclass instance with the controller event stored at the index.
 
 Raises an Exception if the call failed for any reason.
 ```
@@ -1447,7 +1463,7 @@ class Card:
 ```
 
 
-### `Card`
+### `StatusRecord`
 
 Container class for a controller status record.
 
@@ -1474,7 +1490,7 @@ Container class for a controller status record.
     
         EventRecord:
             index           (int)       Event record index.
-            type            (int)       Event type
+            kind            (int)       Event type
             timestamp       (datetime)  Event timestamp.
             card            (int)       Card number for swipe events.
             door            (int)       Door ID [1..4] for door/swipe events.
@@ -1513,9 +1529,9 @@ class Alarms:
 
 
 @dataclass(frozen=True)
-class EventRecord:  # pylint: disable=too-many-instance-attributes
+class EventRecord:
     index: int
-    type: int
+    kind: int
     timestamp: datetime.datetime
     card: int
     door: int
@@ -1524,3 +1540,30 @@ class EventRecord:  # pylint: disable=too-many-instance-attributes
     reason: int
 ```
 
+
+### `EventRecord`
+
+Container class for a controller event record.
+
+    Fields:
+        index           (int)       Event record index.
+        kind            (int)       Event type
+        timestamp       (datetime)  Event timestamp.
+        card            (int)       Card number for swipe events.
+        door            (int)       Door ID [1..4] for door/swipe events.
+        direction       (int)       IN/OUT for door/swipe events.
+        access_granted  (bool)      True if access was granted.
+        reason          (int)       Event reason code.
+
+```
+@dataclass(frozen=True)
+class EventRecord:
+    index: int
+    kind: int
+    timestamp: datetime.datetime
+    card: int
+    door: int
+    direction: int
+    access_granted: bool
+    reason: int
+```
