@@ -1,10 +1,15 @@
 # TODO
 
 - [ ] Fix `# pylint: disable` (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/9)
+    - [ ] validate returned controller
     - [x] get-card-record
+        - [ ] validate returned card number
     - [x] get-card-record-by-index
     - [x] put-card-record
     - [x] get-status-record
+    - [x] get-event
+        - [ ] validate returned event index
+
 
 - [ ] github CI build
 ```

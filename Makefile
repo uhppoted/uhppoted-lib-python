@@ -64,7 +64,7 @@ publish: release
 	. .venv/bin/activate; python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-	python3 -m unittest integration-tests/uhppoted/*.py -k test_get_event_record
+	python3 -m unittest integration-tests/uhppoted/*.py -k test_get_card_record
 # 	python3 -m unittest integration-tests/uhppoted/async_listen.py
 # 	python3 -m unittest integration-tests/uhppoted/async_udp_timeout.py -k test_get_all_controllers
 # 	python3 -m unittest integration-tests/uhppoted/async_udp_timeout.py -k test_get_controller

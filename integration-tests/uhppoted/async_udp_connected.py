@@ -19,6 +19,8 @@ from ipaddress import IPv4Address
 from uhppoted import uhppote_async as uhppote
 from uhppoted.net import dump
 from uhppoted.structs import Card
+from uhppoted.errors import CardNotFound
+from uhppoted.errors import CardDeleted
 from uhppoted.errors import EventNotFound
 from uhppoted.errors import EventOverwritten
 
@@ -29,7 +31,10 @@ from . import expected  # pylint: disable=no-name-in-module
 DEST_ADDR = "127.0.0.1:54321"
 CONTROLLER = 405419896
 CARD = 8165538
+CARD_NOT_FOUND = 10058399
 CARD_INDEX = 2
+CARD_INDEX_NOT_FOUND = 10001
+CARD_INDEX_DELETED = 10002
 EVENT_INDEX = 29
 EVENT_INDEX_NOT_FOUND = 200
 EVENT_INDEX_OVERWRITTEN = 73
@@ -251,6 +256,16 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(record, expected.GetCardRecord)
 
+    async def test_get_card_record_not_found(self):
+        """
+        Tests the get-card-record function with a missing card.
+        """
+        controller = (CONTROLLER, DEST_ADDR)
+        card = CARD_NOT_FOUND
+
+        with self.assertRaises(CardNotFound):
+            await self.u.get_card_record(controller, card)
+
     async def test_get_card_by_index(self):
         """
         Tests the get-card-by-index function with a valid dest_addr.
@@ -272,6 +287,26 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         record = await self.u.get_card_record_by_index(controller, index)
 
         self.assertEqual(record, expected.GetCardRecordByIndex)
+
+    async def test_get_card_record_by_index_not_found(self):
+        """
+        Tests the get-card-record function with a missing card.
+        """
+        controller = (CONTROLLER, DEST_ADDR)
+        index = CARD_INDEX_NOT_FOUND
+
+        with self.assertRaises(CardNotFound):
+            await self.u.get_card_record_by_index(controller, index)
+
+    async def test_get_card_record_by_index_deleted(self):
+        """
+        Tests the get-card-record function with a deleted card.
+        """
+        controller = (CONTROLLER, DEST_ADDR)
+        index = CARD_INDEX_DELETED
+
+        with self.assertRaises(CardDeleted):
+            await self.u.get_card_record_by_index(controller, index)
 
     async def test_put_card(self):
         """

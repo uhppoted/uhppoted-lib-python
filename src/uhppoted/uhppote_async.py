@@ -20,6 +20,8 @@ from .structs import SystemInfo
 from .structs import Door
 from .structs import Alarms
 
+from .errors import CardNotFound
+from .errors import CardDeleted
 from .errors import EventNotFound
 from .errors import EventOverwritten
 
@@ -564,13 +566,17 @@ class UhppoteAsync:
                Card  Card record initialised from the response from the controller.
 
             Raises:
-               Exception  If the response from the access controller cannot be decoded.
+               CardNotFound  If there is no card record at the index.
+               Exception     If the response from the access controller cannot be decoded.
         """
         (controller_id, addr, protocol) = disambiguate(controller)
         request = encode.get_card_request(controller_id, card_number)
 
         if reply := await self._send(request, addr, timeout, protocol):
             if response := decode.get_card_response(reply):
+                if response.card_number == 0:
+                    raise CardNotFound(f"card record {card_number} not found")
+
                 return Card(
                     response.card_number,
                     response.start_date,
@@ -637,13 +643,21 @@ class UhppoteAsync:
                Card  Card record initialised from the response from the controller.
 
             Raises:
-               Exception  If the response from the access controller cannot be decoded.
+               CardNotFound  If there is no card record at the index.
+               CardDeleted   If the card record at the index has been tombstoned.
+               Exception     If the response from the access controller cannot be decoded.
         """
         (controller_id, addr, protocol) = disambiguate(controller)
         request = encode.get_card_by_index_request(controller_id, card_index)
 
         if reply := await self._send(request, addr, timeout, protocol):
             if response := decode.get_card_by_index_response(reply):
+                if response.card_number == 0:
+                    raise CardNotFound(f"no card record at index {card_index}")
+
+                if response.card_number == 0xFFFFFFFF:
+                    raise CardDeleted(f"card record at index {card_index} deleted")
+
                 return Card(
                     response.card_number,
                     response.start_date,
