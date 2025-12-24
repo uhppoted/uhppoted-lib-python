@@ -35,9 +35,7 @@ def parse_args():
         help="UDP IPv4 event listener bind address. Defaults to 0.0.0.0:60001",
     )
 
-    parser.add_argument(
-        "--debug", action=argparse.BooleanOptionalAction, default=False, help="displays sent and received packets"
-    )
+    parser.add_argument("--debug", action=argparse.BooleanOptionalAction, default=False, help="displays sent and received packets")
 
     parser.add_argument(
         "--destination",

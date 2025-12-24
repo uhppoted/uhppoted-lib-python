@@ -23,6 +23,7 @@ from uhppoted.errors import CardNotFound
 from uhppoted.errors import CardDeleted
 from uhppoted.errors import EventNotFound
 from uhppoted.errors import EventOverwritten
+from uhppoted.errors import InvalidResponse
 
 # pylint: disable=relative-beyond-top-level
 from .stub import messages
@@ -150,6 +151,14 @@ class TestUDPWithDestAddr(unittest.TestCase):
 
         self.assertEqual(record, expected.GetStatusRecord)
 
+    def test_get_status_record_invalid_controller_response(self):
+        """
+        Tests the get-status-record function with an incorrect controller in the response.
+        """
+        controller = (303986753, DEST_ADDR)
+
+        self.assertRaisesRegex(InvalidResponse, r"invalid controller \(405419896\)", self.u.get_status_record, controller)
+
     def test_get_listener(self):
         """
         Tests the get-listener function with a valid dest_addr.
@@ -260,6 +269,26 @@ class TestUDPWithDestAddr(unittest.TestCase):
 
         self.assertRaises(CardNotFound, self.u.get_card_record, controller, card)
 
+    def test_get_card_record_invalid_controller_response(self):
+        """
+        Tests the get-card-record function with an incorrect controller in the response.
+        """
+        controller = (303986753, DEST_ADDR)
+        card = CARD
+
+        with self.assertRaisesRegex(InvalidResponse, r"invalid controller \(405419896\)"):
+            self.u.get_card_record(controller, card)
+
+    def test_get_card_record_invalid_card_response(self):
+        """
+        Tests the get-card-record function with an incorrect card in the response.
+        """
+        controller = (CONTROLLER, DEST_ADDR)
+        card = 10058398
+
+        with self.assertRaisesRegex(InvalidResponse, r"invalid card \(8165538\)"):
+            self.u.get_card_record(controller, card)
+
     def test_get_card_by_index(self):
         """
         Tests the get-card-by-index function with a valid dest_addr.
@@ -300,6 +329,16 @@ class TestUDPWithDestAddr(unittest.TestCase):
 
         self.assertRaises(CardDeleted, self.u.get_card_record_by_index, controller, index)
 
+    def test_get_card_record_by_index_invalid_controller_response(self):
+        """
+        Tests the get-card-record-by-index function with an incorrect controller in the response.
+        """
+        controller = (303986753, DEST_ADDR)
+        index = CARD_INDEX
+
+        with self.assertRaisesRegex(InvalidResponse, r"invalid controller \(405419896\)"):
+            self.u.get_card_record_by_index(controller, index)
+
     def test_put_card(self):
         """
         Tests the put-card function with a valid dest_addr.
@@ -338,6 +377,26 @@ class TestUDPWithDestAddr(unittest.TestCase):
         response = self.u.put_card_record(controller, card)
 
         self.assertEqual(response, expected.PutCardRecordResponse)
+
+    def test_put_card_record_invalid_controller_response(self):
+        """
+        Tests the put-card-record function with an incorrect controller in the response.
+        """
+        controller = (303986753, DEST_ADDR)
+        card = Card(
+            123456789,
+            datetime.date(2023, 1, 1),
+            datetime.date(2025, 12, 31),
+            {
+                1: 1,
+                3: 29,
+                4: 1,
+            },
+            7531,
+        )
+
+        with self.assertRaisesRegex(InvalidResponse, r"invalid controller \(405419896\)"):
+            self.u.put_card_record(controller, card)
 
     def test_delete_card(self):
         """
@@ -396,6 +455,16 @@ class TestUDPWithDestAddr(unittest.TestCase):
         index = EVENT_INDEX_OVERWRITTEN
 
         self.assertRaises(EventOverwritten, self.u.get_event_record, controller, index)
+
+    def test_get_event_record_invalid_controller_response(self):
+        """
+        Tests the get-event-record function with an incorrect controller in the response.
+        """
+        controller = (303986753, DEST_ADDR)
+        index = EVENT_INDEX
+
+        with self.assertRaisesRegex(InvalidResponse, r"invalid controller \(405419896\)"):
+            self.u.get_event_record(controller, index)
 
     def test_get_event_index(self):
         """

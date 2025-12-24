@@ -30,9 +30,7 @@ def main():
     host_port = 60001  # port on which to listen for events
 
     bind_addr = "0.0.0.0"  # either INADDR_ANY (0.0.0.0) or the host IPv4 address
-    broadcast_addr = (
-        "255.255.255.255:60000"  # either the broadcast address for INADDR_ANY or the host IP broadcast address
-    )
+    broadcast_addr = "255.255.255.255:60000"  # either the broadcast address for INADDR_ANY or the host IP broadcast address
     listen_addr = f"0.0.0.0:{host_port}"  # either INADDR_ANY (0.0.0.0) or the host IP IPv4 address
     debug = False
 

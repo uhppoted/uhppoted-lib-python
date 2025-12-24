@@ -316,9 +316,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
         with self.assertRaises(TimeoutError):
-            await self.u.put_card(
-                controller, card, start_date, end_date, door1, door2, door3, door4, pin, timeout=TIMEOUT
-            )
+            await self.u.put_card(controller, card, start_date, end_date, door1, door2, door3, door4, pin, timeout=TIMEOUT)
 
     async def test_delete_card(self):
         """
@@ -645,9 +643,7 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
         with self.assertRaises(TimeoutError):
-            await self.u.set_door_passcodes(
-                controller, door, passcode1, passcode2, passcode3, passcode4, timeout=TIMEOUT
-            )
+            await self.u.set_door_passcodes(controller, door, passcode1, passcode2, passcode3, passcode4, timeout=TIMEOUT)
 
     async def test_get_antipassback(self):
         """

@@ -32,9 +32,7 @@ class BroadcastProtocol(asyncio.Protocol):
             _, src_port = sock.getsockname()
             _, dest_port = self._dest
             if src_port == dest_port:
-                self._done.set_exception(
-                    RuntimeError(f"invalid UDP bind address (port {src_port} reserved for broadcast)")
-                )
+                self._done.set_exception(RuntimeError(f"invalid UDP bind address (port {src_port} reserved for broadcast)"))
                 self._transport.close()
                 return
 

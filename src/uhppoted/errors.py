@@ -37,3 +37,9 @@ class EventOverwritten(EventBufferError):
     """
     Error raised if the event index is less than the first event stored on the controller.
     """
+
+
+class InvalidResponse(Exception):
+    """
+    Base class for errors raised because the response controller or card is incorrect
+    """

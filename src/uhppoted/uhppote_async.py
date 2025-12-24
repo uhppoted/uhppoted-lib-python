@@ -24,6 +24,7 @@ from .errors import CardNotFound
 from .errors import CardDeleted
 from .errors import EventNotFound
 from .errors import EventOverwritten
+from .errors import InvalidResponse
 
 
 class UhppoteAsync:
@@ -262,6 +263,9 @@ class UhppoteAsync:
 
         if reply := await self._send(request, addr, timeout, protocol):
             if response := decode.get_status_response(reply):
+                if response.controller != controller_id:
+                    raise InvalidResponse(f"invalid controller ({response.controller})")
+
                 sysinfo = SystemInfo(
                     datetime=datetime.datetime.combine(response.system_date, response.system_time),
                     info=response.special_info,
@@ -574,6 +578,12 @@ class UhppoteAsync:
 
         if reply := await self._send(request, addr, timeout, protocol):
             if response := decode.get_card_response(reply):
+                if response.controller != controller_id:
+                    raise InvalidResponse(f"invalid controller ({response.controller})")
+
+                if response.card_number not in (card_number, 0):
+                    raise InvalidResponse(f"invalid card ({response.card_number})")
+
                 if response.card_number == 0:
                     raise CardNotFound(f"card record {card_number} not found")
 
@@ -652,6 +662,9 @@ class UhppoteAsync:
 
         if reply := await self._send(request, addr, timeout, protocol):
             if response := decode.get_card_by_index_response(reply):
+                if response.controller != controller_id:
+                    raise InvalidResponse(f"invalid controller ({response.controller})")
+
                 if response.card_number == 0:
                     raise CardNotFound(f"no card record at index {card_index}")
 
@@ -705,9 +718,7 @@ class UhppoteAsync:
                Exception  If the response from the access controller cannot be decoded.
         """
         (controller_id, addr, protocol) = disambiguate(controller)
-        request = encode.put_card_request(
-            controller_id, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin
-        )
+        request = encode.put_card_request(controller_id, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin)
         reply = await self._send(request, addr, timeout, protocol)
 
         if reply is not None:
@@ -742,6 +753,9 @@ class UhppoteAsync:
 
         if reply := await self._send(request, addr, timeout, protocol):
             if response := decode.put_card_response(reply):
+                if response.controller != controller_id:
+                    raise InvalidResponse(f"invalid controller ({response.controller})")
+
                 return response.stored
 
         return False
@@ -868,6 +882,9 @@ class UhppoteAsync:
 
         if reply := await self._send(request, addr, timeout, protocol):
             if response := decode.get_event_response(reply):
+                if response.controller != controller_id:
+                    raise InvalidResponse(f"invalid controller ({response.controller})")
+
                 if response.event_type == 0x00:
                     raise EventNotFound(f"event record {event_index} not found")
 

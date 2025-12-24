@@ -518,9 +518,7 @@ class TestUDPWithTimeout(unittest.TestCase):
         reader4 = True
 
         self.u.activate_keypads(controller, reader1, reader2, reader3, reader4)
-        self.assertRaises(
-            socket.timeout, self.u.activate_keypads, controller, reader1, reader2, reader3, reader4, timeout=TIMEOUT
-        )
+        self.assertRaises(socket.timeout, self.u.activate_keypads, controller, reader1, reader2, reader3, reader4, timeout=TIMEOUT)
 
     def test_set_door_passcodes(self):
         """
