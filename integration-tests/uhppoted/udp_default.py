@@ -166,6 +166,16 @@ class TestUDPWithDestAddr(unittest.TestCase):
 
         self.assertEqual(record, expected.GetStatusRecord)
 
+    def test_get_status_record_no_event(self):
+        """
+        Tests the get-status-record function with no events on the controller.
+        """
+        controller = 303986753
+
+        record = self.u.get_status_record(controller)
+
+        self.assertEqual(record, expected.GetStatusRecordNoEvent)
+
     def test_get_status_record_invalid_controller_response(self):
         """
         Tests the get-status-record function with an incorrect controller in the response.

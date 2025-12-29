@@ -64,11 +64,7 @@ publish: release
 	. .venv/bin/activate; python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-	python3 -m unittest integration-tests/uhppoted/*.py -k test_get_status_record
-	python3 -m unittest integration-tests/uhppoted/*.py -k test_get_card_record
-	python3 -m unittest integration-tests/uhppoted/*.py -k test_get_card_record_by_index
-	python3 -m unittest integration-tests/uhppoted/*.py -k test_put_card_record
-	python3 -m unittest integration-tests/uhppoted/*.py -k test_get_event_record
+	python3 -m unittest integration-tests/uhppoted/*.py -k test_get_status_record_no_event
 
 usage: build
 	-export UHPPOTED_ENV=DEV && $(CMD)

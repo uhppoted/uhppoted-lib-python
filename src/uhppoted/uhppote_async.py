@@ -301,16 +301,19 @@ class UhppoteAsync:
                     flags=response.inputs,
                 )
 
-                event = EventRecord(
-                    index=response.event_index,
-                    kind=response.event_type,
-                    timestamp=response.event_timestamp,
-                    card=response.event_card,
-                    door=response.event_door,
-                    direction=response.event_direction,
-                    access_granted=response.event_access_granted,
-                    reason=response.event_reason,
-                )
+                if response.event_index == 0:
+                    event = None
+                else:
+                    event = EventRecord(
+                        index=response.event_index,
+                        kind=response.event_type,
+                        timestamp=response.event_timestamp,
+                        card=response.event_card,
+                        door=response.event_door,
+                        direction=response.event_direction,
+                        access_granted=response.event_access_granted,
+                        reason=response.event_reason,
+                    )
 
                 return StatusRecord(
                     system=sysinfo,

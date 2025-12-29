@@ -421,7 +421,9 @@ card        uint32        card number
 
 Returns a Card dataclass instance with the controller card information if the call succeeded.
 
-Raises an Exception if the call failed for any reason.
+Raises:
+- CardNotFound if controller does not have a corresponding card record.
+- an Exception if the call failed for any other reason.
 ```
 
 ### `get_card_by_index`
@@ -445,7 +447,10 @@ index       uint32        index of card to retrieve
 
 Returns a Card dataclass instance with the controller card information if the call succeeded.
 
-Raises an Exception if the call failed for any reason.
+Raises:
+- CardNotFound if controller does not have a card record at the index.
+- CardDeleted if the card record at the index has been tombstoned.
+- an Exception if the call failed for any reason.
 ```
 
 ### `put_card`
