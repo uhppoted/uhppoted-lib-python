@@ -798,3 +798,42 @@ class StatusRecord:
     doors: Mapping[int, Door]
     alarms: Alarms
     event: EventRecord
+
+
+@dataclass(frozen=True)
+class Weekdays:
+    """
+    Container class for the days on which a time profile/task is active.
+    """
+
+    monday: bool = False
+    tuesday: bool = False
+    wednesday: bool = False
+    thursday: bool = False
+    friday: bool = False
+    saturday: bool = False
+    sunday: bool = False
+
+
+@dataclass(frozen=True)
+class TimeSegment:
+    """
+    Container class for the intervals during which a time profile/task is active.
+    """
+
+    start: datetime.time
+    end: datetime.time
+
+
+@dataclass(frozen=True)
+class TimeProfile:
+    """
+    Container class for a time profile record.
+    """
+
+    id: int
+    start_date: datetime.date
+    end_date: datetime.date
+    weekdays: Weekdays
+    segments: Mapping[int, TimeSegment]
+    linked_profile: int

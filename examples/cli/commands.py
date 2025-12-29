@@ -68,7 +68,8 @@ def commands():
         "get-event-index":            Command(get_event_index,            [Args.controller]),
         "set-event-index":            Command(set_event_index,            [Args.controller]),
         "record-special-events":      Command(record_special_events,      [Args.controller]),
-        "get-time-profile":           Command(get_time_profile,           [Args.controller]),
+        "get-time-profile":           Command(get_time_profile,           [Args.controller, Args.profile]),
+        "get-time-profile-record":    Command(get_time_profile_record,    [Args.controller, Args.profile]),
         "set-time-profile":           Command(set_time_profile,           [Args.controller]),
         "clear-time-profiles":        Command(clear_time_profiles,        [Args.controller]),
         "add-task":                   Command(add_task,                   [Args.controller]),
@@ -433,13 +434,24 @@ def get_time_profile(u, dest, timeout, args, protocol="udp"):
     Retrieves a time profile from a controller using the 'get_time_profile' API function.
     """
     controller = (args.controller, dest, protocol)
-    profile_id = TIME_PROFILE_ID
+    profile_id = args.profile
     response = u.get_time_profile(controller, profile_id, timeout=timeout)
 
     if response.profile_id == 0:
         raise ValueError(f"time profile {profile_id} not defined")
 
     return response
+
+
+def get_time_profile_record(u, dest, timeout, args, protocol="udp"):
+    """
+    Retrieves a time profile rom a controller using the 'get_time_profile_record' API function.
+    """
+    controller = (args.controller, dest, protocol)
+    profile_id = args.profile
+    record = u.get_time_profile_record(controller, profile_id, timeout=timeout)
+
+    return record
 
 
 def set_time_profile(u, dest, timeout, args, protocol="udp"):

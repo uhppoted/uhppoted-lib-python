@@ -8,6 +8,7 @@ CONTROLLER ?= 405419896
 EVENT ?= 37
 LISTENER ?= 192.168.1.125:60001
 CARD ?= 1058400
+PROFILE ?= 29
 
 .DEFAULT_GOAL := debug
 .PHONY: update
@@ -64,7 +65,7 @@ publish: release
 	. .venv/bin/activate; python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-	python3 -m unittest integration-tests/uhppoted/*.py -k test_get_status_record_no_event
+	python3 -m unittest integration-tests/uhppoted/*.py -k test_get_time_profile_record
 
 usage: build
 	-export UHPPOTED_ENV=DEV && $(CMD)
@@ -273,12 +274,18 @@ record-special-events-async: build
 	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) record-special-events --controller $(CONTROLLER)
 
 get-time-profile: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-time-profile --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) get-time-profile --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
+	export UHPPOTED_ENV=DEV && $(TCP) get-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
+
+get-time-profile-record: build
+	export UHPPOTED_ENV=DEV && $(CMD) get-time-profile-record --controller $(CONTROLLER) --profile $(PROFILE)
 
 get-time-profile-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     get-time-profile --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-time-profile --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC)     get-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
+
+get-time-profile-record-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-time-profile-record --controller $(CONTROLLER) --profile $(PROFILE)
 
 set-time-profile: build
 	export UHPPOTED_ENV=DEV && $(CMD) set-time-profile --controller $(CONTROLLER)

@@ -255,6 +255,23 @@ GetTimeProfileResponse = structs.GetTimeProfileResponse(
     linked_profile_id=3,
 )
 
+GetTimeProfileRecord = structs.TimeProfile(
+    id=29,
+    start_date=datetime.date(2021, 4, 1),
+    end_date=datetime.date(2021, 12, 31),
+    weekdays=structs.Weekdays(
+        monday=True,
+        wednesday=True,
+        friday=True,
+    ),
+    segments={
+        1: structs.TimeSegment(datetime.time(8, 30), datetime.time(11, 30)),
+        2: structs.TimeSegment(datetime.time(0, 0), datetime.time(0, 0)),
+        3: structs.TimeSegment(datetime.time(13, 45), datetime.time(17, 0)),
+    },
+    linked_profile=3,
+)
+
 SetTimeProfileResponse = structs.SetTimeProfileResponse(controller=405419896, stored=True)
 
 DeleteAllTimeProfilesResponse = structs.DeleteAllTimeProfilesResponse(controller=405419896, deleted=True)

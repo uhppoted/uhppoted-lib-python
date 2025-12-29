@@ -18,11 +18,15 @@ from .structs import EventRecord
 from .structs import SystemInfo
 from .structs import Door
 from .structs import Alarms
+from .structs import TimeProfile
+from .structs import Weekdays
+from .structs import TimeSegment
 
 from .errors import CardNotFound
 from .errors import CardDeleted
 from .errors import EventNotFound
 from .errors import EventOverwritten
+from .errors import TimeProfileNotFound
 from .errors import InvalidResponse
 
 
@@ -1034,6 +1038,71 @@ class Uhppote:
 
         if reply is not None:
             return decode.get_time_profile_response(reply)
+
+        return None
+
+    def get_time_profile_record(self, controller, profile_id, timeout=2.5):
+        """
+        Retrieves a time profile from an access conntroller.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (controller_id,address,protocol)
+                                          fields. The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'controller_id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
+                                             to 'udp'.
+
+               profile_id  (uint8)   Time profile ID [2..254] to retrieve.
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               TimeProfile  Time profile record for the profile ID.
+
+            Raises:
+               TimeProfileNotFound  If the controller does not have a corresponding record.
+               Exception            If the response from the access controller cannot be decoded.
+        """
+        (controller_id, addr, protocol) = disambiguate(controller)
+        request = encode.get_time_profile_request(controller_id, profile_id)
+
+        if reply := self._send(request, addr, timeout, protocol):
+            if response := decode.get_time_profile_response(reply):
+                if response.controller != controller_id:
+                    raise InvalidResponse(f"invalid controller ({response.controller})")
+
+                if response.profile_id == 0x00:
+                    raise TimeProfileNotFound(f"time profile {profile_id} not found")
+
+                if response.profile_id != profile_id:
+                    raise InvalidResponse(f"invalid time profile ({response.profile_id})")
+
+                weekdays = Weekdays(
+                    monday=response.monday,
+                    tuesday=response.tuesday,
+                    wednesday=response.wednesday,
+                    thursday=response.thursday,
+                    friday=response.friday,
+                    saturday=response.saturday,
+                    sunday=response.sunday,
+                )
+
+                segments = {
+                    1: TimeSegment(response.segment_1_start, response.segment_1_end),
+                    2: TimeSegment(response.segment_2_start, response.segment_2_end),
+                    3: TimeSegment(response.segment_3_start, response.segment_3_end),
+                }
+
+                return TimeProfile(
+                    response.profile_id,
+                    response.start_date,
+                    response.end_date,
+                    weekdays,
+                    segments,
+                    response.linked_profile_id,
+                )
 
         return None
 

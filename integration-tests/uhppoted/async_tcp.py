@@ -22,6 +22,7 @@ from uhppoted.errors import CardNotFound
 from uhppoted.errors import CardDeleted
 from uhppoted.errors import EventNotFound
 from uhppoted.errors import EventOverwritten
+from uhppoted.errors import TimeProfileNotFound
 from uhppoted.errors import InvalidResponse
 
 # pylint: disable=relative-beyond-top-level
@@ -39,6 +40,7 @@ EVENT_INDEX = 29
 EVENT_INDEX_NOT_FOUND = 200
 EVENT_INDEX_OVERWRITTEN = 73
 TIME_PROFILE = 29
+TIME_PROFILE_NOT_FOUND = 92
 
 
 def handle(sock, bind, debug):
@@ -516,6 +518,27 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         response = await self.u.get_time_profile(controller, profile)
 
         self.assertEqual(response, expected.GetTimeProfileResponse)
+
+    async def test_get_time_profile_record(self):
+        """
+        Tests the get-time-profile-record function with defaults.
+        """
+        controller = (CONTROLLER, DEST_ADDR, "tcp")
+        profile = TIME_PROFILE
+
+        record = await self.u.get_time_profile_record(controller, profile)
+
+        self.assertEqual(record, expected.GetTimeProfileRecord)
+
+    async def test_get_time_profile_record_not_found(self):
+        """
+        Tests the get-time-profile-record function with a non-existent record.
+        """
+        controller = (CONTROLLER, DEST_ADDR, "tcp")
+        profile = TIME_PROFILE_NOT_FOUND
+
+        with self.assertRaisesRegex(TimeProfileNotFound, r"time profile 92 not found"):
+            await self.u.get_time_profile_record(controller, profile)
 
     async def test_set_time_profile(self):
         """

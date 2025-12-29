@@ -7,6 +7,9 @@
     - [x] get-card-record-by-index
     - [x] put-card-record
     - [x] get-event
+    - [x] get-time-profile
+    - [ ] set-time-profile
+    - [ ] add-task
 
 - [ ] Fix `# pylint: disable` (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/19)
 

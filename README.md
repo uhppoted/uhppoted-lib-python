@@ -237,6 +237,7 @@ pprint(record.__dict__, indent=2, width=1)
 - [`get_event_record`](#get_event_record)
 - [`record_special_events`](#record_special_events)
 - [`get_time_profile`](#get_time_profile)
+- [`get_time_profile_record`](#get_time_profile_record)
 - [`set_time_profile`](#set_time_profile)
 - [`clear_time_profiles`](#clear_time_profiles)
 - [`add_task`](#add_task)
@@ -567,9 +568,23 @@ get_time_profile(controller, profileID)
 controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
 profile_ID  uint8         ID [2..254] of time profile to retrieve
 
-Returns a TimeProfile dataclass instance with the time profile stored at the profile ID on the controller.
+Returns a GetTimeProfileResponse dataclass instance with the time profile stored at the profile ID on the controller.
 
 Raises an Exception if the call failed for any reason.
+```
+
+### `get_time_profile_record`
+```
+get_time_profile_record(controller, profileID)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+profile_ID  uint8         ID [2..254] of time profile to retrieve
+
+Returns a TimeProfile dataclass instance with the time profile stored at the profile ID on the controller.
+
+Raises:
+- TimeProfileNotFound  if the controller does not have a corresponding time profile
+- Exception            if the request failed for any other reason (e.g. timeout)
 ```
 
 ### `set_time_profile`
@@ -1571,4 +1586,66 @@ class EventRecord:
     direction: int
     access_granted: bool
     reason: int
+```
+
+### `TimeProfile`
+
+Container class for a time profile record.
+
+    Fields:
+        id              (int)       Time profile ID.
+        start_date      (int)       Date from which time profile is active.
+        end_date        (datetime)  Date after which time profile is no longer active.
+        weekdays        (int)       Days of the week on which time profile is active.
+        segments        (int)       Time slots during the day during which the time profile is active.
+        linked_profile  (int)       Linked profile used to extend the active days/time segments (0 for none).
+    
+        Weekdays:
+           monday       (bool)      True if profile is active on Mondays.
+           tuesday      (bool)      True if profile is active on Tuesdays.
+           wednesday    (bool)      True if profile is active on Wednesdays.
+           thursday     (bool)      True if profile is active on Thursdays.
+           friday       (bool)      True if profile is active on Fridays.
+           saturday     (bool)      True if profile is active on Saturdays.
+           sunday       (bool)      True if profile is active on Sundays.
+    
+        TimeSegment:
+           start        (datetime.time)   Time after which profile is active on any given day.
+           end          (datetime.time)   Time after which profile is no longer active on any given day.
+
+```
+@dataclass(frozen=True)
+class TimeProfile:
+    id: int
+    start_date: datetime.date
+    end_date: datetime.date
+    weekdays: Weekdays
+    segments: Mapping[int, TimeSegment]
+    linked_profile: int
+
+
+@dataclass(frozen=True)
+class Weekdays:
+    """
+    Container class for the days on which a time profile/task is active.
+    """
+
+    monday: bool = False
+    tuesday: bool = False
+    wednesday: bool = False
+    thursday: bool = False
+    friday: bool = False
+    saturday: bool = False
+    sunday: bool = False
+
+
+@dataclass(frozen=True)
+class TimeSegment:
+    """
+    Container class for the intervals during which a time profile/task is active.
+    """
+
+    start: datetime.time
+    end: datetime.time
+
 ```

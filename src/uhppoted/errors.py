@@ -39,6 +39,18 @@ class EventOverwritten(EventBufferError):
     """
 
 
+class TimeProfileListError(Exception):
+    """
+    Base class for time profile errors.
+    """
+
+
+class TimeProfileNotFound(TimeProfileListError):
+    """
+    Error raised if the controller does not have a matching time profile.
+    """
+
+
 class InvalidResponse(Exception):
     """
     Base class for errors raised because the response controller or card is incorrect
