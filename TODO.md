@@ -2,14 +2,14 @@
 
 - [ ] Implement get_xxx_record API (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/9)
     - [x] get-status-record
-        - [x] set _event_ to _None_ if event.index is 0
     - [x] get-card-record
     - [x] get-card-record-by-index
     - [x] put-card-record
     - [x] get-event
     - [x] get-time-profile
-    - [ ] set-time-profile
+    - [x] set-time-profile
     - [ ] add-task
+    - [ ] set-door-passcodes
 
 - [ ] Fix `# pylint: disable` (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/19)
 

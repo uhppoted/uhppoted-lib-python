@@ -18,7 +18,12 @@ from ipaddress import IPv4Address
 # pylint: disable=import-error
 from uhppoted import uhppote
 from uhppoted.net import dump
+
 from uhppoted.structs import Card
+from uhppoted.structs import TimeProfile
+from uhppoted.structs import Weekdays
+from uhppoted.structs import TimeSegment
+
 from uhppoted.errors import CardNotFound
 from uhppoted.errors import CardDeleted
 from uhppoted.errors import EventNotFound
@@ -585,6 +590,31 @@ class TestUDPWithDestAddr(unittest.TestCase):
         )
 
         self.assertEqual(response, expected.SetTimeProfileResponse)
+
+    def test_set_time_profile_record(self):
+        """
+        Tests the set-time-profile-record function with defaults.
+        """
+        controller = (CONTROLLER, DEST_ADDR)
+        profile = TimeProfile(
+            id=TIME_PROFILE,
+            start_date=datetime.date(2021, 1, 1),
+            end_date=datetime.date(2021, 12, 31),
+            weekdays=Weekdays(
+                monday=True,
+                wednesday=True,
+                friday=True,
+            ),
+            segments={
+                1: TimeSegment(datetime.time(8, 30), datetime.time(11, 45)),
+                2: TimeSegment(datetime.time(13, 15), datetime.time(17, 25)),
+            },
+            linked_profile=3,
+        )
+
+        response = self.u.set_time_profile_record(controller, profile)
+
+        self.assertEqual(response, expected.SetTimeProfileRecordResponse)
 
     def test_delete_all_time_profiles(self):
         """

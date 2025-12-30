@@ -1194,6 +1194,41 @@ class Uhppote:
 
         return None
 
+    def set_time_profile_record(self, controller, profile, timeout=2.5):
+        """
+        Creates (or updates) a time profile on an access controller.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (controller_id,address,protocol)
+                                          fields. The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'controller_id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
+                                             to 'udp'.
+
+               profile    (TimeProfile)   Time profile record.
+               timeout    (float)         Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               ok (bool)  Returns True if the time profile was successfully added or updated.
+
+            Raises:
+               Exception  If the request failed for any reason.
+        """
+        (controller_id, addr, protocol) = disambiguate(controller)
+        request = encode.set_time_profile_record_request(controller_id, profile)
+
+        if reply := self._send(request, addr, timeout, protocol):
+            if response := decode.set_time_profile_response(reply):
+                if response.controller != controller_id:
+                    raise InvalidResponse(f"invalid controller ({response.controller})")
+
+                return response.stored
+
+        return False
+
     def delete_all_time_profiles(self, controller, timeout=2.5):
         """
         Clears all time profiles from an access conntroller.

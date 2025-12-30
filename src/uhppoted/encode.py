@@ -622,6 +622,72 @@ def set_time_profile_request(
     return packet
 
 
+def set_time_profile_record_request(controller, profile):
+    """
+    Encodes a set-time-profile request.
+
+        Parameters:
+            controller  (uint32)       Controller serial number.
+            profile     (TimeProfile)  Time profile record
+
+        Returns:
+            64 byte UDP packet.
+    """
+    packet = bytearray(64)
+
+    packet[0] = codec.SOM
+    packet[1] = codec.SET_TIME_PROFILE
+
+    pack_uint32(controller, packet, 4)
+    pack_uint8(profile.id, packet, 8)
+    pack_date(profile.start_date, packet, 9)
+    pack_date(profile.end_date, packet, 13)
+    pack_bool(profile.weekdays.monday, packet, 17)
+    pack_bool(profile.weekdays.tuesday, packet, 18)
+    pack_bool(profile.weekdays.wednesday, packet, 19)
+    pack_bool(profile.weekdays.thursday, packet, 20)
+    pack_bool(profile.weekdays.friday, packet, 21)
+    pack_bool(profile.weekdays.saturday, packet, 22)
+    pack_bool(profile.weekdays.sunday, packet, 23)
+
+    segment = profile.segments.get(1)
+    if segment is None or segment.start is None:
+        pack_HHmm(datetime.time(0, 0), packet, 24)
+    else:
+        pack_HHmm(segment.start, packet, 24)
+
+    if segment is None or segment.end is None:
+        pack_HHmm(datetime.time(0, 0), packet, 26)
+    else:
+        pack_HHmm(segment.end, packet, 26)
+
+    segment = profile.segments.get(2)
+    if segment is None or segment.start is None:
+        pack_HHmm(datetime.time(0, 0), packet, 28)
+    else:
+        pack_HHmm(segment.start, packet, 28)
+
+    if segment is None or segment.end is None:
+        pack_HHmm(datetime.time(0, 0), packet, 30)
+    else:
+        pack_HHmm(segment.end, packet, 30)
+
+    segment = profile.segments.get(3)
+    if segment is None or segment.start is None:
+        pack_HHmm(datetime.time(0, 0), packet, 32)
+    else:
+        pack_HHmm(segment.start, packet, 32)
+
+    if segment is None or segment.end is None:
+        pack_HHmm(datetime.time(0, 0), packet, 34)
+    else:
+        pack_HHmm(segment.end, packet, 34)
+
+    pack_uint8(profile.linked_profile, packet, 36)
+
+    return packet
+
+
 def delete_all_time_profiles_request(controller):
     """
     Encodes a delete-all-time-profiles request.

@@ -239,6 +239,7 @@ pprint(record.__dict__, indent=2, width=1)
 - [`get_time_profile`](#get_time_profile)
 - [`get_time_profile_record`](#get_time_profile_record)
 - [`set_time_profile`](#set_time_profile)
+- [`set_time_profile_record`](#set_time_profile_record)
 - [`clear_time_profiles`](#clear_time_profiles)
 - [`add_task`](#add_task)
 - [`refresh_tasklist`](#refresh_tasklist)
@@ -591,8 +592,37 @@ Raises:
 ```
 set_time_profile(controller, profile)
 
+controller         uint32|tuple  controller serial number or (id, address, protocol) tuple
+profile_id         uint8         time profile ID [2..254].
+start_date         date          date from which profile is active.
+end_date           date          date after which profile is no longer active.
+monday             bool          time profile enabled on Monday.
+tuesday            bool          time profile enabled on Tuesday.
+wednesday          bool          time profile enabled on Wednesday.
+thursday           bool          time profile enabled on Thursday.
+friday             bool          time profile enabled on Friday.
+saturday           bool          time profile enabled on Saturday.
+sunday             bool          time profile enabled on Sunday.
+segment_1_start    time          time profile segment 1 start time (HHmm).
+segment_1_end      time          time profile segment 1 end time (HHmm).
+segment_2_start    time          time profile segment 2 start time (HHmm).
+segment_2_end      time          time profile segment 2 end time (HHmm).
+segment_3_start    time          time profile segment 3 start time (HHmm).
+segment_3_end      time          time profile segment 3 end time (HHmm).
+linked_profile_id  uint8         next profile ID in chain (0 if none).
+timeout            float         optional operation timeout (in seconds). Defaults to 2.5s.
+
+Raises an Exception if the call failed for any reason.
+```
+
+### `set_time_profile_record`
+```
+set_time_profile_record(controller, profile)
+
 controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
-profile     uint8         TimeProfile dataclass instance initialised with the time profile to store on the controller.
+profile     TimeProfile   TimeProfile dataclass instance initialised with the time profile to store on the controller.
+
+Returns True if the time profile was successfully added or updated.
 
 Raises an Exception if the call failed for any reason.
 ```

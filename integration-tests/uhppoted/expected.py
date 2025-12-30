@@ -274,6 +274,8 @@ GetTimeProfileRecord = structs.TimeProfile(
 
 SetTimeProfileResponse = structs.SetTimeProfileResponse(controller=405419896, stored=True)
 
+SetTimeProfileRecordResponse = True
+
 DeleteAllTimeProfilesResponse = structs.DeleteAllTimeProfilesResponse(controller=405419896, deleted=True)
 
 AddTaskResponse = structs.AddTaskResponse(controller=405419896, added=True)

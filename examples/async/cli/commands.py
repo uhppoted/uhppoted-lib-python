@@ -73,7 +73,8 @@ def commands():
         "record-special-events":      Command(record_special_events,      [Args.controller]),
         "get-time-profile":           Command(get_time_profile,           [Args.controller, Args.profile]),
         "get-time-profile-record":    Command(get_time_profile_record,    [Args.controller, Args.profile]),
-        "set-time-profile":           Command(set_time_profile,           [Args.controller]),
+        "set-time-profile":           Command(set_time_profile,           [Args.controller, Args.profile]),
+        "set-time-profile-record":    Command(set_time_profile_record,    [Args.controller, Args.profile]),
         "clear-time-profiles":        Command(clear_time_profiles,        [Args.controller]),
         "add-task":                   Command(add_task,                   [Args.controller]),
         "refresh-tasklist":           Command(refresh_tasklist,           [Args.controller]),
@@ -508,7 +509,7 @@ async def set_time_profile(u, dest, timeout, args, protocol="udp"):
     Adds or updates a time profile on a controller using the 'set_time_profile' API function.
     """
     controller = (args.controller, dest, protocol)
-    profile_id = TIME_PROFILE_ID
+    profile_id = args.profile
     start = datetime.datetime.strptime("2022-01-01", "%Y-%m-%d").date()
     end = datetime.datetime.strptime("2022-12-31", "%Y-%m-%d").date()
     weekdays = {
@@ -550,6 +551,32 @@ async def set_time_profile(u, dest, timeout, args, protocol="udp"):
     )
 
     return response
+
+
+async def set_time_profile_record(u, dest, timeout, args, protocol="udp"):
+    """
+    Adds or updates a time profile on a controller using the 'set_time_profile_record' API function.
+    """
+    controller = (args.controller, dest, protocol)
+    profile = structs.TimeProfile(
+        id=args.profile,
+        start_date=datetime.datetime.strptime("2022-01-01", "%Y-%m-%d").date(),
+        end_date=datetime.datetime.strptime("2022-12-31", "%Y-%m-%d").date(),
+        weekdays=structs.Weekdays(
+            monday=True,
+            wednesday=True,
+            thursday=True,
+            sunday=True,
+        ),
+        segments={
+            1: structs.TimeSegment(datetime.time(8, 15), datetime.time(11, 45)),
+            2: structs.TimeSegment(datetime.time(12, 45), datetime.time(17, 15)),
+            3: structs.TimeSegment(datetime.time(19, 30), datetime.time(22, 0)),
+        },
+        linked_profile=23,
+    )
+
+    return await u.set_time_profile_record(controller, profile, timeout=timeout)
 
 
 async def clear_time_profiles(u, dest, timeout, args, protocol="udp"):

@@ -12,6 +12,9 @@ from ipaddress import IPv4Address
 from uhppoted import encode
 
 from uhppoted.structs import Card
+from uhppoted.structs import TimeProfile
+from uhppoted.structs import Weekdays
+from uhppoted.structs import TimeSegment
 
 
 class TestEncode(unittest.TestCase):
@@ -79,6 +82,42 @@ class TestEncode(unittest.TestCase):
         )
 
         request = encode.put_card_record_request(405419896, card)
+
+        self.assertEqual(request, expected)
+
+    def test_set_time_profile_record_request(self):
+        """
+        Tests message encoding for a set-time-profile-record request.
+        """
+        # fmt: off
+        expected = bytearray([
+           0x17, 0x88, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0x25, 0x20, 0x24, 0x11, 0x26, 0x20, 0x24, 0x12,
+           0x29, 0x01, 0x01, 0x00, 0x01, 0x00, 0x01, 0x01, 0x08, 0x30, 0x09, 0x45, 0x11, 0x35, 0x13, 0x15,
+           0x14, 0x01, 0x17, 0x59, 0x13, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+           0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        ])
+        # fmt: on
+
+        profile = TimeProfile(
+            id=37,
+            start_date=datetime.date(2024, 11, 26),
+            end_date=datetime.date(2024, 12, 29),
+            weekdays=Weekdays(
+                monday=True,
+                tuesday=True,
+                thursday=True,
+                saturday=True,
+                sunday=True,
+            ),
+            segments={
+                1: TimeSegment(datetime.time(8, 30), datetime.time(9, 45)),
+                2: TimeSegment(datetime.time(11, 35), datetime.time(13, 15)),
+                3: TimeSegment(datetime.time(14, 1), datetime.time(17, 59)),
+            },
+            linked_profile=19,
+        )
+
+        request = encode.set_time_profile_record_request(405419896, profile)
 
         self.assertEqual(request, expected)
 

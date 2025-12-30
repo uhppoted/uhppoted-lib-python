@@ -10,6 +10,7 @@
     - `get-status-record`
     - `get-event-record`
     - `get-time-profile-record`
+    - `set-time-profile-record`
 
 ### Updated
 1. Removed legacy `#yapf` directives.
