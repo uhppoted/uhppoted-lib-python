@@ -13,6 +13,7 @@ from uhppoted import encode
 
 from uhppoted.structs import Card
 from uhppoted.structs import TimeProfile
+from uhppoted.structs import Task
 from uhppoted.structs import Weekdays
 from uhppoted.structs import TimeSegment
 
@@ -118,6 +119,39 @@ class TestEncode(unittest.TestCase):
         )
 
         request = encode.set_time_profile_record_request(405419896, profile)
+
+        self.assertEqual(request, expected)
+
+    def test_add_task_record_request(self):
+        """
+        Tests message encoding for an add-task-record request.
+        """
+        # fmt: off
+        expected = bytearray([
+           0x17, 0xa8, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0x20, 0x24, 0x11, 0x26, 0x20, 0x24, 0x12, 0x29,
+           0x01, 0x01, 0x00, 0x01, 0x00, 0x01, 0x01, 0x08, 0x45, 0x04, 0x03, 0x07, 0x00, 0x00, 0x00, 0x00,
+           0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+           0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        ])
+        # fmt: on
+
+        task = Task(
+            task=3,
+            door=4,
+            start_date=datetime.date(2024, 11, 26),
+            end_date=datetime.date(2024, 12, 29),
+            weekdays=Weekdays(
+                monday=True,
+                tuesday=True,
+                thursday=True,
+                saturday=True,
+                sunday=True,
+            ),
+            start_time=datetime.time(8, 45),
+            more_cards=7,
+        )
+
+        request = encode.add_task_record_request(405419896, task)
 
         self.assertEqual(request, expected)
 

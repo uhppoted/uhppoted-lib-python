@@ -65,7 +65,7 @@ publish: release
 	. .venv/bin/activate; python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-	python3 -m unittest integration-tests/uhppoted/*.py -k test_set_time_profile_record
+	python3 -m unittest integration-tests/uhppoted/*.py -k test_get_status_record_invalid_controller_response
 
 usage: build
 	-export UHPPOTED_ENV=DEV && $(CMD)
@@ -313,9 +313,15 @@ add-task: build
 	export UHPPOTED_ENV=DEV && $(CMD) add-task --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(TCP) add-task --controller $(CONTROLLER)
 
+add-task-record: build
+	export UHPPOTED_ENV=DEV && $(CMD) add-task-record --controller $(CONTROLLER)
+
 add-task-async: build
 	export UHPPOTED_ENV=DEV && $(ASYNC)     add-task --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) add-task --controller $(CONTROLLER)
+
+add-task-record-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC) add-task-record --controller $(CONTROLLER)
 
 refresh-tasklist: build
 	export UHPPOTED_ENV=DEV && $(CMD) refresh-tasklist --controller $(CONTROLLER)
@@ -400,6 +406,7 @@ all: build
 	export UHPPOTED_ENV=DEV && $(CMD) get-controller             --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(CMD) set-ip                     --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(CMD) get-status                 --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-status-record          --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(CMD) get-time                   --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(CMD) set-time                   --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(CMD) get-listener               --controller $(CONTROLLER)
@@ -409,18 +416,25 @@ all: build
 	export UHPPOTED_ENV=DEV && $(CMD) open-door                  --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(CMD) get-cards                  --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(CMD) put-card                   --controller $(CONTROLLER) --card $(CARD)
+	export UHPPOTED_ENV=DEV && $(CMD) put-card-record            --controller $(CONTROLLER) --card $(CARD)
 	export UHPPOTED_ENV=DEV && $(CMD) get-card                   --controller $(CONTROLLER) --card $(CARD)
+	export UHPPOTED_ENV=DEV && $(CMD) get-card-record            --controller $(CONTROLLER) --card $(CARD)
 	export UHPPOTED_ENV=DEV && $(CMD) get-card-by-index          --controller $(CONTROLLER) --index 3
+	export UHPPOTED_ENV=DEV && $(CMD) get-card-record-by-index   --controller $(CONTROLLER) --index 3
 	export UHPPOTED_ENV=DEV && $(CMD) delete-card                --controller $(CONTROLLER) --card $(CARD)
 	export UHPPOTED_ENV=DEV && $(CMD) delete-all-cards           --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) get-event                  --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-event                  --controller $(CONTROLLER) --index $(EVENT)
+	export UHPPOTED_ENV=DEV && $(CMD) get-event-record           --controller $(CONTROLLER) --index $(EVENT)
 	export UHPPOTED_ENV=DEV && $(CMD) get-event-index            --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(CMD) set-event-index            --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(CMD) record-special-events      --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) get-time-profile           --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) set-time-profile           --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) get-time-profile           --controller $(CONTROLLER) --profile $(PROFILE)
+	export UHPPOTED_ENV=DEV && $(CMD) get-time-profile-record    --controller $(CONTROLLER) --profile $(PROFILE)
+	export UHPPOTED_ENV=DEV && $(CMD) set-time-profile           --controller $(CONTROLLER) --profile $(PROFILE)
+	export UHPPOTED_ENV=DEV && $(CMD) set-time-profile-record    --controller $(CONTROLLER) --profile $(PROFILE)
 	export UHPPOTED_ENV=DEV && $(CMD) clear-time-profiles        --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(CMD) add-task                   --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) add-task-record            --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(CMD) refresh-tasklist           --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(CMD) clear-tasklist             --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(CMD) set-pc-control             --controller $(CONTROLLER)
@@ -436,6 +450,7 @@ all-async: build
 	export UHPPOTED_ENV=DEV && $(ASYNC) get-controller             --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC) set-ip                     --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC) get-status                 --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-status-record          --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC) get-time                   --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC) set-time                   --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC) get-listener               --controller $(CONTROLLER)
@@ -444,19 +459,25 @@ all-async: build
 	export UHPPOTED_ENV=DEV && $(ASYNC) set-door-control           --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC) open-door                  --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC) get-cards                  --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) put-card                   --controller $(CONTROLLER) --card $(CARD)
+	export UHPPOTED_ENV=DEV && $(ASYNC) put-card-record            --controller $(CONTROLLER) --card $(CARD)
 	export UHPPOTED_ENV=DEV && $(ASYNC) get-card                   --controller $(CONTROLLER) --card $(CARD)
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-card-record            --controller $(CONTROLLER) --card $(CARD)
 	export UHPPOTED_ENV=DEV && $(ASYNC) get-card-by-index          --controller $(CONTROLLER) --index 3
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-card-record-by-index   --controller $(CONTROLLER) --index 3
 	export UHPPOTED_ENV=DEV && $(ASYNC) delete-card                --controller $(CONTROLLER) --card $(CARD)
 	export UHPPOTED_ENV=DEV && $(ASYNC) delete-all-cards           --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-event                  --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-event                  --controller $(CONTROLLER) --index $(EVENT)
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-event-record           --controller $(CONTROLLER) --index $(EVENT)
 	export UHPPOTED_ENV=DEV && $(ASYNC) get-event-index            --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC) set-event-index            --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC) record-special-events      --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-time-profile           --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) set-time-profile           --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-time-profile           --controller $(CONTROLLER) --profile $(PROFILE)
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-time-profile-record    --controller $(CONTROLLER) --profile $(PROFILE)
+	export UHPPOTED_ENV=DEV && $(ASYNC) set-time-profile           --controller $(CONTROLLER) --profile $(PROFILE)
+	export UHPPOTED_ENV=DEV && $(ASYNC) set-time-profile-record    --controller $(CONTROLLER) --profile $(PROFILE)
 	export UHPPOTED_ENV=DEV && $(ASYNC) clear-time-profiles        --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC) add-task                   --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC) add-task-record            --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC) refresh-tasklist           --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC) clear-tasklist             --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC) set-pc-control             --controller $(CONTROLLER)

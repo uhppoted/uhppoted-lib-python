@@ -11,6 +11,7 @@
     - `get-event-record`
     - `get-time-profile-record`
     - `set-time-profile-record`
+    - `add-task-record`
 
 ### Updated
 1. Removed legacy `#yapf` directives.

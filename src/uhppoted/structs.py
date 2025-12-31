@@ -837,3 +837,18 @@ class TimeProfile:
     weekdays: Weekdays
     segments: Mapping[int, TimeSegment]
     linked_profile: int
+
+
+@dataclass(frozen=True)
+class Task:
+    """
+    Container class for a task record.
+    """
+
+    task: int
+    door: int
+    start_date: datetime.date
+    end_date: datetime.date
+    weekdays: Weekdays
+    start_time: datetime.time
+    more_cards: int

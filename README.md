@@ -242,6 +242,7 @@ pprint(record.__dict__, indent=2, width=1)
 - [`set_time_profile_record`](#set_time_profile_record)
 - [`clear_time_profiles`](#clear_time_profiles)
 - [`add_task`](#add_task)
+- [`add_task_record`](#add_task_record)
 - [`refresh_tasklist`](#refresh_tasklist)
 - [`clear_tasklist`](#clear_tasklist)
 - [`set_pc_control`](#set_pc_control)
@@ -641,7 +642,45 @@ Raises an Exception if the call failed for any reason.
 add_task(controller, task)
 
 controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
-task        uint8         Task dataclass instance initialised with the task to store on the controller.
+start_date  datetime.date Task 'valid from' date.
+end_date    datetime.date Task 'valid until' date.
+monday      bool          Task enabled on Monday.
+tuesday     bool          Task enabled on Tuesday.
+wednesday   bool          Task enabled on Wednesday.
+thursday    bool          Task enabled on Thursday.
+friday      bool          Task enabled on Friday.
+saturday    bool          Task enabled on Saturday.
+sunday      bool          Task enabled on Sunday.
+start_time  time          Task 'run at' time (HHmm).
+door        uint8         Door [1..4] to which task is assigned.
+task_type   uint8         Task type
+                             0:  door controlled
+                             1:  door unlocked
+                             2:  door locked
+                             3:  disable time profile
+                             4:  enable time profile
+                             5:  card, no password
+                             6:  card, IN password
+                             7:  card, password
+                             8:  enable 'more cards'
+                             9:  disable 'more cards'
+                             10: trigger once
+                             11: disable pushbutton
+                             12: enable pushbutton
+more_cards  uint8         Number of cards for the 'more cards' task.
+timeout     float       Optional operation timeout (in seconds). Defaults to 2.5s.
+
+Returns an AddTaskResponse dataclass instance.
+
+Raises an Exception if the call failed for any reason.
+```
+
+### `add_task_record`
+```
+add_task_record(controller, task)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+task        Task          Task dataclass instance initialised with the task to store on the controller.
 
 Raises an Exception if the call failed for any reason.
 ```
@@ -1623,12 +1662,12 @@ class EventRecord:
 Container class for a time profile record.
 
     Fields:
-        id              (int)       Time profile ID.
-        start_date      (int)       Date from which time profile is active.
-        end_date        (datetime)  Date after which time profile is no longer active.
-        weekdays        (int)       Days of the week on which time profile is active.
-        segments        (int)       Time slots during the day during which the time profile is active.
-        linked_profile  (int)       Linked profile used to extend the active days/time segments (0 for none).
+        id              (int)             Time profile ID.
+        start_date      (datetime.date)   Date from which the time profile is active.
+        end_date        (datetime.date)   Date after which the time profile is no longer active.
+        weekdays        (int)             Days of the week on which the time profile is active.
+        segments        (int)             Time slots during the day during which the time profile is active.
+        linked_profile  (int)             Linked profile used to extend the active days/time segments (0 for none).
     
         Weekdays:
            monday       (bool)      True if profile is active on Mondays.
@@ -1678,4 +1717,52 @@ class TimeSegment:
     start: datetime.time
     end: datetime.time
 
+```
+
+### `Task`
+
+Container class for a task record.
+
+    Fields:
+        task            (int)            Task type.
+        door            (int)            Door ID ([1..4]).
+        start_date      (datetime.date)  Date from which task is enabled.
+        end_date        (datetime.date)  Date after which the task is no longer enabled.
+        weekdays        (Weekdays)       Days of the week on which the task is enabled.
+        start_time      (datetime.time)  Time of day after which task is enabled.
+        more_cards      (int)            Number of cards allowed for the 'more-cards' task.
+    
+        Weekdays:
+           monday       (bool)      True if profile is active on Mondays.
+           tuesday      (bool)      True if profile is active on Tuesdays.
+           wednesday    (bool)      True if profile is active on Wednesdays.
+           thursday     (bool)      True if profile is active on Thursdays.
+           friday       (bool)      True if profile is active on Fridays.
+           saturday     (bool)      True if profile is active on Saturdays.
+           sunday       (bool)      True if profile is active on Sundays.
+
+```
+@dataclass(frozen=True)
+class Task:
+    task: int
+    door: int
+    start_date: datetime.date
+    end_date: datetime.date
+    weekdays: Weekdays
+    start_time: datetime.time
+    more_cards: int
+
+@dataclass(frozen=True)
+class Weekdays:
+    """
+    Container class for the days on which a time profile/task is active.
+    """
+
+    monday: bool = False
+    tuesday: bool = False
+    wednesday: bool = False
+    thursday: bool = False
+    friday: bool = False
+    saturday: bool = False
+    sunday: bool = False
 ```

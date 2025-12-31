@@ -783,6 +783,40 @@ def add_task_request(
     return packet
 
 
+def add_task_record_request(controller, task):
+    """
+    Encodes an add-task request.
+
+        Parameters:
+            controller  (uint32)  Controller serial number.
+            task        (Task)    Task struct.
+
+        Returns:
+            64 byte UDP packet.
+    """
+    packet = bytearray(64)
+
+    packet[0] = codec.SOM
+    packet[1] = codec.ADD_TASK
+
+    pack_uint32(controller, packet, 4)
+    pack_date(task.start_date, packet, 8)
+    pack_date(task.end_date, packet, 12)
+    pack_bool(task.weekdays.monday, packet, 16)
+    pack_bool(task.weekdays.tuesday, packet, 17)
+    pack_bool(task.weekdays.wednesday, packet, 18)
+    pack_bool(task.weekdays.thursday, packet, 19)
+    pack_bool(task.weekdays.friday, packet, 20)
+    pack_bool(task.weekdays.saturday, packet, 21)
+    pack_bool(task.weekdays.sunday, packet, 22)
+    pack_HHmm(task.start_time, packet, 23)
+    pack_uint8(task.door, packet, 25)
+    pack_uint8(task.task, packet, 26)
+    pack_uint8(task.more_cards, packet, 27)
+
+    return packet
+
+
 def refresh_tasklist_request(controller):
     """
     Encodes a refresh-tasklist request.

@@ -1351,6 +1351,41 @@ class UhppoteAsync:
 
         return None
 
+    async def add_task_record(self, controller, task, timeout=2.5):
+        """
+        Creates a scheduled task on an access conntroller.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (controller_id,address,protocol)
+                                          fields. The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'controller_id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
+                                             to 'udp'.
+
+               task        (Task)   Task record.
+               timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               ok (bool)  Returns True if the task was successfully added.
+
+            Raises:
+               Exception  If the request failed for any reason.
+        """
+        (controller_id, addr, protocol) = disambiguate(controller)
+        request = encode.add_task_record_request(controller_id, task)
+
+        if reply := await self._send(request, addr, timeout, protocol):
+            if response := decode.add_task_response(reply):
+                if response.controller != controller_id:
+                    raise InvalidResponse(f"invalid controller ({response.controller})")
+
+                return response.added
+
+        return False
+
     async def refresh_tasklist(self, controller, timeout=2.5):
         """
         Updates the active tasklist to include tasks added by add_task.

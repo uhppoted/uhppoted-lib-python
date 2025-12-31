@@ -20,6 +20,7 @@ from uhppoted.net import dump
 
 from uhppoted.structs import Card
 from uhppoted.structs import TimeProfile
+from uhppoted.structs import Task
 from uhppoted.structs import Weekdays
 from uhppoted.structs import TimeSegment
 
@@ -177,7 +178,7 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         """
         Tests the get-status-record function with an incorrect controller in the response.
         """
-        controller = (303986753, DEST_ADDR, "tcp")
+        controller = (201020304, DEST_ADDR, "tcp")
 
         with self.assertRaisesRegex(InvalidResponse, r"invalid controller \(405419896\)"):
             await self.u.get_status_record(controller)
@@ -665,6 +666,29 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         )
 
         self.assertEqual(response, expected.AddTaskResponse)
+
+    async def test_add_task_record(self):
+        """
+        Tests the add-task-record function with defaults.
+        """
+        controller = (CONTROLLER, DEST_ADDR, "tcp")
+        task = Task(
+            task=4,
+            door=3,
+            start_date=datetime.date(2021, 1, 1),
+            end_date=datetime.date(2021, 12, 31),
+            weekdays=Weekdays(
+                monday=True,
+                wednesday=True,
+                friday=True,
+            ),
+            start_time=datetime.time(8, 30),
+            more_cards=17,
+        )
+
+        response = await self.u.add_task_record(controller, task)
+
+        self.assertEqual(response, expected.AddTaskRecordResponse)
 
     async def test_refresh_tasklist(self):
         """

@@ -8,7 +8,7 @@
     - [x] get-event
     - [x] get-time-profile
     - [x] set-time-profile
-    - [ ] add-task
+    - [x] add-task
     - [ ] set-door-passcodes
 
 - [ ] Fix `# pylint: disable` (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/19)

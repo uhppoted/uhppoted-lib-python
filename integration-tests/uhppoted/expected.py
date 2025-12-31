@@ -280,6 +280,8 @@ DeleteAllTimeProfilesResponse = structs.DeleteAllTimeProfilesResponse(controller
 
 AddTaskResponse = structs.AddTaskResponse(controller=405419896, added=True)
 
+AddTaskRecordResponse = True
+
 RefreshTaskListResponse = structs.RefreshTasklistResponse(controller=405419896, refreshed=True)
 
 ClearTaskListResponse = structs.ClearTasklistResponse(controller=405419896, cleared=True)

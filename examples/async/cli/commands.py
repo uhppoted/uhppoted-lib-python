@@ -77,6 +77,7 @@ def commands():
         "set-time-profile-record":    Command(set_time_profile_record,    [Args.controller, Args.profile]),
         "clear-time-profiles":        Command(clear_time_profiles,        [Args.controller]),
         "add-task":                   Command(add_task,                   [Args.controller]),
+        "add-task-record":            Command(add_task_record,            [Args.controller]),
         "refresh-tasklist":           Command(refresh_tasklist,           [Args.controller]),
         "clear-tasklist":             Command(clear_tasklist,             [Args.controller]),
         "set-pc-control":             Command(set_pc_control,             [Args.controller]),
@@ -629,6 +630,29 @@ async def add_task(u, dest, timeout, args, protocol="udp"):
     )
 
     return response
+
+
+async def add_task_record(u, dest, timeout, args, protocol="udp"):
+    """
+    Adds a scheduled task to a controller using the 'add_task_record' API function.
+    """
+    controller = (args.controller, dest, protocol)
+    task = structs.Task(
+        task=2,
+        door=DOOR,
+        start_date=datetime.date(2025, 1, 1),
+        end_date=datetime.date(2025, 12, 31),
+        weekdays=structs.Weekdays(
+            monday=True,
+            wednesday=True,
+            thursday=True,
+            sunday=True,
+        ),
+        start_time=datetime.time(8, 15),
+        more_cards=0,
+    )
+
+    return await u.add_task_record(controller, task, timeout=timeout)
 
 
 async def refresh_tasklist(u, dest, timeout, args, protocol="udp"):
