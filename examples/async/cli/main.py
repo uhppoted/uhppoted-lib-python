@@ -53,12 +53,18 @@ def parse_args():
     parser.add_argument("--tcp", action=argparse.BooleanOptionalAction, default=False, help="use TCP protocol")
 
     # ... command specific args
+    def list_of_ints(arg):
+        return list(map(int, arg.split(",")))
+
     subparsers = parser.add_subparsers(title="subcommands", dest="command")
 
     for c, v in commands().items():
         subparser = subparsers.add_parser(f"{c}")
         for arg in v.args:
-            subparser.add_argument(arg.arg, type=arg.type, help=arg.help)
+            if arg.type == "passcodes":
+                subparser.add_argument(arg.arg, type=list_of_ints, help=arg.help)
+            else:
+                subparser.add_argument(arg.arg, type=arg.type, help=arg.help)
 
     return parser.parse_args()
 

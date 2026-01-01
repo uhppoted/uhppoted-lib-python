@@ -12,6 +12,7 @@
     - `get-time-profile-record`
     - `set-time-profile-record`
     - `add-task-record`
+    - `set-door-passcodes-record`
 
 ### Updated
 1. Removed legacy `#yapf` directives.

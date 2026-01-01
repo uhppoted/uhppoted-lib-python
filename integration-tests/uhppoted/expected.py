@@ -294,6 +294,8 @@ ActivateKeypadsResponse = structs.ActivateKeypadsResponse(controller=405419896, 
 
 SetDoorPasscodesResponse = structs.SetDoorPasscodesResponse(controller=405419896, ok=True)
 
+SetDoorPasscodesRecordResponse = True
+
 GetAntiPassbackResponse = structs.GetAntiPassbackResponse(controller=405419896, antipassback=2)
 
 SetAntiPassbackResponse = structs.SetAntiPassbackResponse(controller=405419896, ok=True)

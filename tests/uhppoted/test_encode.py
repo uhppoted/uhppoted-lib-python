@@ -14,6 +14,7 @@ from uhppoted import encode
 from uhppoted.structs import Card
 from uhppoted.structs import TimeProfile
 from uhppoted.structs import Task
+from uhppoted.structs import Passcodes
 from uhppoted.structs import Weekdays
 from uhppoted.structs import TimeSegment
 
@@ -152,6 +153,30 @@ class TestEncode(unittest.TestCase):
         )
 
         request = encode.add_task_record_request(405419896, task)
+
+        self.assertEqual(request, expected)
+
+    def test_set_door_passcodes_record_request(self):
+        """
+        Tests message encoding for a set-door-passcodes-record request.
+        """
+        # fmt: off
+        expected = bytearray([
+           0x17, 0x8c, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0x03, 0x00, 0x00, 0x00, 0x6b, 0x1d, 0x00, 0x00,
+           0x40, 0xe2, 0x01, 0x00, 0x3f, 0x42, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+           0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+           0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        ])
+        # fmt: on
+
+        # 00000000  17 8c 00 00 78 37 2a 18  03 00 00 00 6b 1d 00 00
+        # 00000010  40 e2 01 00 3f 42 0f 00  00 00 00 00 00 00 00 00
+        # 00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+        # 00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+
+        passcodes = Passcodes([7531, 123456, 1000000, 999999])
+
+        request = encode.set_door_passcodes_record_request(405419896, 3, passcodes)
 
         self.assertEqual(request, expected)
 

@@ -1596,6 +1596,40 @@ class Uhppote:
 
         return None
 
+    def set_door_passcodes_record(self, controller, door, passcodes, timeout=2.5):
+        """
+        Sets up to four supervisor passcodes for a door. The passcodes override any other access
+        restrictions and a valid passcode is in the range [1..999999].
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (controller_id,address,protocol)
+                                          fields. The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'controller_id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
+                                             to 'udp'.
+
+               door       (uint8)      Door ID [1..4].
+               passcodes  (list[int])  Up to 4 passcodes in the range [1..999999].
+               timeout    (float)      Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               ok (bool)  Returns True if the passcodes were successfully updated.
+
+            Raises:
+               Exception  If the request failed for any reason.
+        """
+        (controller_id, addr, protocol) = disambiguate(controller)
+        request = encode.set_door_passcodes_record_request(controller_id, door, passcodes)
+
+        if reply := self._send(request, addr, timeout, protocol):
+            if response := decode.set_door_passcodes_response(reply):
+                return response.ok
+
+        return False
+
     def get_antipassback(self, controller, timeout=2.5):
         """
         Retrieves the anti-passback mode for an access controller.

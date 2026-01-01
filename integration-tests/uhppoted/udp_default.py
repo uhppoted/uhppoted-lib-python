@@ -22,6 +22,7 @@ from uhppoted.net import dump
 from uhppoted.structs import Card
 from uhppoted.structs import TimeProfile
 from uhppoted.structs import Task
+from uhppoted.structs import Passcodes
 from uhppoted.structs import Weekdays
 from uhppoted.structs import TimeSegment
 
@@ -783,6 +784,18 @@ class TestUDPWithDestAddr(unittest.TestCase):
         response = self.u.set_door_passcodes(controller, door, passcode1, passcode2, passcode3, passcode4)
 
         self.assertEqual(response, expected.SetDoorPasscodesResponse)
+
+    def test_set_door_passcodes_record(self):
+        """
+        Tests the set-door-passcodes-record function with defaults.
+        """
+        controller = CONTROLLER
+        door = 3
+        passcodes = Passcodes([12345, 0, 999999, 54321])
+
+        response = self.u.set_door_passcodes_record(controller, door, passcodes)
+
+        self.assertEqual(response, expected.SetDoorPasscodesRecordResponse)
 
     def test_get_antipassback(self):
         """

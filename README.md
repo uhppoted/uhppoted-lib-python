@@ -249,6 +249,7 @@ pprint(record.__dict__, indent=2, width=1)
 - [`set_interlock`](#set_interlock)
 - [`activate_keypads`](#activate_keypads)
 - [`set_door_passcodes`](#set_door_passcodes)
+- [`set_door_passcodes_record`](#set_door_passcodes_record)
 - [`get_antipassback`](#get_antipassback)
 - [`set_antipassback`](#set_antipassback)
 - [`restore_default_parameters`](#restore_default_parameters)
@@ -755,6 +756,20 @@ passcode2   uint32        supervisor passcode 2 [0..999999] (0 is 'no code')
 passcode3   uint32        supervisor passcode 3 [0..999999] (0 is 'no code')
 passcode4   uint32        supervisor passcode 4 [0..999999] (0 is 'no code')
 
+Returns a SetDoorPasscodesResponse.
+
+Raises an Exception if the call failed for any reason.
+```
+
+### `set_door_passcodes_record`
+```
+set_door_passcodes(controller, door, passcodes)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+door        uint8         door ID [1..4]
+passcodes   Passcodes     Passcodes struct initialised with a list of the supervisor passcodes [1..999999]
+
+Returns True if the passcodes were successfully updated.
 
 Raises an Exception if the call failed for any reason.
 ```
@@ -1754,10 +1769,6 @@ class Task:
 
 @dataclass(frozen=True)
 class Weekdays:
-    """
-    Container class for the days on which a time profile/task is active.
-    """
-
     monday: bool = False
     tuesday: bool = False
     wednesday: bool = False
@@ -1765,4 +1776,18 @@ class Weekdays:
     friday: bool = False
     saturday: bool = False
     sunday: bool = False
+```
+
+### `Passcodes`
+
+Container class for a passcodes record.
+
+    Fields:
+        passcodes       (Sequence[int]) List of passcodes (in the range [1..999999])
+                        Invalid passcodes are silently ignored.
+
+```
+@dataclass(frozen=True)
+class Passcodes:
+    passcodes: Sequence[int]
 ```

@@ -970,6 +970,34 @@ def set_door_passcodes_request(
     return packet
 
 
+def set_door_passcodes_record_request(device_id, door, passcodes):
+    """
+    Encodes a set-door-passcodes-record request.
+
+        Parameters:
+           controller (uint32)     Controller serial number (expected to be greater than 0).
+           door       (uint8)      Door ID [1..4].
+           passcodes  (list[int])  List of passcode in the range [1..999999].
+
+        Returns:
+            64 byte UDP packet.
+    """
+    packet = bytearray(64)
+
+    packet[0] = codec.SOM
+    packet[1] = codec.SET_DOOR_PASSCODES
+
+    pack_uint32(device_id, packet, 4)
+    pack_uint8(door, packet, 8)
+
+    pack_uint32(passcodes.code(1), packet, 12)
+    pack_uint32(passcodes.code(2), packet, 16)
+    pack_uint32(passcodes.code(3), packet, 20)
+    pack_uint32(passcodes.code(4), packet, 24)
+
+    return packet
+
+
 def get_antipassback_request(controller):
     """
     Encodes a get-antipassback request.

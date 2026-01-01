@@ -80,7 +80,8 @@ def commands():
         "set-pc-control":             Command(set_pc_control,             [Args.controller]),
         "set-interlock":              Command(set_interlock,              [Args.controller]),
         "activate-keypads":           Command(activate_keypads,           [Args.controller]),
-        "set-door-passcodes":         Command(set_door_passcodes,         [Args.controller]),
+        "set-door-passcodes":         Command(set_door_passcodes,         [Args.controller, Args.door, Args.passcodes]),
+        "set-door-passcodes-record":  Command(set_door_passcodes_record,  [Args.controller, Args.door, Args.passcodes]),
         "get-antipassback":           Command(get_antipassback,           [Args.controller]),
         "set-antipassback":           Command(set_antipassback,           [Args.controller, Args.antipassback]),
         "restore-default-parameters": Command(restore_default_parameters, [Args.controller]),
@@ -657,13 +658,36 @@ def set_door_passcodes(u, dest, timeout, args, protocol="udp"):
     Sets the supervisor passcodes for a door using the 'set_door_passcodes' API function.
     """
     controller = (args.controller, dest, protocol)
-    door = DOOR
-    passcode1 = 12345
+    door = args.door
+    passcode1 = 0
     passcode2 = 0
-    passcode3 = 999999
-    passcode4 = 54321
+    passcode3 = 0
+    passcode4 = 0
+
+    if len(args.passcodes) > 0:
+        passcode1 = args.passcodes[0]
+
+    if len(args.passcodes) > 1:
+        passcode2 = args.passcodes[1]
+
+    if len(args.passcodes) > 2:
+        passcode3 = args.passcodes[2]
+
+    if len(args.passcodes) > 3:
+        passcode4 = args.passcodes[3]
 
     return u.set_door_passcodes(controller, door, passcode1, passcode2, passcode3, passcode4, timeout=timeout)
+
+
+def set_door_passcodes_record(u, dest, timeout, args, protocol="udp"):
+    """
+    Sets the supervisor passcodes for a door using the 'set_door_passcodes_record' API function.
+    """
+    controller = (args.controller, dest, protocol)
+    door = args.door
+    passcodes = structs.Passcodes(args.passcodes)
+
+    return u.set_door_passcodes_record(controller, door, passcodes, timeout=timeout)
 
 
 def get_antipassback(u, dest, timeout, args, protocol="udp"):

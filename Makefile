@@ -65,7 +65,7 @@ publish: release
 	. .venv/bin/activate; python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-	python3 -m unittest integration-tests/uhppoted/*.py -k test_get_status_record_invalid_controller_response
+	python3 -m unittest integration-tests/uhppoted/*.py -k test_set_door_passcodes
 
 usage: build
 	-export UHPPOTED_ENV=DEV && $(CMD)
@@ -364,12 +364,18 @@ activate-keypads-async: build
 	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) activate-keypads --controller $(CONTROLLER)
 
 set-door-passcodes: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-door-passcodes --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) set-door-passcodes --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(CMD) set-door-passcodes --controller $(CONTROLLER) --door 2 --passcodes 7531,54321,999999
+	export UHPPOTED_ENV=DEV && $(TCP) set-door-passcodes --controller $(CONTROLLER) --door 2 --passcodes 7531,54321,999999
+
+set-door-passcodes-record: build
+	export UHPPOTED_ENV=DEV && $(CMD) set-door-passcodes-record --controller $(CONTROLLER) --door 2 --passcodes 7531,54321,999999
 
 set-door-passcodes-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     set-door-passcodes --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-door-passcodes --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC)     set-door-passcodes --controller $(CONTROLLER) --door 2 --passcodes 7531,54321,999999
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-door-passcodes --controller $(CONTROLLER) --door 2 --passcodes 7531,54321,999999
+
+set-door-passcodes-record-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC) set-door-passcodes-record --controller $(CONTROLLER) --door 2 --passcodes 7531,54321,999999
 
 get-antipassback: build
 	export UHPPOTED_ENV=DEV && $(CMD) get-antipassback --controller $(CONTROLLER)
