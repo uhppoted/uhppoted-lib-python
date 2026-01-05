@@ -14,7 +14,6 @@ import datetime
 
 from ipaddress import IPv4Address
 
-# pylint: disable=import-error
 from uhppoted import uhppote
 from uhppoted.net import dump
 

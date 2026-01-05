@@ -1,2 +1,5 @@
 [FORMAT]
 max-line-length=132
+
+[MESSAGES CONTROL]
+enable=useless-suppression

@@ -11,7 +11,6 @@ import socket
 import time
 import unittest
 
-# pylint: disable=import-error
 from uhppoted import uhppote_async as uhppote
 from uhppoted import structs
 

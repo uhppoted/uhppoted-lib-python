@@ -34,6 +34,5 @@ jobs:
 
     - name: Build
       run: |
-         pwd
-         ls -la
+         pip install -e .
          make build-all
