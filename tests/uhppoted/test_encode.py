@@ -174,7 +174,7 @@ class TestEncode(unittest.TestCase):
         # 00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
         # 00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
 
-        passcodes = Passcodes([7531, 123456, 1000000, 999999])
+        passcodes = [7531, 123456, 1000000, 999999]
 
         request = encode.set_door_passcodes_record_request(405419896, 3, passcodes)
 

@@ -767,7 +767,7 @@ set_door_passcodes(controller, door, passcodes)
 
 controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
 door        uint8         door ID [1..4]
-passcodes   Passcodes     Passcodes struct initialised with a list of the supervisor passcodes [1..999999]
+passcodes   list[int]     list of the supervisor passcodes [1..999999]
 
 Returns True if the passcodes were successfully updated.
 
@@ -1776,18 +1776,4 @@ class Weekdays:
     friday: bool = False
     saturday: bool = False
     sunday: bool = False
-```
-
-### `Passcodes`
-
-Container class for a passcodes record.
-
-    Fields:
-        passcodes       (Sequence[int]) List of passcodes (in the range [1..999999])
-                        Invalid passcodes are silently ignored.
-
-```
-@dataclass(frozen=True)
-class Passcodes:
-    passcodes: Sequence[int]
 ```

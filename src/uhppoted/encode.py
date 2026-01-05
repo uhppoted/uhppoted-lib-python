@@ -982,6 +982,21 @@ def set_door_passcodes_record_request(device_id, door, passcodes):
         Returns:
             64 byte UDP packet.
     """
+    codes = {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+    }
+
+    ix = 1
+    for code in passcodes:
+        if 1 <= code <= 999999:
+            codes[ix] = code
+            ix += 1
+            if ix > 4:
+                break
+
     packet = bytearray(64)
 
     packet[0] = codec.SOM
@@ -990,10 +1005,10 @@ def set_door_passcodes_record_request(device_id, door, passcodes):
     pack_uint32(device_id, packet, 4)
     pack_uint8(door, packet, 8)
 
-    pack_uint32(passcodes.code(1), packet, 12)
-    pack_uint32(passcodes.code(2), packet, 16)
-    pack_uint32(passcodes.code(3), packet, 20)
-    pack_uint32(passcodes.code(4), packet, 24)
+    pack_uint32(codes.get(1, 0), packet, 12)
+    pack_uint32(codes.get(2, 0), packet, 16)
+    pack_uint32(codes.get(3, 0), packet, 20)
+    pack_uint32(codes.get(4, 0), packet, 24)
 
     return packet
 

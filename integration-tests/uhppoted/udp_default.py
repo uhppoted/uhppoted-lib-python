@@ -22,7 +22,6 @@ from uhppoted.net import dump
 from uhppoted.structs import Card
 from uhppoted.structs import TimeProfile
 from uhppoted.structs import Task
-from uhppoted.structs import Passcodes
 from uhppoted.structs import Weekdays
 from uhppoted.structs import TimeSegment
 
@@ -791,7 +790,7 @@ class TestUDPWithDestAddr(unittest.TestCase):
         """
         controller = CONTROLLER
         door = 3
-        passcodes = Passcodes([12345, 0, 999999, 54321])
+        passcodes = [12345, 0, 999999, 54321]
 
         response = self.u.set_door_passcodes_record(controller, door, passcodes)
 

@@ -685,7 +685,7 @@ def set_door_passcodes_record(u, dest, timeout, args, protocol="udp"):
     """
     controller = (args.controller, dest, protocol)
     door = args.door
-    passcodes = structs.Passcodes(args.passcodes)
+    passcodes = args.passcodes
 
     return u.set_door_passcodes_record(controller, door, passcodes, timeout=timeout)
 

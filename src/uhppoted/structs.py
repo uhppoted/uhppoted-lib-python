@@ -852,34 +852,3 @@ class Task:
     weekdays: Weekdays
     start_time: datetime.time
     more_cards: int
-
-
-@dataclass(frozen=True)
-class Passcodes:
-    """
-    Container class for the passcodes assigned to a door.
-    """
-
-    passcodes: Sequence[int]
-
-    def __post_init__(self):
-        passcodes = []
-        for code in self.passcodes:
-            if 1 <= code <= 999999:
-                passcodes.append(code)
-                if len(passcodes) >= 4:
-                    break
-
-        while len(passcodes) < 4:
-            passcodes.append(0)
-
-        object.__setattr__(self, "passcodes", tuple(passcodes))
-
-    def code(self, index: int) -> int:
-        """
-        Returns passcode at the index [1..4], defaulting to 0.
-        """
-        if 1 <= index <= 4:
-            return self.passcodes[index - 1]
-
-        return 0
