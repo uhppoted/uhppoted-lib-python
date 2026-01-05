@@ -3,19 +3,11 @@ Implements an event listener that pushes received events on to a queue for proce
 """
 
 import ipaddress
-import os
-import pathlib
 import pprint
 import queue
-import sys
 import threading
 import time
 
-if os.environ.get("UHPPOTED_ENV", "") == "DEV":
-    root = pathlib.Path(__file__).resolve().parents[2]
-    sys.path.append(os.path.join(root, "src"))
-
-# pylint: disable=import-error, wrong-import-position
 from uhppoted import uhppote
 
 QUEUE_SIZE = 8

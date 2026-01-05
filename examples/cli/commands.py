@@ -2,21 +2,14 @@
 CLI command implementation.
 """
 
-import os
 import ipaddress
 import datetime
 import pprint
-import sys
-import pathlib
 
 from collections import namedtuple
 
-if os.environ["UHPPOTED_ENV"] == "DEV":
-    root = pathlib.Path(__file__).resolve().parents[2]
-    sys.path.append(os.path.join(root, "src"))
-
-# pylint: disable=import-error, wrong-import-position
 import cli_args as Args
+
 from uhppoted import uhppote
 from uhppoted import structs
 

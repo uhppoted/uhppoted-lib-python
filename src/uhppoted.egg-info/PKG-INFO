@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: uhppoted
-Version: 0.8.11.2
+Version: 0.9.0
 Summary: Python API for the UHPPOTE TCP/IP access controllers
 Author-email: uhppoted <uhppoted.development@gmail.com>
 Project-URL: Homepage, https://github.com/uhppoted/uhppoted-lib-python
@@ -236,6 +236,7 @@ pprint(record.__dict__, indent=2, width=1)
 - [`get_controller`](#get_controller)
 - [`set_address`](#set_address)
 - [`get_status`](#get_status)
+- [`get_status_record`](#get_status_record)
 - [`get_time`](#get_time)
 - [`set_time`](#set_time)
 - [`get_listener`](#get_listener)
@@ -245,24 +246,31 @@ pprint(record.__dict__, indent=2, width=1)
 - [`open_door`](#open_door)
 - [`get_cards`](#get_cards)
 - [`get_card`](#get_card)
+- [`get_card_record`](#get_card_record)
 - [`get_card_by_index`](#get_card_by_index)
+- [`get_card_record_by_index`](#get_card_record_by_index)
 - [`put_card`](#put_card)
 - [`delete_card`](#delete_card)
 - [`delete_cards`](#delete_cards)
 - [`get_event_index`](#get_event_index)
 - [`set_event_index`](#set_event_index)
 - [`get_event`](#get_event)
+- [`get_event_record`](#get_event_record)
 - [`record_special_events`](#record_special_events)
 - [`get_time_profile`](#get_time_profile)
+- [`get_time_profile_record`](#get_time_profile_record)
 - [`set_time_profile`](#set_time_profile)
+- [`set_time_profile_record`](#set_time_profile_record)
 - [`clear_time_profiles`](#clear_time_profiles)
 - [`add_task`](#add_task)
+- [`add_task_record`](#add_task_record)
 - [`refresh_tasklist`](#refresh_tasklist)
 - [`clear_tasklist`](#clear_tasklist)
 - [`set_pc_control`](#set_pc_control)
 - [`set_interlock`](#set_interlock)
 - [`activate_keypads`](#activate_keypads)
 - [`set_door_passcodes`](#set_door_passcodes)
+- [`set_door_passcodes_record`](#set_door_passcodes_record)
 - [`get_antipassback`](#get_antipassback)
 - [`set_antipassback`](#set_antipassback)
 - [`restore_default_parameters`](#restore_default_parameters)
@@ -312,6 +320,18 @@ valid event, the event fields are set to `None`.
 Raises an Exception if the call failed for any reason.
 ```
 
+### `get_status_record`
+```
+get_status_record(controller)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+
+Returns a `StatusRecord` with the controller status information. If the response does not contain a
+valid event, the event field is set to `None`.
+
+Raises an Exception if the call failed for any reason.
+```
+
 ### `get_time`
 ```
 get_time(controller)
@@ -325,10 +345,10 @@ Raises an Exception if the call failed for any reason.
 
 ### `set_time`
 ```
-set_time(controller, datetime)
+set_time(controller, date_time)
 
 controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
-datetime    datetime      date/time
+date_time   datetime      date/time
 
 Returns a `SetTimeResponse` with the current controller date and time.
 
@@ -412,9 +432,23 @@ get_card(controller, card)
 controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
 card        uint32        card number
 
-Returns a Card dataclass instance with the controller card information if the call succeeded.
+Returns a GetCardResponse dataclass instance with the response from the controller if the call succeeded.
 
 Raises an Exception if the call failed for any reason.
+```
+
+### `get_card_record`
+```
+get_card_record(controller, card)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+card        uint32        card number
+
+Returns a Card dataclass instance with the controller card information if the call succeeded.
+
+Raises:
+- CardNotFound if controller does not have a corresponding card record.
+- an Exception if the call failed for any other reason.
 ```
 
 ### `get_card_by_index`
@@ -424,9 +458,24 @@ get_card_by_index(controller, index)
 controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
 index       uint32        index of card to retrieve
 
-Returns a Card dataclass instance with the controller card information if the call succeeded.
+Returns a GetCardByIndexResponse dataclass instance with the response from the controller if the call succeeded.
 
 Raises an Exception if the call failed for any reason.
+```
+
+### `get_card_record_by_index`
+```
+get_card_record_by_index(controller, index)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+index       uint32        index of card to retrieve
+
+Returns a Card dataclass instance with the controller card information if the call succeeded.
+
+Raises:
+- CardNotFound if controller does not have a card record at the index.
+- CardDeleted if the card record at the index has been tombstoned.
+- an Exception if the call failed for any reason.
 ```
 
 ### `put_card`
@@ -441,6 +490,20 @@ door1       uint8         Door 1 access (0: none, 1: all, 2-254: time profile)
 door2       uint8         Door 2 access (0: none, 1: all, 2-254: time profile)
 door3       uint8         Door 3 access (0: none, 1: all, 2-254: time profile)
 door4       uint8         Door 4 access (0: none, 1: all, 2-254: time profile)
+
+Returns a PutCardResponse dataclass instance with the response from the controller if the call succeeded.
+
+Raises an Exception if the call failed for any reason.
+```
+
+### `put_card_record`
+```
+put_card_record(controller, card)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+card        Card          Card struct initialised with the card information
+
+Returns True if the card was added/updated on the controller, False otherwise.
 
 Raises an Exception if the call failed for any reason.
 ```
@@ -464,6 +527,33 @@ controller  uint32|tuple  controller serial number or (id, address, protocol) tu
 Raises an Exception if the call failed for any reason.
 ```
 
+### `get_event`
+```
+get_event(controller, index)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+index       uint32        index of event to retrieve
+
+Returns an event dataclass instance with the controller event stored at the index.
+
+Raises an Exception if the call failed for any reason.
+```
+
+### `get_event_record`
+```
+get_event_record(controller, index)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+index       uint32        index of event to retrieve
+
+Returns an EventRecord dataclass instance with the controller event stored at the index.
+
+Raises:
+- EventNotFound     if the index is greater than the last stored event
+- EventOverwritten  if the index is less than the first stored event
+- Exception         if the request failed for any other reason (e.g. timeout)
+```
+
 ### `get_event_index`
 ```
 get_event_index(controller)
@@ -485,18 +575,6 @@ index       uint32        controller event index
 Raises an Exception if the call failed for any reason.
 ```
 
-### `get_event`
-```
-get_event(controller, index)
-
-controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
-index       uint32        index of event to retrieve
-
-Returns an event dataclass instance with the controller event stored at the index.
-
-Raises an Exception if the call failed for any reason.
-```
-
 ### `record_special_events`
 ```
 record_special_events(controller, enabled)
@@ -514,17 +592,60 @@ get_time_profile(controller, profileID)
 controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
 profile_ID  uint8         ID [2..254] of time profile to retrieve
 
-Returns a TimeProfile dataclass instance with the time profile stored at the profile ID on the controller.
+Returns a GetTimeProfileResponse dataclass instance with the time profile stored at the profile ID on the controller.
 
 Raises an Exception if the call failed for any reason.
+```
+
+### `get_time_profile_record`
+```
+get_time_profile_record(controller, profileID)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+profile_ID  uint8         ID [2..254] of time profile to retrieve
+
+Returns a TimeProfile dataclass instance with the time profile stored at the profile ID on the controller.
+
+Raises:
+- TimeProfileNotFound  if the controller does not have a corresponding time profile
+- Exception            if the request failed for any other reason (e.g. timeout)
 ```
 
 ### `set_time_profile`
 ```
 set_time_profile(controller, profile)
 
+controller         uint32|tuple  controller serial number or (id, address, protocol) tuple
+profile_id         uint8         time profile ID [2..254].
+start_date         date          date from which profile is active.
+end_date           date          date after which profile is no longer active.
+monday             bool          time profile enabled on Monday.
+tuesday            bool          time profile enabled on Tuesday.
+wednesday          bool          time profile enabled on Wednesday.
+thursday           bool          time profile enabled on Thursday.
+friday             bool          time profile enabled on Friday.
+saturday           bool          time profile enabled on Saturday.
+sunday             bool          time profile enabled on Sunday.
+segment_1_start    time          time profile segment 1 start time (HHmm).
+segment_1_end      time          time profile segment 1 end time (HHmm).
+segment_2_start    time          time profile segment 2 start time (HHmm).
+segment_2_end      time          time profile segment 2 end time (HHmm).
+segment_3_start    time          time profile segment 3 start time (HHmm).
+segment_3_end      time          time profile segment 3 end time (HHmm).
+linked_profile_id  uint8         next profile ID in chain (0 if none).
+timeout            float         optional operation timeout (in seconds). Defaults to 2.5s.
+
+Raises an Exception if the call failed for any reason.
+```
+
+### `set_time_profile_record`
+```
+set_time_profile_record(controller, profile)
+
 controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
-profile     uint8         TimeProfile dataclass instance initialised with the time profile to store on the controller.
+profile     TimeProfile   TimeProfile dataclass instance initialised with the time profile to store on the controller.
+
+Returns True if the time profile was successfully added or updated.
 
 Raises an Exception if the call failed for any reason.
 ```
@@ -543,7 +664,45 @@ Raises an Exception if the call failed for any reason.
 add_task(controller, task)
 
 controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
-task        uint8         Task dataclass instance initialised with the task to store on the controller.
+start_date  datetime.date Task 'valid from' date.
+end_date    datetime.date Task 'valid until' date.
+monday      bool          Task enabled on Monday.
+tuesday     bool          Task enabled on Tuesday.
+wednesday   bool          Task enabled on Wednesday.
+thursday    bool          Task enabled on Thursday.
+friday      bool          Task enabled on Friday.
+saturday    bool          Task enabled on Saturday.
+sunday      bool          Task enabled on Sunday.
+start_time  time          Task 'run at' time (HHmm).
+door        uint8         Door [1..4] to which task is assigned.
+task_type   uint8         Task type
+                             0:  door controlled
+                             1:  door unlocked
+                             2:  door locked
+                             3:  disable time profile
+                             4:  enable time profile
+                             5:  card, no password
+                             6:  card, IN password
+                             7:  card, password
+                             8:  enable 'more cards'
+                             9:  disable 'more cards'
+                             10: trigger once
+                             11: disable pushbutton
+                             12: enable pushbutton
+more_cards  uint8         Number of cards for the 'more cards' task.
+timeout     float       Optional operation timeout (in seconds). Defaults to 2.5s.
+
+Returns an AddTaskResponse dataclass instance.
+
+Raises an Exception if the call failed for any reason.
+```
+
+### `add_task_record`
+```
+add_task_record(controller, task)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+task        Task          Task dataclass instance initialised with the task to store on the controller.
 
 Raises an Exception if the call failed for any reason.
 ```
@@ -618,6 +777,20 @@ passcode2   uint32        supervisor passcode 2 [0..999999] (0 is 'no code')
 passcode3   uint32        supervisor passcode 3 [0..999999] (0 is 'no code')
 passcode4   uint32        supervisor passcode 4 [0..999999] (0 is 'no code')
 
+Returns a SetDoorPasscodesResponse.
+
+Raises an Exception if the call failed for any reason.
+```
+
+### `set_door_passcodes_record`
+```
+set_door_passcodes(controller, door, passcodes)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+door        uint8         door ID [1..4]
+passcodes   list[int]     list of the supervisor passcodes [1..999999]
+
+Returns True if the passcodes were successfully updated.
 
 Raises an Exception if the call failed for any reason.
 ```
@@ -1388,4 +1561,240 @@ class Event:
     system_error: int
     special_info: int
     sequence_no: int
+```
+
+### `Card`
+
+Container class for a controller card record.
+
+       Fields:
+          card         (uint32)  Card number.
+          start_date   (date)    Date from which card is valid.
+          end_date     (date)    Date after which card is no longer valid.
+          permissions  (dict)    Maps doors [1..4] to permissions [0..255], where:
+                                 - 0 is no access
+                                 - 1 is unrestricted 24/7  access
+                                 - 2..255 is the time profile ID used to restrict access
+          pin          (uint32)  Keypad PIN code (0 if none).
+
+```
+@dataclass(frozen=True)
+class Card:
+    card: int
+    start_date: datetime.date
+    end_date: datetime.date
+    permissions: Mapping[int, int]
+    pin: int
+```
+
+
+### `StatusRecord`
+
+Container class for a controller status record.
+
+    Fields:
+        system  (SystemStatus)   Access controller system date/time, error, etc.
+        doors   (dict)           Maps doors [1..4] to { unlocked, button, open }
+        alarms  (Alarms)         Alarm flags.
+        event   (EventRecord)    Most recent event.
+    
+        SystemStatus:
+            datetime  (datetime)  Access controller system date/time.
+            info      (uint8)     Absolutely no idea.
+            error     (uint8)     System error code.
+    
+        Door:
+            unlocked  (bool)   True if door unlocked.
+            open      (bool)   True if door is open.
+            button    (bool)   True if door button pressed.
+    
+        Alarms:
+            fire         (bool)   True if the fire alarm flag is set.
+            lock_forced  (bool)   True if a door lock has been forced.
+            flags        (uint8)  Bitfield of inputs.
+    
+        EventRecord:
+            index           (int)       Event record index.
+            kind            (int)       Event type
+            timestamp       (datetime)  Event timestamp.
+            card            (int)       Card number for swipe events.
+            door            (int)       Door ID [1..4] for door/swipe events.
+            direction       (int)       IN/OUT for door/swipe events.
+            access_granted  (bool)      True if access was granted.
+            reason          (int)       Event reason code.
+
+```
+@dataclass
+class StatusRecord:
+    system: SystemInfo
+    doors: Mapping[int, Door]
+    alarms: Alarms
+    event: EventRecord
+
+
+@dataclass(frozen=True)
+class SystemInfo:
+    datetime: datetime.datetime
+    info: int
+    error: int
+
+
+@dataclass(frozen=True)
+class Door:
+    unlocked: bool
+    open: bool
+    button: bool
+
+
+@dataclass(frozen=True)
+class Alarms:
+    fire: bool
+    lock_forced: bool
+    flags: int
+
+
+@dataclass(frozen=True)
+class EventRecord:
+    index: int
+    kind: int
+    timestamp: datetime.datetime
+    card: int
+    door: int
+    direction: int
+    access_granted: bool
+    reason: int
+```
+
+
+### `EventRecord`
+
+Container class for a controller event record.
+
+    Fields:
+        index           (int)       Event record index.
+        kind            (int)       Event type
+        timestamp       (datetime)  Event timestamp.
+        card            (int)       Card number for swipe events.
+        door            (int)       Door ID [1..4] for door/swipe events.
+        direction       (int)       IN/OUT for door/swipe events.
+        access_granted  (bool)      True if access was granted.
+        reason          (int)       Event reason code.
+
+```
+@dataclass(frozen=True)
+class EventRecord:
+    index: int
+    kind: int
+    timestamp: datetime.datetime
+    card: int
+    door: int
+    direction: int
+    access_granted: bool
+    reason: int
+```
+
+### `TimeProfile`
+
+Container class for a time profile record.
+
+    Fields:
+        id              (int)             Time profile ID.
+        start_date      (datetime.date)   Date from which the time profile is active.
+        end_date        (datetime.date)   Date after which the time profile is no longer active.
+        weekdays        (int)             Days of the week on which the time profile is active.
+        segments        (int)             Time slots during the day during which the time profile is active.
+        linked_profile  (int)             Linked profile used to extend the active days/time segments (0 for none).
+    
+        Weekdays:
+           monday       (bool)      True if profile is active on Mondays.
+           tuesday      (bool)      True if profile is active on Tuesdays.
+           wednesday    (bool)      True if profile is active on Wednesdays.
+           thursday     (bool)      True if profile is active on Thursdays.
+           friday       (bool)      True if profile is active on Fridays.
+           saturday     (bool)      True if profile is active on Saturdays.
+           sunday       (bool)      True if profile is active on Sundays.
+    
+        TimeSegment:
+           start        (datetime.time)   Time after which profile is active on any given day.
+           end          (datetime.time)   Time after which profile is no longer active on any given day.
+
+```
+@dataclass(frozen=True)
+class TimeProfile:
+    id: int
+    start_date: datetime.date
+    end_date: datetime.date
+    weekdays: Weekdays
+    segments: Mapping[int, TimeSegment]
+    linked_profile: int
+
+
+@dataclass(frozen=True)
+class Weekdays:
+    """
+    Container class for the days on which a time profile/task is active.
+    """
+
+    monday: bool = False
+    tuesday: bool = False
+    wednesday: bool = False
+    thursday: bool = False
+    friday: bool = False
+    saturday: bool = False
+    sunday: bool = False
+
+
+@dataclass(frozen=True)
+class TimeSegment:
+    """
+    Container class for the intervals during which a time profile/task is active.
+    """
+
+    start: datetime.time
+    end: datetime.time
+
+```
+
+### `Task`
+
+Container class for a task record.
+
+    Fields:
+        task            (int)            Task type.
+        door            (int)            Door ID ([1..4]).
+        start_date      (datetime.date)  Date from which task is enabled.
+        end_date        (datetime.date)  Date after which the task is no longer enabled.
+        weekdays        (Weekdays)       Days of the week on which the task is enabled.
+        start_time      (datetime.time)  Time of day after which task is enabled.
+        more_cards      (int)            Number of cards allowed for the 'more-cards' task.
+    
+        Weekdays:
+           monday       (bool)      True if profile is active on Mondays.
+           tuesday      (bool)      True if profile is active on Tuesdays.
+           wednesday    (bool)      True if profile is active on Wednesdays.
+           thursday     (bool)      True if profile is active on Thursdays.
+           friday       (bool)      True if profile is active on Fridays.
+           saturday     (bool)      True if profile is active on Saturdays.
+           sunday       (bool)      True if profile is active on Sundays.
+
+```
+@dataclass(frozen=True)
+class Task:
+    task: int
+    door: int
+    start_date: datetime.date
+    end_date: datetime.date
+    weekdays: Weekdays
+    start_time: datetime.time
+    more_cards: int
+
+@dataclass(frozen=True)
+class Weekdays:
+    monday: bool = False
+    tuesday: bool = False
+    wednesday: bool = False
+    thursday: bool = False
+    friday: bool = False
+    saturday: bool = False
+    sunday: bool = False
 ```

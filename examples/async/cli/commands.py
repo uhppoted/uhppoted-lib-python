@@ -3,12 +3,9 @@ async CLI command implementation.
 """
 
 import asyncio
-import os
 import ipaddress
 import datetime
 import pprint
-import sys
-import pathlib
 import itertools
 import signal
 import re
@@ -16,12 +13,8 @@ import re
 from collections import namedtuple
 from contextlib import suppress
 
-if os.environ["UHPPOTED_ENV"] == "DEV":
-    root = pathlib.Path(__file__).resolve().parents[3]
-    sys.path.append(os.path.join(root, "src"))
-
-# pylint: disable=import-error, wrong-import-position
 import cli_args as Args
+
 from uhppoted import uhppote_async as uhppote
 from uhppoted import structs
 

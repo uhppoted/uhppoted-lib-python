@@ -5,6 +5,7 @@ src/uhppoted/__init__.py
 src/uhppoted/codec.py
 src/uhppoted/decode.py
 src/uhppoted/encode.py
+src/uhppoted/errors.py
 src/uhppoted/net.py
 src/uhppoted/structs.py
 src/uhppoted/tcp.py

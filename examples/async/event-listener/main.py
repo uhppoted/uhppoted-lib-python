@@ -5,17 +5,9 @@ Implements an async event listener that pushes received events on to a queue for
 import argparse
 import asyncio
 import ipaddress
-import os
-import pathlib
 import pprint
 import signal
-import sys
 
-if os.environ.get("UHPPOTED_ENV", "") == "DEV":
-    root = pathlib.Path(__file__).resolve().parents[3]
-    sys.path.append(os.path.join(root, "src"))
-
-# pylint: disable=import-error, wrong-import-position
 from uhppoted import uhppote_async as uhppote
 
 QUEUE_SIZE = 8

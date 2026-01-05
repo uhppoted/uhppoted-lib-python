@@ -41,6 +41,27 @@ pip install uhppoted
 3. Added check to prevent UDP broadcast-to-self.
 4. Switched to _black_ formatter.
 
+## Development
+
+### Building from source
+
+With `make`:
+```
+git clone https://github.com/uhppoted/uhppoted-lib-python.git
+cd uhppoted-lib-python
+pip install -e .
+make build-all
+```
+
+If you prefer building manually:
+```
+git clone https://github.com/uhppoted/uhppoted-lib-python.git
+cd uhppoted-lib-python
+pip install -e .
+python3 -m compileall .
+python3 -m unittest tests/uhppoted/*.py 
+python3 -m unittest integration-tests/uhppoted/*.py 
+```
 
 ## API
 
