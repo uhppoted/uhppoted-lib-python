@@ -368,7 +368,7 @@ async def put_card(u, dest, timeout, args, protocol="udp"):
     return await u.put_card(controller, card, start, end, door1, door2, door3, door4, pin, timeout=timeout)
 
 
-async def put_card_record(u, dest, timeout, args, protocol="udp"):  # pylint: disable=unused-argument
+async def put_card_record(u, dest, timeout, args, protocol="udp"):
     """
     Adds or updates the information for an access card on a controller using the 'put_card_record' API function.
     """
