@@ -60,7 +60,7 @@ cd uhppoted-lib-python
 pip install -e .
 python3 -m compileall .
 python3 -m unittest tests/uhppoted/*.py 
-python3 -m unittest integration-tests/uhppoted/*.py 
+python3 -m unittest integration_tests/uhppoted/*.py 
 ```
 
 ## API

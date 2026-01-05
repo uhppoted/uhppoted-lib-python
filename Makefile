@@ -27,7 +27,7 @@ format:
 	. .venv/bin/activate; black examples/async/cli
 	. .venv/bin/activate; black examples/async/event-listener
 	. .venv/bin/activate; black tests
-	. .venv/bin/activate; black integration-tests
+	. .venv/bin/activate; black integration_tests
 
 build: format
 	python3 -m compileall .
@@ -36,7 +36,7 @@ test: build
 	python3 -m unittest tests/uhppoted/*.py 
 
 integration-tests: build
-	python3 -m unittest integration-tests/uhppoted/*.py 
+	python3 -m unittest integration_tests/uhppoted/*.py 
 
 vet: 
 
@@ -48,8 +48,8 @@ lint:
 	. .venv/bin/activate; pylint --rcfile=.pylintrc examples/async/event-listener
 	. .venv/bin/activate; pylint --rcfile=.pylintrc tests
 	. .venv/bin/activate; pylint --rcfile=.pylintrc tests/uhppoted
-	. .venv/bin/activate; pylint --rcfile=.pylintrc integration-tests
-	. .venv/bin/activate; pylint --rcfile=.pylintrc --disable=duplicate-code integration-tests/uhppoted
+	. .venv/bin/activate; pylint --rcfile=.pylintrc integration_tests
+	. .venv/bin/activate; pylint --rcfile=.pylintrc --disable=duplicate-code integration_tests/uhppoted
 
 build-all: test vet lint
 
@@ -65,7 +65,7 @@ publish: release
 	. .venv/bin/activate; python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-	python3 -m unittest integration-tests/uhppoted/*.py -k test_set_door_passcodes
+	python3 -m unittest integration_tests/uhppoted/*.py -k test_set_door_passcodes
 
 usage: build
 	-export UHPPOTED_ENV=DEV && $(CMD)
