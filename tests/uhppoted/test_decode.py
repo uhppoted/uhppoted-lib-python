@@ -7,7 +7,6 @@ Tests the packet decoding functions.
 import unittest
 import datetime
 
-# pylint: disable=import-error
 from ipaddress import IPv4Address
 from uhppoted import decode
 

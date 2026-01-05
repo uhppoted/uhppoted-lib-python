@@ -310,7 +310,7 @@ def get_card_record_by_index(u, dest, timeout, args, protocol="udp"):
     return record
 
 
-def put_card(u, dest, timeout, args, protocol="udp"):  # pylint: disable=unused-argument
+def put_card(u, dest, timeout, args, protocol="udp"):
     """
     Adds or updates the information for an access card on a controller using the 'put_card' API function.
     """
@@ -327,7 +327,7 @@ def put_card(u, dest, timeout, args, protocol="udp"):  # pylint: disable=unused-
     return u.put_card(controller, card, start, end, door1, door2, door3, door4, pin, timeout=timeout)
 
 
-def put_card_record(u, dest, timeout, args, protocol="udp"):  # pylint: disable=unused-argument
+def put_card_record(u, dest, timeout, args, protocol="udp"):
     """
     Adds or updates the information for an access card on a controller using the 'put_card_record' API function.
     """

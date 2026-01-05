@@ -1523,7 +1523,7 @@ class UhppoteAsync:
 
     async def activate_keypads(
         self, controller, reader1, reader2, reader3, reader4, timeout=2.5
-    ):  # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
+    ):  # pylint: disable=too-many-arguments, too-many-positional-arguments
         """
         Enables (or disables) the keypad associated with an access reader.
 
@@ -1560,7 +1560,7 @@ class UhppoteAsync:
 
     async def set_door_passcodes(
         self, controller, door, passcode1, passcode2, passcode3, passcode4, timeout=2.5
-    ):  # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
+    ):  # pylint: disable=too-many-arguments, too-many-positional-arguments
         """
         Sets up to four supervisor passcodes for a door. The passcodes override any other access
         restrictions and a valid passcode is in the range [0..999999], with 0 corresponding to

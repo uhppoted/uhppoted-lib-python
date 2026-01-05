@@ -63,7 +63,6 @@ def handle(sock, bind, debug):
                 connection.sendall(bytes(m["response"]))
                 break
 
-    # pylint: disable=too-many-nested-blocks
     try:
         while True:
             (connection, _) = sock.accept()

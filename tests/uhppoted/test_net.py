@@ -6,7 +6,6 @@ Tests the internal conversion functions.
 
 import unittest
 
-# pylint: disable=import-error
 from uhppoted.net import timeout_to_seconds
 from uhppoted.net import disambiguate
 from uhppoted.net import is_inaddr_any

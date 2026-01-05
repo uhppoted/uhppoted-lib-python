@@ -66,7 +66,6 @@ def handle(sock, bind, debug):
                         sock.sendto(bytes(packet), addr)
                 break
 
-    # pylint: disable=too-many-nested-blocks
     try:
         sock.bind(bind)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, never)
