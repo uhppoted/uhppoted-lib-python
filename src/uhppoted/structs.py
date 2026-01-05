@@ -8,7 +8,7 @@ from ipaddress import IPv4Address
 from dataclasses import dataclass
 from typing import NewType
 from types import MappingProxyType
-from collections.abc import Mapping, Sequence
+from collections.abc import Mapping
 
 PIN = NewType("PIN", int)
 

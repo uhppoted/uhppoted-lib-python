@@ -14,7 +14,6 @@ from uhppoted import encode
 from uhppoted.structs import Card
 from uhppoted.structs import TimeProfile
 from uhppoted.structs import Task
-from uhppoted.structs import Passcodes
 from uhppoted.structs import Weekdays
 from uhppoted.structs import TimeSegment
 
