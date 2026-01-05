@@ -17,8 +17,7 @@ from ipaddress import IPv4Address
 from uhppoted import uhppote_async as uhppote
 from uhppoted.net import dump
 
-# pylint: disable=relative-beyond-top-level
-from .stub import messages
+from .stub import messages  # pylint: disable=relative-beyond-top-level
 
 DEST_ADDR = "127.0.0.1:12345"
 TIMEOUT = 0.25
@@ -37,6 +36,15 @@ def handle(sock, bind, debug):
     sock.bind(bind)
     sock.listen(1)
 
+    def received(message):
+        if debug:
+            dump(message)
+        for m in messages():
+            if bytes(m["request"]) == message:
+                time.sleep(0.5)
+                connection.sendall(bytes(m["response"]))
+                break
+
     # pylint: disable=too-many-nested-blocks
     try:
         while True:
@@ -44,15 +52,8 @@ def handle(sock, bind, debug):
             try:
                 connection.settimeout(0.5)
                 message = connection.recv(1024)
-
                 if len(message) == 64:
-                    if debug:
-                        dump(message)
-                    for m in messages():
-                        if bytes(m["request"]) == message:
-                            time.sleep(0.5)
-                            connection.sendall(bytes(m["response"]))
-                            break
+                    received(message)
 
             except Exception as exc:  # pylint: disable=broad-exception-caught
                 print("WARN", exc)

@@ -31,8 +31,7 @@ from uhppoted.errors import EventOverwritten
 from uhppoted.errors import TimeProfileNotFound
 from uhppoted.errors import InvalidResponse
 
-# pylint: disable=relative-beyond-top-level
-from .stub import messages
+from .stub import messages  # pylint: disable=relative-beyond-top-level
 from . import expected  # pylint: disable=no-name-in-module
 
 DEST_ADDR = "127.0.0.1:54321"

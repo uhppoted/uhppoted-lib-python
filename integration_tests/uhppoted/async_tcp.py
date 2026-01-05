@@ -30,8 +30,7 @@ from uhppoted.errors import EventOverwritten
 from uhppoted.errors import TimeProfileNotFound
 from uhppoted.errors import InvalidResponse
 
-# pylint: disable=relative-beyond-top-level
-from .stub import messages
+from .stub import messages  # pylint: disable=relative-beyond-top-level
 from . import expected  # pylint: disable=no-name-in-module
 
 DEST_ADDR = "127.0.0.1:12345"
@@ -56,21 +55,22 @@ def handle(sock, bind, debug):
     sock.bind(bind)
     sock.listen(1)
 
-    # pylint: disable=too-many-nested-blocks
+    def received(message):
+        if debug:
+            dump(message)
+        for m in messages():
+            if bytes(m["request"]) == message:
+                connection.sendall(bytes(m["response"]))
+                break
+
     try:
         while True:
             (connection, _) = sock.accept()
             try:
                 connection.settimeout(0.5)
                 message = connection.recv(1024)
-
                 if len(message) == 64:
-                    if debug:
-                        dump(message)
-                    for m in messages():
-                        if bytes(m["request"]) == message:
-                            connection.sendall(bytes(m["response"]))
-                            break
+                    received(message)
 
             except Exception as exc:  # pylint: disable=broad-exception-caught
                 print("WARN", exc)

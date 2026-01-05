@@ -18,8 +18,7 @@ from ipaddress import IPv4Address
 from uhppoted import uhppote_async as uhppote
 from uhppoted.net import dump
 
-# pylint: disable=relative-beyond-top-level
-from .stub import messages
+from .stub import messages  # pylint: disable=relative-beyond-top-level
 
 DEST_ADDR = "127.0.0.1:54321"
 TIMEOUT = 0.25
