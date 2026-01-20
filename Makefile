@@ -30,13 +30,13 @@ format:
 	. .venv/bin/activate; black integration_tests
 
 build: format
-	python3 -m compileall .
+	. .venv/bin/activate; python3 -m compileall .
 
 test: build
-	python3 -m unittest tests/uhppoted/*.py 
+	. .venv/bin/activate; python3 -m unittest tests/uhppoted/*.py 
 
 integration-tests: build
-	python3 -m unittest integration_tests/uhppoted/*.py 
+	. .venv/bin/activate; python3 -m unittest integration_tests/uhppoted/*.py 
 
 vet: 
 
