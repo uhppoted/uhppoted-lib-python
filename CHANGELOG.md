@@ -16,7 +16,7 @@
 
 ### Updated
 1. Removed legacy `#yapf` directives.
-2. Fixed all the pylint warnings that made sense.
+2. Fixed all the _pylint_ warnings that made sense.
 
 
 ## [0.8.11.2](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.8.11.2) - 2025-12-08
