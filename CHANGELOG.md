@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## [0.9.0](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.9.0) - 2026-01-27
 
 ### Added
 1. Added the following _convenience_ functions to the API:
