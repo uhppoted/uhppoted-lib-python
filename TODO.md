@@ -1,8 +1,12 @@
 # TODO
 
-- [x] Implement get_xxx_record API (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/9)s
-- [x] Fix `# pylint: disable` (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/19)
-- [x] Use 'uv dev' to avoid packaging integration tests (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/17)
+- [ ] 'first card' API (cf. https://github.com/uhppoted/uhppoted/issues/82)
+   - [x] API function
+   - [ ] CLI command
+   - [ ] _io_ function
+   - [ ] integration tests
+   - [ ] README
+   - [ ] CHANGELOG
 
 - [ ] `set-ip`
    - [ ] Fix integration test

@@ -15,6 +15,8 @@ from uhppoted.structs import TimeProfile
 from uhppoted.structs import Task
 from uhppoted.structs import Weekdays
 from uhppoted.structs import TimeSegment
+from uhppoted.structs import FirstCard
+from uhppoted.structs import DoorMode
 
 
 class TestEncode(unittest.TestCase):
@@ -209,6 +211,39 @@ class TestEncode(unittest.TestCase):
         # fmt: on
 
         request = encode.set_antipassback_request(405419896, 2)
+
+        self.assertEqual(request, expected)
+
+    def test_set_firstcardrequest(self):
+        """
+        Tests message encoding for a set-firstcard request.
+        """
+        # fmt: off
+        expected = bytearray([
+            0x17, 0xaa, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0x03, 0x08, 0x30, 0x00, 0x17, 0x45, 0x03, 0x01,
+            0x01, 0x00, 0x01, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        ])
+        # fmt: on
+
+        controller = 405419896
+        door = 3
+        firstcard = FirstCard(
+            start_time=datetime.time(8, 30),
+            end_time=datetime.time(17, 45),
+            active_mode=DoorMode.CONTROLLED,
+            inactive_mode=DoorMode.FIRSTCARD_ONLY,
+            weekdays=Weekdays(
+                monday=True,
+                tuesday=True,
+                thursday=True,
+                saturday=True,
+                sunday=True,
+            ),
+        )
+
+        request = encode.set_firstcard_request(controller, door, firstcard)
 
         self.assertEqual(request, expected)
 

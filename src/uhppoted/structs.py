@@ -4,6 +4,8 @@ Shared dataclass definitions.
 
 import datetime
 
+from enum import Enum
+
 from ipaddress import IPv4Address
 from dataclasses import dataclass
 from typing import NewType
@@ -11,6 +13,17 @@ from types import MappingProxyType
 from collections.abc import Mapping
 
 PIN = NewType("PIN", int)
+
+
+class DoorMode(Enum):
+    """
+    Constants for door control modes.
+    """
+
+    NORMALLY_OPEN = 1
+    NORMALLY_CLOSED = 2
+    CONTROLLED = 3
+    FIRSTCARD_ONLY = 4
 
 
 @dataclass
@@ -594,6 +607,20 @@ class SetAntiPassbackResponse:
 
 
 @dataclass
+class SetFirstCardResponse:
+    """
+    Container class for the decoded response from a set-firstcard request.
+
+       Fields:
+          controller (uint32)  Controller serial number.
+          ok         (bool)    Succeeded/failed
+    """
+
+    controller: int
+    ok: bool
+
+
+@dataclass
 class RestoreDefaultParametersResponse:
     """
     Container class for the decoded response from a restore-default-parameters request.
@@ -843,6 +870,14 @@ class TimeProfile:
 class Task:
     """
     Container class for a task record.
+
+       Fields:
+          task          (int)       Task code.
+          door          (int)       Door ID [1..4].
+          start_date    (date)      Date from which task is enabled.
+          end_date      (date)      Date after which task is no longer enabled.
+          start_time    (HHmm)      Time of day at which the task is run.
+          weekdays      (Weekdays)  Days on which first-card mode can be activated.
     """
 
     task: int
@@ -852,3 +887,24 @@ class Task:
     weekdays: Weekdays
     start_time: datetime.time
     more_cards: int
+
+
+@dataclass(frozen=True)
+class FirstCard:
+    """
+    Container class for a first-card configuration record.
+
+       Fields:
+          start_time    (HHmm)      Time of day from which first-card mode can be activated.
+          end_time      (HHmm)      Time of day after which first-card mode is deactivated.
+          active_mode   (uint8)     Door control mode after activation (1: normally open, 2: normally closed, 3: controlled)
+          inactive_mode (uint8)     Door control mode when first-card mode is deactivated (1: normally open, 2: normally closed,
+                                    3: controlled, 4: first-card only)
+          weekdays      (Weekdays)  Days on which first-card mode can be activated.
+    """
+
+    start_time: datetime.time
+    end_time: datetime.time
+    active_mode: DoorMode
+    inactive_mode: DoorMode
+    weekdays: Weekdays

@@ -208,7 +208,7 @@ async def set_listener(u, dest, timeout, args, protocol="udp"):
     'set_listener' API function.
     """
     controller = (args.controller, dest, protocol)
-    (address, port) = addr_port(args.listener)
+    address, port = addr_port(args.listener)
     interval = AUTO_SEND
 
     response = await u.set_listener(controller, address, port, interval, timeout=timeout)

@@ -177,7 +177,7 @@ def set_listener(u, dest, timeout, args, protocol="udp"):
     'set_listener' API function.
     """
     controller = (args.controller, dest, protocol)
-    (address, port) = LISTENER
+    address, port = LISTENER
     interval = AUTO_SEND
 
     return u.set_listener(controller, address, port, interval, timeout=timeout)

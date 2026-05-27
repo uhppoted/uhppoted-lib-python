@@ -14,6 +14,7 @@ import datetime
 import struct
 
 from . import codec
+from .structs import DoorMode
 
 
 def get_controller_request(controller):
@@ -1056,6 +1057,62 @@ def set_antipassback_request(controller, antipassback):
 
     pack_uint32(controller, packet, 4)
     pack_uint8(antipassback, packet, 8)
+
+    return packet
+
+
+def set_firstcard_request(controller, door, firstcard):
+    """
+    Encodes a set-firstcard request.
+
+        Parameters:
+            controller (uint32)     Controller serial number.
+            door       (uint8)      Door ID [1..4].
+            firstcard  (FirstCard)  First-card configuration
+
+        Returns:
+            64 byte UDP packet.
+    """
+    match firstcard.active_mode:
+        case DoorMode.CONTROLLED:
+            active_mode = 0
+        case DoorMode.NORMALLY_OPEN:
+            active_mode = 1
+        case DoorMode.NORMALLY_CLOSED:
+            active_mode = 2
+        case _:
+            raise ValueError(f"invalid 'active' control mode ({firstcard.active_mode})")
+
+    match firstcard.inactive_mode:
+        case DoorMode.CONTROLLED:
+            inactive_mode = 0
+        case DoorMode.NORMALLY_OPEN:
+            inactive_mode = 1
+        case DoorMode.NORMALLY_CLOSED:
+            inactive_mode = 2
+        case DoorMode.FIRSTCARD_ONLY:
+            inactive_mode = 3
+        case _:
+            raise ValueError(f"invalid 'inactive' control mode ({firstcard.inactive_mode})")
+
+    packet = bytearray(64)
+
+    packet[0] = codec.SOM
+    packet[1] = codec.SET_FIRST_CARD
+
+    pack_uint32(controller, packet, 4)
+    pack_uint8(door, packet, 8)
+    pack_HHmm(firstcard.start_time, packet, 9)
+    pack_HHmm(firstcard.end_time, packet, 12)
+    pack_uint8(active_mode, packet, 11)
+    pack_uint8(inactive_mode, packet, 14)
+    pack_bool(firstcard.weekdays.monday, packet, 15)
+    pack_bool(firstcard.weekdays.tuesday, packet, 16)
+    pack_bool(firstcard.weekdays.wednesday, packet, 17)
+    pack_bool(firstcard.weekdays.thursday, packet, 18)
+    pack_bool(firstcard.weekdays.friday, packet, 19)
+    pack_bool(firstcard.weekdays.saturday, packet, 20)
+    pack_bool(firstcard.weekdays.sunday, packet, 21)
 
     return packet
 

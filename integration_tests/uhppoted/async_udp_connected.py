@@ -72,7 +72,7 @@ def handle(sock, bind, debug):
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, never)
 
         while True:
-            (message, addr) = sock.recvfrom(1024)
+            message, addr = sock.recvfrom(1024)
             received(message)
             if len(message) == 64:
                 received(message)

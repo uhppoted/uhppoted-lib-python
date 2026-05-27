@@ -44,6 +44,7 @@ from .structs import SetDoorPasscodesResponse
 from .structs import RestoreDefaultParametersResponse
 from .structs import GetAntiPassbackResponse
 from .structs import SetAntiPassbackResponse
+from .structs import SetFirstCardResponse
 from .structs import Event
 
 from . import codec
@@ -1028,7 +1029,7 @@ def set_antipassback_response(packet):
             packet  (bytearray)  64 byte UDP packet.
 
         Returns:
-            SetAntiPassbackResponse initialised from the UDP packet.
+            SetAntiPassbackResponse initialised from the reply packet.
 
         Raises:
             ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
@@ -1044,6 +1045,32 @@ def set_antipassback_response(packet):
         raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
     return SetAntiPassbackResponse(unpack_uint32(packet, 4), unpack_bool(packet, 8))
+
+
+def set_firstcard_response(packet):
+    """
+    Decodes a set-firstcardresponse.
+
+        Parameters:
+            packet  (bytearray)  64 byte UDP packet.
+
+        Returns:
+            SetFirstCardResponse initialised from the reply packet.
+
+        Raises:
+            ValueError If the packet is not 64 bytes, has an invalid start-of-message byte or has
+                       the incorrect message type.
+    """
+    if len(packet) != 64:
+        raise ValueError(f"invalid reply packet length ({len(packet)})")
+
+    if packet[0] != codec.SOM:
+        raise ValueError(f"invalid reply start of message byte ({packet[0]:02x})")
+
+    if packet[1] != codec.SET_FIRST_CARD:
+        raise ValueError(f"invalid reply function code ({packet[1]:02x})")
+
+    return SetFirstCardResponse(unpack_uint32(packet, 4), unpack_bool(packet, 8))
 
 
 def restore_default_parameters_response(packet):

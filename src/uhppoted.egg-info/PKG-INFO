@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: uhppoted
-Version: 0.9.0
+Version: 0.9.1
 Summary: Python API for the UHPPOTE TCP/IP access controllers
 Author-email: uhppoted <uhppoted.development@gmail.com>
 Project-URL: Homepage, https://github.com/uhppoted/uhppoted-lib-python
@@ -8,14 +8,14 @@ Project-URL: Bug Tracker, https://github.com/uhppoted/uhppoted-lib-python/issues
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
-Requires-Python: >=3.9
+Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Requires-Dist: toml>=0.10.2
 Provides-Extra: dev
-Requires-Dist: toml~=0.10.2; extra == "dev"
-Requires-Dist: black~=0.25.1; extra == "dev"
-Requires-Dist: build~=1.2.2; extra == "dev"
-Requires-Dist: twine~=6.1.0; extra == "dev"
+Requires-Dist: black~=26.5.1; extra == "dev"
+Requires-Dist: build~=1.5.0; extra == "dev"
+Requires-Dist: twine~=6.2.0; extra == "dev"
 Provides-Extra: test
 Dynamic: license-file
 

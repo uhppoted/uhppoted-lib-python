@@ -47,7 +47,7 @@ def handle(sock, bind, debug):
 
     try:
         while True:
-            (connection, _) = sock.accept()
+            connection, _ = sock.accept()
             try:
                 connection.settimeout(0.5)
                 message = connection.recv(1024)

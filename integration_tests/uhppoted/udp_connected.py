@@ -59,7 +59,7 @@ def handle(sock, bind, debug):
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, never)
 
         while True:
-            (message, addr) = sock.recvfrom(1024)
+            message, addr = sock.recvfrom(1024)
             if len(message) == 64:
                 if debug:
                     dump(message)

@@ -102,7 +102,7 @@ class TCPAsync:
         """
         self.dump(request)
 
-        (host, port) = net.resolve(f"{dest_addr}")
+        host, port = net.resolve(f"{dest_addr}")
         loop = asyncio.get_running_loop()
 
         if net.is_inaddr_any(self._bind):

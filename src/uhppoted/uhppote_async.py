@@ -102,7 +102,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_controller_request(controller_id)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -138,7 +138,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the request failed for any reason.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_ip_request(controller_id, address, netmask, gateway)
 
         await self._send(request, addr, timeout, protocol)
@@ -167,7 +167,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_time_request(controller_id)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -200,7 +200,7 @@ class UhppoteAsync:
                Exception  If the datetime format cannot be encoded or the response from the
                           access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_time_request(controller_id, date_time)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -231,7 +231,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_status_request(controller_id)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -262,7 +262,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_status_request(controller_id)
 
         if reply := await self._send(request, addr, timeout, protocol):
@@ -350,7 +350,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_listener_request(controller_id)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -386,7 +386,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_listener_request(controller_id, address, port, interval)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -418,7 +418,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_door_control_request(controller_id, door)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -454,7 +454,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_door_control_request(controller_id, door, mode, delay)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -486,7 +486,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.open_door_request(controller_id, door)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -517,7 +517,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_cards_request(controller_id)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -548,7 +548,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_card_request(controller_id, card_number)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -580,7 +580,7 @@ class UhppoteAsync:
                CardNotFound  If there is no card record at the index.
                Exception     If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_card_request(controller_id, card_number)
 
         if reply := await self._send(request, addr, timeout, protocol):
@@ -631,7 +631,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_card_by_index_request(controller_id, card_index)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -664,7 +664,7 @@ class UhppoteAsync:
                CardDeleted   If the card record at the index has been tombstoned.
                Exception     If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_card_by_index_request(controller_id, card_index)
 
         if reply := await self._send(request, addr, timeout, protocol):
@@ -724,7 +724,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.put_card_request(controller_id, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -755,7 +755,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the request failed for any reason.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.put_card_record_request(controller_id, card)
 
         if reply := await self._send(request, addr, timeout, protocol):
@@ -789,7 +789,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.delete_card_request(controller_id, card_number)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -819,7 +819,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.delete_cards_request(controller_id)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -850,7 +850,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_event_request(controller_id, event_index)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -884,7 +884,7 @@ class UhppoteAsync:
                EventOverwritten  If the event_index is less than the first event stored on the controller.
                Exception         If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_event_request(controller_id, event_index)
 
         if reply := await self._send(request, addr, timeout, protocol):
@@ -935,7 +935,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_event_index_request(controller_id)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -969,7 +969,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_event_index_request(controller_id, event_index)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -1002,7 +1002,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.record_special_events_request(controller_id, enable)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -1034,7 +1034,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_time_profile_request(controller_id, profile_id)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -1067,7 +1067,7 @@ class UhppoteAsync:
                TimeProfileNotFound  If the controller does not have a corresponding record.
                Exception            If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_time_profile_request(controller_id, profile_id)
 
         if reply := await self._send(request, addr, timeout, protocol):
@@ -1168,7 +1168,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_time_profile_request(
             controller_id,
             profile_id,
@@ -1219,7 +1219,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the request failed for any reason.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_time_profile_record_request(controller_id, profile)
 
         if reply := await self._send(request, addr, timeout, protocol):
@@ -1253,7 +1253,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.delete_all_time_profiles_request(controller_id)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -1327,7 +1327,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.add_task_request(
             controller_id,
             start_date,
@@ -1374,7 +1374,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the request failed for any reason.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.add_task_record_request(controller_id, task)
 
         if reply := await self._send(request, addr, timeout, protocol):
@@ -1408,7 +1408,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.refresh_tasklist_request(controller_id)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -1439,7 +1439,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.clear_tasklist_request(controller_id)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -1474,7 +1474,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_pc_control_request(controller_id, enable)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -1512,7 +1512,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_interlock_request(controller_id, interlock)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -1549,7 +1549,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.activate_keypads_request(controller_id, reader1, reader2, reader3, reader4)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -1589,7 +1589,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_door_passcodes_request(controller_id, door, passcode1, passcode2, passcode3, passcode4)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -1623,7 +1623,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the request failed for any reason.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_door_passcodes_record_request(controller_id, door, passcodes)
 
         if reply := await self._send(request, addr, timeout, protocol):
@@ -1654,7 +1654,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_antipassback_request(controller_id)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -1692,7 +1692,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_antipassback_request(controller_id, antipassback)
         reply = await self._send(request, addr, timeout, protocol)
 
@@ -1722,7 +1722,7 @@ class UhppoteAsync:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.restore_default_parameters_request(controller_id)
         reply = await self._send(request, addr, timeout, protocol)
 

@@ -2,6 +2,7 @@
 .pypi-test
 .pypi
 .venv
+uv.lock
 __pycache__
 workdir
 dist

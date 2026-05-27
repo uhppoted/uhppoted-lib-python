@@ -101,7 +101,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_controller_request(controller_id)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -137,7 +137,7 @@ class Uhppote:
             Raises:
                Exception  If the request failed for any reason.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_ip_request(controller_id, address, netmask, gateway)
 
         self._send(request, addr, timeout, protocol)
@@ -166,7 +166,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_time_request(controller_id)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -199,7 +199,7 @@ class Uhppote:
                Exception  If the datetime format cannot be encoded or the response from the
                           access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_time_request(controller_id, date_time)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -230,7 +230,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_status_request(controller_id)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -261,7 +261,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_status_request(controller_id)
 
         if reply := self._send(request, addr, timeout, protocol):
@@ -349,7 +349,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_listener_request(controller_id)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -385,7 +385,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_listener_request(controller_id, address, port, interval)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -417,7 +417,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_door_control_request(controller_id, door)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -453,7 +453,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_door_control_request(controller_id, door, mode, delay)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -485,7 +485,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.open_door_request(controller_id, door)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -516,7 +516,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_cards_request(controller_id)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -547,7 +547,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_card_request(controller_id, card_number)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -579,7 +579,7 @@ class Uhppote:
                CardNotFound  If there is no card record at the index.
                Exception     If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_card_request(controller_id, card_number)
 
         if reply := self._send(request, addr, timeout, protocol):
@@ -630,7 +630,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_card_by_index_request(controller_id, card_index)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -663,7 +663,7 @@ class Uhppote:
                CardDeleted   If the card record at the index has been tombstoned.
                Exception     If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_card_by_index_request(controller_id, card_index)
 
         if reply := self._send(request, addr, timeout, protocol):
@@ -723,7 +723,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.put_card_request(controller_id, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -754,7 +754,7 @@ class Uhppote:
             Raises:
                Exception  If the request failed for any reason.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.put_card_record_request(controller_id, card)
 
         if reply := self._send(request, addr, timeout, protocol):
@@ -788,7 +788,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.delete_card_request(controller_id, card_number)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -818,7 +818,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.delete_cards_request(controller_id)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -849,7 +849,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_event_request(controller_id, event_index)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -882,7 +882,7 @@ class Uhppote:
                EventOverwritten  If the event_index is less than the first event stored on the controller.
                Exception         If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_event_request(controller_id, event_index)
 
         if reply := self._send(request, addr, timeout, protocol):
@@ -933,7 +933,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_event_index_request(controller_id)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -967,7 +967,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_event_index_request(controller_id, event_index)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -1000,7 +1000,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.record_special_events_request(controller_id, enable)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -1032,7 +1032,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_time_profile_request(controller_id, profile_id)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -1065,7 +1065,7 @@ class Uhppote:
                TimeProfileNotFound  If the controller does not have a corresponding record.
                Exception            If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_time_profile_request(controller_id, profile_id)
 
         if reply := self._send(request, addr, timeout, protocol):
@@ -1166,7 +1166,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_time_profile_request(
             controller_id,
             profile_id,
@@ -1217,7 +1217,7 @@ class Uhppote:
             Raises:
                Exception  If the request failed for any reason.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_time_profile_record_request(controller_id, profile)
 
         if reply := self._send(request, addr, timeout, protocol):
@@ -1251,7 +1251,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.delete_all_time_profiles_request(controller_id)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -1325,7 +1325,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.add_task_request(
             controller_id,
             start_date,
@@ -1372,7 +1372,7 @@ class Uhppote:
             Raises:
                Exception  If the request failed for any reason.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.add_task_record_request(controller_id, task)
 
         if reply := self._send(request, addr, timeout, protocol):
@@ -1406,7 +1406,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.refresh_tasklist_request(controller_id)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -1437,7 +1437,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.clear_tasklist_request(controller_id)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -1472,7 +1472,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_pc_control_request(controller_id, enable)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -1510,7 +1510,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_interlock_request(controller_id, interlock)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -1547,7 +1547,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.activate_keypads_request(controller_id, reader1, reader2, reader3, reader4)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -1587,7 +1587,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_door_passcodes_request(controller_id, door, passcode1, passcode2, passcode3, passcode4)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -1621,7 +1621,7 @@ class Uhppote:
             Raises:
                Exception  If the request failed for any reason.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_door_passcodes_record_request(controller_id, door, passcodes)
 
         if reply := self._send(request, addr, timeout, protocol):
@@ -1652,7 +1652,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.get_antipassback_request(controller_id)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -1690,7 +1690,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.set_antipassback_request(controller_id, antipassback)
         reply = self._send(request, addr, timeout, protocol)
 
@@ -1698,6 +1698,43 @@ class Uhppote:
             return decode.set_antipassback_response(reply)
 
         return None
+
+    def set_firstcard(self, controller, door, firstcard, timeout=2.5):
+        """
+        Sets the first-card configuration for a controller managed door.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (controller_id,address,protocol)
+                                          fields. The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'controller_id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
+                                             to 'udp'.
+
+               door       (uint8)        Door [1..4]
+               firstcard  (FirstCard)    First-card configuration.
+               timeout    (float)        Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               ok (bool)  Returns True if the first-card configuration was accepted. The configuration will only take effect after
+                          a subsequent refresh-tasks command.
+
+            Raises:
+               Exception  If the request failed for any reason.
+        """
+        controller_id, addr, protocol = disambiguate(controller)
+        request = encode.set_firstcard_request(controller_id, door, firstcard)
+
+        if reply := self._send(request, addr, timeout, protocol):
+            if response := decode.set_firstcard_response(reply):
+                if response.controller != controller_id:
+                    raise InvalidResponse(f"invalid controller ({response.controller})")
+
+                return response.ok
+
+        return False
 
     def restore_default_parameters(self, controller, timeout=2.5):
         """
@@ -1720,7 +1757,7 @@ class Uhppote:
             Raises:
                Exception  If the response from the access controller cannot be decoded.
         """
-        (controller_id, addr, protocol) = disambiguate(controller)
+        controller_id, addr, protocol = disambiguate(controller)
         request = encode.restore_default_parameters_request(controller_id)
         reply = self._send(request, addr, timeout, protocol)
 
