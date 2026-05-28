@@ -1701,6 +1701,44 @@ class UhppoteAsync:
 
         return None
 
+    async def set_firstcard(self, controller, door, firstcard, timeout=2.5):
+        """
+        Sets the first-card configuration for a controller managed door.
+
+            Parameters:
+               controller (uint32|tuple)  Controller serial number or tuple with (controller_id,address,protocol)
+                                          fields. The controller serial number is expected to be greater than 0.
+                                          If the controller is a tuple:
+                                          - 'controller_id' is the controller serial number
+                                          - 'address' is the optional controller IPv4 addess:port. Defaults to the
+                                             UDP broadcast address and port 60000.
+                                          - 'protocol' is an optional transport protocol ('udp' or 'tcp'). Defaults
+                                             to 'udp'.
+
+               door       (uint8)        Door [1..4]
+               firstcard  (FirstCard)    First-card configuration.
+               timeout    (float)        Optional operation timeout (in seconds). Defaults to 2.5s.
+
+            Returns:
+               ok (bool)  Returns True if the first-card configuration was accepted. The configuration will only take effect after
+                          a subsequent refresh-tasks command.
+
+            Raises:
+               Exception  If the request failed for any reason.
+        """
+        controller_id, addr, protocol = disambiguate(controller)
+        request = encode.set_firstcard_request(controller_id, door, firstcard)
+        reply = await self._send(request, addr, timeout, protocol)
+
+        if reply is not None:
+            if response := decode.set_firstcard_response(reply):
+                if response.controller != controller_id:
+                    raise InvalidResponse(f"invalid controller ({response.controller})")
+
+                return response.ok
+
+        return False
+
     async def restore_default_parameters(self, controller, timeout=2.5):
         """
         Resets a controller to the manufacturer default configuratio, protocol='udp'n.

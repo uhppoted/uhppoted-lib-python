@@ -5,10 +5,13 @@ ASYNC = cd examples/async/cli && python3 main.py --debug --bind 192.168.1.125 --
 ASYNC_TCP = cd examples/async/cli && python3 main.py --debug --tcp --dest 192.168.1.125
 
 CONTROLLER ?= 405419896
+DOOR ?= 3
 EVENT ?= 37
 LISTENER ?= 192.168.1.125:60001
 CARD ?= 1058400
 PROFILE ?= 29
+ANTIPASSBACK ?= (1,3):(2,4)
+FIRSTCARD ?= 08:30,16:45,normally open,firstcard only,[Mon,Tues,Fri]
 
 .DEFAULT_GOAL := debug
 .PHONY: update
@@ -386,12 +389,20 @@ get-antipassback-async: build
 	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-antipassback --controller $(CONTROLLER)
 
 set-antipassback: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-antipassback --controller $(CONTROLLER) --antipassback "(1,3):(2,4)"
-	export UHPPOTED_ENV=DEV && $(TCP) set-antipassback --controller $(CONTROLLER) --antipassback "(1,3):(2,4)"
+	export UHPPOTED_ENV=DEV && $(CMD) set-antipassback --controller $(CONTROLLER) --antipassback "$(ANTIPASSBACK)"
+	export UHPPOTED_ENV=DEV && $(TCP) set-antipassback --controller $(CONTROLLER) --antipassback "$(ANTIPASSBACK)"
 
 set-antipassback-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     set-antipassback --controller $(CONTROLLER) --antipassback "(1,3):(2,4)"
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-antipassback --controller $(CONTROLLER) --antipassback "(1,3):(2,4)"
+	export UHPPOTED_ENV=DEV && $(ASYNC)     set-antipassback --controller $(CONTROLLER) --antipassback "$(ANTIPASSBACK)"
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-antipassback --controller $(CONTROLLER) --antipassback "$(ANTIPASSBACK)"
+
+set-firstcard: build
+	export UHPPOTED_ENV=DEV && $(CMD) set-firstcard --controller $(CONTROLLER) --door $(DOOR) --firstcard "$(FIRSTCARD)"
+	export UHPPOTED_ENV=DEV && $(TCP) set-firstcard --controller $(CONTROLLER) --door $(DOOR) --firstcard "$(FIRSTCARD)"
+
+set-firstcard-async: build
+	export UHPPOTED_ENV=DEV && $(ASYNC)     set-firstcard --controller $(CONTROLLER) --door $(DOOR) --firstcard "$(FIRSTCARD)"
+	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-firstcard --controller $(CONTROLLER) --door $(DOOR) --firstcard "$(FIRSTCARD)"
 
 restore-default-parameters: build
 	export UHPPOTED_ENV=DEV && $(CMD) restore-default-parameters --controller $(CONTROLLER)
@@ -448,7 +459,8 @@ all: build
 	export UHPPOTED_ENV=DEV && $(CMD) activate-keypads           --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(CMD) set-door-passcodes         --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(CMD) get-antipassback           --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) set-antipassback           --controller $(CONTROLLER) --antipassback "(1,3):(2,4)"
+	export UHPPOTED_ENV=DEV && $(CMD) set-antipassback           --controller $(CONTROLLER) --antipassback "$(ANTIPASSBACK)"
+	export UHPPOTED_ENV=DEV && $(CMD) set-firstcard              --controller $(CONTROLLER) --door $(DOOR) --firstcard "$(FIRSTCARD)"
 	export UHPPOTED_ENV=DEV && $(CMD) restore-default-parameters --controller $(CONTROLLER)
 
 all-async: build
@@ -491,7 +503,8 @@ all-async: build
 	export UHPPOTED_ENV=DEV && $(ASYNC) activate-keypads           --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC) set-door-passcodes         --controller $(CONTROLLER)
 	export UHPPOTED_ENV=DEV && $(ASYNC) get-antipassback           --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) set-antipassback           --controller $(CONTROLLER) --antipassback "(1,3):(2,4)"
+	export UHPPOTED_ENV=DEV && $(ASYNC) set-antipassback           --controller $(CONTROLLER) --antipassback "$(ANTIPASSBACK)"
+	export UHPPOTED_ENV=DEV && $(ASYNC) set-firstcard              --controller $(CONTROLLER) --door $(DOOR) --firstcard "$(FIRSTCARD)"
 	export UHPPOTED_ENV=DEV && $(ASYNC) restore-default-parameters --controller $(CONTROLLER)
 
 event-listener: build

@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+1. `set-firstcard` API function to configure the first-code mode for a controller managed door.
 
 ### Updated
 1. Bumped minimum Python version to 3.10.

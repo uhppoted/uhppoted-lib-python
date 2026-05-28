@@ -17,6 +17,7 @@ import cli_args as Args
 
 from uhppoted import uhppote_async as uhppote
 from uhppoted import structs
+from uhppoted.structs import DoorMode
 
 DOOR = 3
 MODE = 2
@@ -80,6 +81,7 @@ def commands():
         "set-door-passcodes-record":  Command(set_door_passcodes_record,  [Args.controller, Args.door, Args.passcodes]),
         "get-antipassback":           Command(get_antipassback,           [Args.controller]),
         "set-antipassback":           Command(set_antipassback,           [Args.controller, Args.antipassback]),
+        "set-firstcard":              Command(set_firstcard,              [Args.controller, Args.door, Args.firstcard]),
         "restore-default-parameters": Command(restore_default_parameters, [Args.controller]),
         "listen":                     Command(listen,                     []),
     }
@@ -768,6 +770,60 @@ async def set_antipassback(u, dest, timeout, args, protocol="udp"):
     response = await u.set_antipassback(controller, antipassback, timeout=timeout)
 
     return response
+
+
+def set_firstcard(u, dest, timeout, args, protocol="udp"):
+    """
+    Sets the first-card mode for a controller managed door using the 'set_firstcard' API function.
+    """
+    controller = (args.controller, dest, protocol)
+    door = args.door
+
+    # parse args.firstcard
+    tokens = re.split(r",(?![^\[]*\])", args.firstcard)
+
+    if len(tokens) < 5:
+        raise ValueError(f'invalid first-card "{args.firstcard}"')
+
+    if tokens[2] == "controlled":
+        active_mode = DoorMode.CONTROLLED
+    elif tokens[2] == "normally open":
+        active_mode = DoorMode.NORMALLY_OPEN
+    elif tokens[2] == "normally closed":
+        active_mode = DoorMode.NORMALLY_CLOSED
+    else:
+        raise ValueError(f"invalid 'active mode' ({tokens[2]})")
+
+    if tokens[3] == "controlled":
+        inactive_mode = DoorMode.CONTROLLED
+    elif tokens[3] == "normally open":
+        inactive_mode = DoorMode.NORMALLY_OPEN
+    elif tokens[3] == "normally closed":
+        inactive_mode = DoorMode.NORMALLY_CLOSED
+    elif tokens[3] == "firstcard only":
+        inactive_mode = DoorMode.FIRSTCARD_ONLY
+    else:
+        raise ValueError(f"invalid 'inactive mode' ({tokens[3]})")
+
+    weekdays = tokens[4].lower()
+
+    firstcard = structs.FirstCard(
+        start_time=datetime.datetime.strptime(tokens[0], "%H:%M").time(),
+        end_time=datetime.datetime.strptime(tokens[1], "%H:%M").time(),
+        active_mode=active_mode,
+        inactive_mode=inactive_mode,
+        weekdays=structs.Weekdays(
+            monday="mon" in weekdays,
+            tuesday="tue" in weekdays,
+            wednesday="wed" in weekdays,
+            thursday="thu" in weekdays,
+            friday="fri" in weekdays,
+            saturday="sat" in weekdays,
+            sunday="sun" in weekdays,
+        ),
+    )
+
+    return u.set_firstcard(controller, door, firstcard, timeout=timeout)
 
 
 async def restore_default_parameters(u, dest, timeout, args, protocol="udp"):

@@ -2,11 +2,12 @@
 
 - [ ] 'first card' API (cf. https://github.com/uhppoted/uhppoted/issues/82)
    - [x] API function
-   - [ ] CLI command
+   - [x] async function
+   - [x] CLI command
    - [ ] _io_ function
    - [ ] integration tests
-   - [ ] README
-   - [ ] CHANGELOG
+   - [x] README
+   - [x] CHANGELOG
 
 - [ ] `set-ip`
    - [ ] Fix integration test

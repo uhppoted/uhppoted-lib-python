@@ -823,6 +823,29 @@ antipassback  uint8         anti-passback mode:
 Raises an Exception if the call failed for any reason.
 ```
 
+### `set_firstcard`
+```
+set_firstcard(controller, door, firstcard)
+
+controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
+door        uint8         door ID [1..4]
+firstcard   FirstCard     FirstCard dataclass instance initialised with the first-card configuration for the door.
+
+@dataclass(frozen=True)
+class FirstCard:
+    start_time:    datetime.time    # time of day (HHmm) from which first-card mode can be activated.
+    end_time:      datetime.time    # time of day (HHmm) after which first-card mode is deactivated.
+    active_mode:   DoorMode         # door control mode after activation (NORMALLY_OPEN, NORMALLY_CLOSED, CONTROLLED)
+    inactive_mode: DoorMode         # door control mode when first-card mode is deactivated (NORMALLY_OPEN, NORMALLY_CLOSED, CONTROLLED, FIRST_CARD_ONLY)
+    weekdays:      Weekdays         # days on which first-card mode can be activated.
+
+
+Returns True if the first-card configuration was accepted - the first-card mode will only take effect after a subsequent
+refresh_tasklist command.
+
+Raises an Exception if the call failed for any reason.
+```
+
 ### `restore_default_parameters`
 ```
 restore_default_parameters(controller)
@@ -1794,3 +1817,27 @@ class Weekdays:
     saturday: bool = False
     sunday: bool = False
 ```
+
+### `FirstCard`
+
+```
+Container class for a first-card configuration record.
+
+   Fields:
+      start_time    (HHmm)      Time of day from which first-card mode can be activated.
+      end_time      (HHmm)      Time of day after which first-card mode is deactivated.
+      active_mode   (uint8)     Door control mode after activation (1: normally open, 2: normally closed, 3: controlled)
+      inactive_mode (uint8)     Door control mode when first-card mode is deactivated (1: normally open, 2: normally closed,
+                                3: controlled, 4: first-card only)
+     weekdays      (Weekdays)  Days on which first-card mode can be activated.
+```
+```
+@dataclass(frozen=True)
+class FirstCard:
+    start_time: datetime.time
+    end_time: datetime.time
+    active_mode: DoorMode
+    inactive_mode: DoorMode
+    weekdays: Weekdays
+```
+
