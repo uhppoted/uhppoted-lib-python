@@ -720,9 +720,9 @@ def set_firstcard(u, dest, timeout, args, protocol="udp"):
 
     match tokens[2]:
         case "controlled":
-            active = DoorMode.CONTROLLED
+            active_mode = DoorMode.CONTROLLED
         case "normally open":
-            active = DoorMode.OPEN
+            active_mode = DoorMode.NORMALLY_OPEN
         case "normally closed":
             active_mode = DoorMode.NORMALLY_CLOSED
         case _:

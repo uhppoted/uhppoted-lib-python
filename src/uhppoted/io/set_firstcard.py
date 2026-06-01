@@ -1,9 +1,18 @@
-def set_firstcard(uhppote, controller, door, firstcard, timeout=2.5):
+"""
+Low level API functions for the uhppoted library.
+"""
+
+from ..net import disambiguate
+from .. import encode
+from .. import decode
+
+
+def set_firstcard(u, controller, door, firstcard, timeout=2.5):
     """
     Sets the first-card configuration for a controller managed door.
 
         Parameters:
-           uhppoted   (Uhppote)       Initialised Uhppote struct with the operation configuration.
+           u          (Uhppote)       Initialised Uhppote struct with the operation configuration.
            controller (uint32|tuple)  Controller serial number or tuple with (controller_id,address,protocol)
                                       fields. The controller serial number is expected to be greater than 0.
                                       If the controller is a tuple:
@@ -26,18 +35,18 @@ def set_firstcard(uhppote, controller, door, firstcard, timeout=2.5):
     controller_id, addr, protocol = disambiguate(controller)
     request = encode.set_firstcard_request(controller_id, door, firstcard)
 
-    if reply := u._send(request, addr, timeout, protocol):
+    if reply := u._send(request, addr, timeout, protocol):  # pylint: disable=protected-access
         return decode.set_firstcard_response(reply)
 
     return None
 
 
-async def set_firstcard_async(uhppote, controller, door, firstcard, timeout=2.5):
+async def set_firstcard_async(u, controller, door, firstcard, timeout=2.5):
     """
     Sets the first-card configuration for a controller managed door.
 
        Parameters:
-           uhppoted   (UhppoteAsync)  Initialised UhppoteAsync struct with the operation configuration.
+           u          (UhppoteAsync)  Initialised UhppoteAsync struct with the operation configuration.
            controller (uint32|tuple)  Controller serial number or tuple with (controller_id,address,protocol)
                                       fields. The controller serial number is expected to be greater than 0.
                                       If the controller is a tuple:
@@ -59,7 +68,7 @@ async def set_firstcard_async(uhppote, controller, door, firstcard, timeout=2.5)
     """
     controller_id, addr, protocol = disambiguate(controller)
     request = encode.set_firstcard_request(controller_id, door, firstcard)
-    reply = await self._send(request, addr, timeout, protocol)
+    reply = await u._send(request, addr, timeout, protocol)  # pylint: disable=protected-access
 
     if reply is not None:
         return decode.set_firstcard_response(reply)
