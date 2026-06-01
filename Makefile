@@ -68,7 +68,7 @@ publish: release
 	. .venv/bin/activate; python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-	python3 -m unittest integration_tests/uhppoted/*.py -k test_set_door_passcodes
+	. .venv/bin/activate; python3 -m unittest integration_tests/uhppoted/*.py -k test_set_firstcard
 
 usage: build
 	-export UHPPOTED_ENV=DEV && $(CMD)

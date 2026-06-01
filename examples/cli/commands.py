@@ -718,25 +718,27 @@ def set_firstcard(u, dest, timeout, args, protocol="udp"):
     if len(tokens) < 5:
         raise ValueError(f'invalid first-card "{args.firstcard}"')
 
-    if tokens[2] == "controlled":
-        active_mode = DoorMode.CONTROLLED
-    elif tokens[2] == "normally open":
-        active_mode = DoorMode.NORMALLY_OPEN
-    elif tokens[2] == "normally closed":
-        active_mode = DoorMode.NORMALLY_CLOSED
-    else:
-        raise ValueError(f"invalid 'active mode' ({tokens[2]})")
+    match tokens[2]:
+        case "controlled":
+            active = DoorMode.CONTROLLED
+        case "normally open":
+            active = DoorMode.OPEN
+        case "normally closed":
+            active_mode = DoorMode.NORMALLY_CLOSED
+        case _:
+            raise ValueError(f"invalid 'active mode' ({tokens[2]})")
 
-    if tokens[3] == "controlled":
-        inactive_mode = DoorMode.CONTROLLED
-    elif tokens[3] == "normally open":
-        inactive_mode = DoorMode.NORMALLY_OPEN
-    elif tokens[3] == "normally closed":
-        inactive_mode = DoorMode.NORMALLY_CLOSED
-    elif tokens[3] == "firstcard only":
-        inactive_mode = DoorMode.FIRSTCARD_ONLY
-    else:
-        raise ValueError(f"invalid 'inactive mode' ({tokens[3]})")
+    match tokens[3]:
+        case "controlled":
+            inactive_mode = DoorMode.CONTROLLED
+        case "normally open":
+            inactive_mode = DoorMode.NORMALLY_OPEN
+        case "normally closed":
+            inactive_mode = DoorMode.NORMALLY_CLOSED
+        case "firstcard only":
+            inactive_mode = DoorMode.FIRSTCARD_ONLY
+        case _:
+            raise ValueError(f"invalid 'inactive mode' ({tokens[3]})")
 
     weekdays = tokens[4].lower()
 

@@ -23,6 +23,8 @@ from uhppoted.structs import TimeProfile
 from uhppoted.structs import Task
 from uhppoted.structs import Weekdays
 from uhppoted.structs import TimeSegment
+from uhppoted.structs import DoorMode
+from uhppoted.structs import FirstCard
 
 from uhppoted.errors import CardNotFound
 from uhppoted.errors import CardDeleted
@@ -820,6 +822,33 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         response = await self.u.set_antipassback(controller, antipassback)
 
         self.assertEqual(response, expected.SetAntiPassbackResponse)
+
+    async def test_set_firstcard(self):
+        """
+        Tests the set_firstcard function with defaults.
+        """
+        controller = CONTROLLER
+        door = 3
+
+        firstcard = FirstCard(
+            start_time=datetime.time(8, 30),
+            end_time=datetime.time(17, 45),
+            active_mode=DoorMode.NORMALLY_OPEN,
+            inactive_mode=DoorMode.FIRSTCARD_ONLY,
+            weekdays=Weekdays(
+                monday=True,
+                tuesday=True,
+                wednesday=False,
+                thursday=True,
+                friday=False,
+                saturday=False,
+                sunday=True,
+            ),
+        )
+
+        response = await self.u.set_firstcard(controller, door, firstcard)
+
+        self.assertEqual(response, True)
 
     async def test_restore_default_parameters(self):
         """

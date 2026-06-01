@@ -4,8 +4,9 @@
    - [x] API function
    - [x] async function
    - [x] CLI command
-   - [ ] _io_ function
-   - [ ] integration tests
+   - [x] _io_ function
+   - [x] integration tests
+   - [ ] io integration tests
    - [x] README
    - [x] CHANGELOG
 
