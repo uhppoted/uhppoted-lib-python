@@ -56,16 +56,34 @@ class UDP:
         """
         self.dump(request)
 
+        sockets = []
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
+        sockets.append(sock)
 
         try:
             sock.bind(self._bind)
 
             # NTS: avoid broadcast-to-self
+            _, bind_port = self._bind
             _, src_port = sock.getsockname()
             _, dest_port = self._broadcast
-            if src_port == dest_port:
+
+            if src_port == dest_port and bind_port != 0:
                 raise RuntimeError(f"invalid UDP bind address (port {src_port} reserved for broadcast)")
+
+            if src_port == dest_port:
+                retries = 0
+                while retries < 5:
+                    retries += 1
+                    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
+                    sockets.append(sock)
+                    sock.bind(self._bind)
+
+                    _, src_port = sock.getsockname()
+                    if src_port != dest_port:
+                        break
+                else:
+                    raise RuntimeError(f"OS returned UDP bind socket with port {dest_port} reserved for broadcast)")
 
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, net.WRITE_TIMEOUT)
@@ -75,7 +93,8 @@ class UDP:
 
             return _read_all(sock, timeout=timeout, debug=self._debug)
         finally:
-            sock.close()
+            for sock in sockets:
+                sock.close()
 
     def send(self, request, dest_addr=None, timeout=2.5):
         """
@@ -96,7 +115,6 @@ class UDP:
         """
         self.dump(request)
 
-        # sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM | socket.SOCK_NONBLOCK)
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
 
         try:

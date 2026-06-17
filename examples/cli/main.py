@@ -106,7 +106,6 @@ def main():
 
     if cmd is None:
         print(usage())
-        print("AWOOOOOGAH")
         sys.exit(1)
 
     if args.udp and args.tcp:

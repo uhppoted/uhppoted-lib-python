@@ -1,14 +1,13 @@
 # TODO
 
 - [x] 'first card' API (cf. https://github.com/uhppoted/uhppoted/issues/82)
-   - [x] API function
-   - [x] async function
-   - [x] CLI command
-   - [x] integration tests
-   - [x] _io_ function
-   - [x] io integration tests
-   - [x] README
-   - [x] CHANGELOG
+
+- [ ] UDP broadcast fails randomly (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/21)
+      - [x] retry if bind port is 0
+      - (?) add check to udp::send
+      - [ ] README
+      - [x] CHANGELOG
+
 
 - [ ] Put API functions into __init__.py
 
