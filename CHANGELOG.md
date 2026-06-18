@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## Unreleased
+
+
 ## [0.9.1](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.9.1) - 2026-06-18
 
 ### Added
