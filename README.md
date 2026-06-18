@@ -21,20 +21,12 @@ pip install uhppoted
 
 #### Current Release
 
-**[v0.9.0](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.9.0) - 2026-01-27**
+**[v0.9.1](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.9.1) - 2026-06-18**
 
-1. Added the following _convenience_ functions to the API:
-    - `get-card-record`
-    - `get-card-record-by-index`
-    - `put-card-record`
-    - `get-status-record`
-    - `get-event-record`
-    - `get-time-profile-record`
-    - `set-time-profile-record`
-    - `add-task-record`
-    - `set-door-passcodes-record`
-
-2. Fixed all the _pylint_ warnings that made sense.
+1. Added `set-firstcard` API function to configure the _first card_ mode for a controller managed door.
+2. Added automatic retries when an ephemeral UDP port collides with broadcast port (see 
+   [UDP broadcast fails randomly](https://github.com/uhppoted/uhppoted-lib-python/issues/21))
+3. Bumped minimum Python version to 3.10 (LTS).
 
 
 ## Development

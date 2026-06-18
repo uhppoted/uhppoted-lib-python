@@ -1,9 +1,9 @@
 # CHANGELOG
 
-## Unreleased
+## [0.9.1](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.9.1) - 2026-06-18
 
 ### Added
-1. `set-firstcard` API function to configure the first-code mode for a controller managed door.
+1. `set-firstcard` API function to configure the 'first card' mode for a controller managed door.
 
 ### Updated
 1. Bumped minimum Python version to 3.10.

@@ -19,3 +19,5 @@ src/uhppoted.egg-info/SOURCES.txt
 src/uhppoted.egg-info/dependency_links.txt
 src/uhppoted.egg-info/requires.txt
 src/uhppoted.egg-info/top_level.txt
+src/uhppoted/io/__init__.py
+src/uhppoted/io/set_firstcard.py
