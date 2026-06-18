@@ -261,6 +261,7 @@ pprint(record.__dict__, indent=2, width=1)
 - [`set_door_passcodes_record`](#set_door_passcodes_record)
 - [`get_antipassback`](#get_antipassback)
 - [`set_antipassback`](#set_antipassback)
+- [`set_firstcard`](#set_firstcard)
 - [`restore_default_parameters`](#restore_default_parameters)
 - [`listen`](#listen)
 
