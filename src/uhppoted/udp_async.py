@@ -11,6 +11,18 @@ import socket
 from . import net
 
 
+class InvalidBindPort(Exception):
+    """Exception raised when the bind port is the same as the broadcast port.
+
+    Attributes:
+        message -- error message
+    """
+
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
+
+
 class BroadcastProtocol(asyncio.Protocol):
     """
     asyncio protocol implementation for UDP broadcast single request/multiple response.
@@ -31,9 +43,11 @@ class BroadcastProtocol(asyncio.Protocol):
         if sock := transport.get_extra_info("socket"):
             _, src_port = sock.getsockname()
             _, dest_port = self._dest
+
             if src_port == dest_port:
-                self._done.set_exception(RuntimeError(f"invalid UDP bind address (port {src_port} reserved for broadcast)"))
-                self._transport.close()
+                self._done.set_exception(InvalidBindPort(f"invalid UDP bind address (port {src_port} reserved for broadcast)"))
+                # NTS: do NOT close here otherwise OS will potentially assign it again and we don't want that
+                # self._transport.close()
                 return
 
         self._transport.sendto(self._request, self._dest)
@@ -182,17 +196,31 @@ class UDPAsync:
         self.dump(request)
 
         loop = asyncio.get_running_loop()
-
-        transport, protocol = await loop.create_datagram_endpoint(
-            lambda: BroadcastProtocol(request, self._broadcast, self._debug),
-            local_addr=self._bind,
-            allow_broadcast=True,
-        )
+        transports = []
 
         try:
-            return await protocol.run(timeout)
+            _, src_port = self._bind
+            _, dest_port = self._broadcast
+
+            for _ in range(5):
+                transport, protocol = await loop.create_datagram_endpoint(
+                    lambda: BroadcastProtocol(request, self._broadcast, self._debug),
+                    local_addr=self._bind,
+                    allow_broadcast=True,
+                )
+
+                transports.append(transport)
+
+                try:
+                    return await protocol.run(timeout)
+                except InvalidBindPort as e:
+                    if src_port != 0:
+                        raise RuntimeError(f"Invalid UDP bind address - port {src_port} is reserved for broadcast)") from e
+
+            raise RuntimeError(f"OS returned UDP bind socket with port {dest_port} (reserved for broadcast)")
         finally:
-            transport.close()
+            for t in transports:
+                t.close()
 
     async def send(self, request, dest_addr=None, timeout=2.5):
         """
@@ -217,7 +245,9 @@ class UDPAsync:
 
         if dest_addr is None:
             transport, protocol = await loop.create_datagram_endpoint(
-                lambda: SendProtocol(request, self._broadcast, self._debug), local_addr=self._bind, allow_broadcast=True
+                lambda: SendProtocol(request, self._broadcast, self._debug),
+                local_addr=self._bind,
+                allow_broadcast=True,
             )
         else:
             addr = net.resolve(f"{dest_addr}")

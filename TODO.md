@@ -1,13 +1,12 @@
 # TODO
 
 - [x] 'first card' API (cf. https://github.com/uhppoted/uhppoted/issues/82)
+- [x] UDP broadcast fails randomly (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/21)
 
-- [ ] UDP broadcast fails randomly (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/21)
-      - [ ] add check to udp::send
-      - [x] retry if bind port is 0
-      - [x] README
-      - [x] CHANGELOG
-      - [x] Add to FAQ
+```
+asyncio.get_event_loop() in __init__ is deprecated in newer Python (3.10+) in favour of asyncio.get_running_loop(). 
+Since the protocol is always created inside a running loop (from within broadcast), that's an easy fix.
+```
 
 - [ ] Put API functions into __init__.py
 

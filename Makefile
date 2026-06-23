@@ -68,7 +68,7 @@ publish: release
 	. .venv/bin/activate; python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-	. .venv/bin/activate; python3 -m unittest integration_tests/uhppoted/io_*.py -k test_set_firstcard
+	export UHPPOTED_ENV=DEV && $(ASYNC) get-all-controllers
 
 usage: build
 	-export UHPPOTED_ENV=DEV && $(CMD)

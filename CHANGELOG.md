@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+### Updated
+1. Added retry in udp::sendto and udp_async when ephemeral UDP port collides with broadcast port.
 
 
 ## [0.9.1](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.9.1) - 2026-06-18
@@ -11,7 +13,7 @@
 
 ### Updated
 1. Bumped minimum Python version to 3.10.
-2. Retries when ephemeral UDP port collides with broadcast port.
+2. Added retry in udp::broadcast when ephemeral UDP port collides with broadcast port.
 
 
 ## [0.9.0](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.9.0) - 2026-01-27
