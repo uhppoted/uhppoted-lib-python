@@ -9,8 +9,8 @@ import argparse
 import sys
 import traceback
 
-from commands import commands
-from commands import execute
+from .commands import commands
+from .commands import execute
 
 
 def parse_args():

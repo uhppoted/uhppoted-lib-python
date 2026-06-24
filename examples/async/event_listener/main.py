@@ -18,7 +18,7 @@ async def main():
     Sets the access controller(s) event listener address:port and then listens for received events on a thread.
     """
     controllers = [405419896, 303986753, 201020304]  # controller serial numbers
-    host_addr = "192.168.1.100"  # IPv4 address of host machine
+    host_addr = "192.168.1.125"  # IPv4 address of host machine
     host_port = 60001  # port on which to listen for events
 
     bind_addr = "0.0.0.0"  # INADDR_ANY (0.0.0.0) or the host IPv4 address

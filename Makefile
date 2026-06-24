@@ -1,8 +1,8 @@
 DIST ?= development
-CMD   = cd examples/cli && python3 main.py --debug --bind 192.168.1.125 --broadcast 192.168.1.255 --listen 192.168.1.125:60001
-TCP   = cd examples/cli && python3 main.py --debug --tcp --dest 192.168.1.125
-ASYNC = cd examples/async/cli && python3 main.py --debug --bind 192.168.1.125 --broadcast 192.168.1.255 --listen 192.168.1.125:60001
-ASYNC_TCP = cd examples/async/cli && python3 main.py --debug --tcp --dest 192.168.1.125
+CMD   = python3 -m examples.cli.main --debug --bind 192.168.1.125 --broadcast 192.168.1.255 --listen 192.168.1.125:60001
+TCP   = python3 -m examples.cli.main --debug --tcp --dest 192.168.1.125
+ASYNC = python3 -m examples.async.cli.main --debug --bind 192.168.1.125 --broadcast 192.168.1.255 --listen 192.168.1.125:60001
+ASYNC_TCP = python3 -m examples.async.cli.main --debug --tcp --dest 192.168.1.125
 
 CONTROLLER ?= 405419896
 DOOR ?= 3
@@ -26,9 +26,9 @@ update-release:
 format: 
 	. .venv/bin/activate; black src
 	. .venv/bin/activate; black examples/cli
-	. .venv/bin/activate; black examples/event-listener
+	. .venv/bin/activate; black examples/event_listener
 	. .venv/bin/activate; black examples/async/cli
-	. .venv/bin/activate; black examples/async/event-listener
+	. .venv/bin/activate; black examples/async/event_listener
 	. .venv/bin/activate; black tests
 	. .venv/bin/activate; black integration_tests
 
@@ -46,9 +46,9 @@ vet:
 lint: 
 	. .venv/bin/activate; pylint --rcfile=.pylintrc  --disable=duplicate-code src
 	. .venv/bin/activate; pylint --rcfile=.pylintrc examples/cli
-	. .venv/bin/activate; pylint --rcfile=.pylintrc examples/event-listener
+	. .venv/bin/activate; pylint --rcfile=.pylintrc examples/event_listener
 	. .venv/bin/activate; pylint --rcfile=.pylintrc examples/async/cli
-	. .venv/bin/activate; pylint --rcfile=.pylintrc examples/async/event-listener
+	. .venv/bin/activate; pylint --rcfile=.pylintrc examples/async/event_listener
 	. .venv/bin/activate; pylint --rcfile=.pylintrc tests
 	. .venv/bin/activate; pylint --rcfile=.pylintrc tests/uhppoted
 	. .venv/bin/activate; pylint --rcfile=.pylintrc integration_tests
@@ -67,456 +67,453 @@ publish: release
 	. .venv/bin/activate; python3 -m twine upload --repository testpypi -u __token__ --skip-existing --verbose dist/*
 	. .venv/bin/activate; python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
-debug: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)                                   get-all-controllers
-	export UHPPOTED_ENV=DEV && $(ASYNC) --destination 192.168.1.125 --udp get-controller --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC)                             --udp get-controller --controller $(CONTROLLER)
+debug:
+# 	$(ASYNC)                                   get-all-controllers
+# 	$(ASYNC) --destination 192.168.1.125 --udp get-controller --controller $(CONTROLLER)
+# 	$(ASYNC)                             --udp get-controller --controller $(CONTROLLER)
+	python3 -m examples.cli.main --debug --broadcast 192.168.1.255 get-all-controllers
 
 usage: build
-	-export UHPPOTED_ENV=DEV && $(CMD)
-	-export UHPPOTED_ENV=DEV && $(ASYNC)
-	-export UHPPOTED_ENV=DEV && $(CMD)   do-weird-stuff
-	-export UHPPOTED_ENV=DEV && $(ASYNC) do-weird-stuff
+	-$(CMD)
+	-$(ASYNC)
+	-$(CMD)   do-weird-stuff
+	-$(ASYNC) do-weird-stuff
 
 get-all-controllers: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-all-controllers
+	$(CMD) get-all-controllers
 
 get-all-controllers-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-all-controllers
+	$(ASYNC) get-all-controllers
 
 get-controller: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-controller --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) get-controller --controller $(CONTROLLER)
+	$(CMD) get-controller --controller $(CONTROLLER)
+	$(TCP) get-controller --controller $(CONTROLLER)
 
 get-controller-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     get-controller --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-controller --controller $(CONTROLLER)
+	$(ASYNC)     get-controller --controller $(CONTROLLER)
+	$(ASYNC_TCP) get-controller --controller $(CONTROLLER)
 
 set-ip: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-ip --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) set-ip --controller $(CONTROLLER)
+	$(CMD) set-ip --controller $(CONTROLLER)
+	$(TCP) set-ip --controller $(CONTROLLER)
 
 set-ip-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     set-ip --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-ip --controller $(CONTROLLER)
+	$(ASYNC)     set-ip --controller $(CONTROLLER)
+	$(ASYNC_TCP) set-ip --controller $(CONTROLLER)
 
 get-status: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-status --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) get-status --controller $(CONTROLLER)
+	$(CMD) get-status --controller $(CONTROLLER)
+	$(TCP) get-status --controller $(CONTROLLER)
 
 get-status-record: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-status-record --controller $(CONTROLLER)
+	$(CMD) get-status-record --controller $(CONTROLLER)
 
 get-status-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     get-status --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-status --controller $(CONTROLLER)
+	$(ASYNC)     get-status --controller $(CONTROLLER)
+	$(ASYNC_TCP) get-status --controller $(CONTROLLER)
 
 get-status-record-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-status-record --controller $(CONTROLLER)
+	$(ASYNC) get-status-record --controller $(CONTROLLER)
 
 get-time: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-time --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) get-time --controller $(CONTROLLER)
+	$(CMD) get-time --controller $(CONTROLLER)
+	$(TCP) get-time --controller $(CONTROLLER)
 
 get-time-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     get-time --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-time --controller $(CONTROLLER)
+	$(ASYNC)     get-time --controller $(CONTROLLER)
+	$(ASYNC_TCP) get-time --controller $(CONTROLLER)
 
 set-time: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-time --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) set-time --controller $(CONTROLLER)
+	$(CMD) set-time --controller $(CONTROLLER)
+	$(TCP) set-time --controller $(CONTROLLER)
 
 set-time-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     set-time --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-time --controller $(CONTROLLER)
+	$(ASYNC)     set-time --controller $(CONTROLLER)
+	$(ASYNC_TCP) set-time --controller $(CONTROLLER)
 
 get-listener: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-listener --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) get-listener --controller $(CONTROLLER)
+	$(CMD) get-listener --controller $(CONTROLLER)
+	$(TCP) get-listener --controller $(CONTROLLER)
 
 get-listener-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     get-listener --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-listener --controller $(CONTROLLER)
+	$(ASYNC)     get-listener --controller $(CONTROLLER)
+	$(ASYNC_TCP) get-listener --controller $(CONTROLLER)
 
 set-listener: build
-# 	export UHPPOTED_ENV=DEV && $(CMD) set-listener --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) set-listener --controller $(CONTROLLER) --listener $(LISTENER)
+	$(CMD) set-listener --controller $(CONTROLLER)
+	$(ASYNC) set-listener --controller $(CONTROLLER) --listener $(LISTENER)
 
 set-listener-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     set-listener --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-listener --controller $(CONTROLLER)
+	$(ASYNC)     set-listener --controller $(CONTROLLER)
+	$(ASYNC_TCP) set-listener --controller $(CONTROLLER)
 
 get-door-control: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-door-control --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) get-door-control --controller $(CONTROLLER)
+	$(CMD) get-door-control --controller $(CONTROLLER)
+	$(TCP) get-door-control --controller $(CONTROLLER)
 
 get-door-control-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     get-door-control --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-door-control --controller $(CONTROLLER)
+	$(ASYNC)     get-door-control --controller $(CONTROLLER)
+	$(ASYNC_TCP) get-door-control --controller $(CONTROLLER)
 
 set-door-control: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-door-control --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) set-door-control --controller $(CONTROLLER)
+	$(CMD) set-door-control --controller $(CONTROLLER)
+	$(TCP) set-door-control --controller $(CONTROLLER)
 
 set-door-control-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     set-door-control --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-door-control --controller $(CONTROLLER)
+	$(ASYNC)     set-door-control --controller $(CONTROLLER)
+	$(ASYNC_TCP) set-door-control --controller $(CONTROLLER)
 
 open-door: build
-	export UHPPOTED_ENV=DEV && $(CMD) open-door --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) open-door --controller $(CONTROLLER)
+	$(CMD) open-door --controller $(CONTROLLER)
+	$(TCP) open-door --controller $(CONTROLLER)
 
 open-door-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     open-door --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) open-door --controller $(CONTROLLER)
+	$(ASYNC)     open-door --controller $(CONTROLLER)
+	$(ASYNC_TCP) open-door --controller $(CONTROLLER)
 
 get-cards: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-cards --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) get-cards --controller $(CONTROLLER)
+	$(CMD) get-cards --controller $(CONTROLLER)
+	$(TCP) get-cards --controller $(CONTROLLER)
 
 get-cards-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     get-cards --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-cards --controller $(CONTROLLER)
+	$(ASYNC)     get-cards --controller $(CONTROLLER)
+	$(ASYNC_TCP) get-cards --controller $(CONTROLLER)
 
 get-card: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-card --controller $(CONTROLLER) --card $(CARD)
-	export UHPPOTED_ENV=DEV && $(TCP) get-card --controller $(CONTROLLER) --card $(CARD)
+	$(CMD) get-card --controller $(CONTROLLER) --card $(CARD)
+	$(TCP) get-card --controller $(CONTROLLER) --card $(CARD)
 
 get-card-record: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-card-record --controller $(CONTROLLER) --card $(CARD)
-	export UHPPOTED_ENV=DEV && $(TCP) get-card-record --controller $(CONTROLLER) --card $(CARD)
+	$(CMD) get-card-record --controller $(CONTROLLER) --card $(CARD)
+	$(TCP) get-card-record --controller $(CONTROLLER) --card $(CARD)
 
 get-card-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     get-card --controller $(CONTROLLER) --card $(CARD)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-card --controller $(CONTROLLER) --card $(CARD)
+	$(ASYNC)     get-card --controller $(CONTROLLER) --card $(CARD)
+	$(ASYNC_TCP) get-card --controller $(CONTROLLER) --card $(CARD)
 
 get-card-record-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     get-card-record --controller $(CONTROLLER) --card $(CARD)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-card-record --controller $(CONTROLLER) --card $(CARD)
+	$(ASYNC)     get-card-record --controller $(CONTROLLER) --card $(CARD)
+	$(ASYNC_TCP) get-card-record --controller $(CONTROLLER) --card $(CARD)
 
 get-card-by-index: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-card-by-index --controller $(CONTROLLER) --index 3
-	export UHPPOTED_ENV=DEV && $(TCP) get-card-by-index --controller $(CONTROLLER) --index 3
+	$(CMD) get-card-by-index --controller $(CONTROLLER) --index 3
+	$(TCP) get-card-by-index --controller $(CONTROLLER) --index 3
 
 get-card-record-by-index: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-card-record-by-index --controller $(CONTROLLER) --index 3
-	export UHPPOTED_ENV=DEV && $(TCP) get-card-record-by-index --controller $(CONTROLLER) --index 3
+	$(CMD) get-card-record-by-index --controller $(CONTROLLER) --index 3
+	$(TCP) get-card-record-by-index --controller $(CONTROLLER) --index 3
 
 get-card-by-index-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     get-card-by-index --controller $(CONTROLLER) --index 3
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-card-by-index --controller $(CONTROLLER) --index 3
+	$(ASYNC)     get-card-by-index --controller $(CONTROLLER) --index 3
+	$(ASYNC_TCP) get-card-by-index --controller $(CONTROLLER) --index 3
 
 get-card-record-by-index-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     get-card-record-by-index --controller $(CONTROLLER) --index 3
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-card-record-by-index --controller $(CONTROLLER) --index 3
+	$(ASYNC)     get-card-record-by-index --controller $(CONTROLLER) --index 3
+	$(ASYNC_TCP) get-card-record-by-index --controller $(CONTROLLER) --index 3
 
 put-card: build
-	export UHPPOTED_ENV=DEV && $(CMD) put-card --controller $(CONTROLLER) --card $(CARD)
-	export UHPPOTED_ENV=DEV && $(TCP) put-card --controller $(CONTROLLER) --card $(CARD)
+	$(CMD) put-card --controller $(CONTROLLER) --card $(CARD)
+	$(TCP) put-card --controller $(CONTROLLER) --card $(CARD)
 
 put-card-record: build
-	export UHPPOTED_ENV=DEV && $(CMD) put-card-record --controller $(CONTROLLER) --card $(CARD)
+	$(CMD) put-card-record --controller $(CONTROLLER) --card $(CARD)
 
 put-card-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     put-card --controller $(CONTROLLER) --card $(CARD)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) put-card --controller $(CONTROLLER) --card $(CARD)
+	$(ASYNC)     put-card --controller $(CONTROLLER) --card $(CARD)
+	$(ASYNC_TCP) put-card --controller $(CONTROLLER) --card $(CARD)
 
 put-card-record-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC) put-card-record --controller $(CONTROLLER) --card $(CARD)
+	$(ASYNC) put-card-record --controller $(CONTROLLER) --card $(CARD)
 
 delete-card: build
-	export UHPPOTED_ENV=DEV && $(CMD) delete-card --controller $(CONTROLLER) --card $(CARD)
-	export UHPPOTED_ENV=DEV && $(TCP) delete-card --controller $(CONTROLLER) --card $(CARD)
+	$(CMD) delete-card --controller $(CONTROLLER) --card $(CARD)
+	$(TCP) delete-card --controller $(CONTROLLER) --card $(CARD)
 
 delete-card-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     delete-card --controller $(CONTROLLER) --card $(CARD)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) delete-card --controller $(CONTROLLER) --card $(CARD)
+	$(ASYNC)     delete-card --controller $(CONTROLLER) --card $(CARD)
+	$(ASYNC_TCP) delete-card --controller $(CONTROLLER) --card $(CARD)
 
 delete-all-cards: build
-	export UHPPOTED_ENV=DEV && $(CMD) delete-all-cards --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) delete-all-cards --controller $(CONTROLLER)
+	$(CMD) delete-all-cards --controller $(CONTROLLER)
+	$(TCP) delete-all-cards --controller $(CONTROLLER)
 
 delete-all-cards-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     delete-all-cards --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) delete-all-cards --controller $(CONTROLLER)
+	$(ASYNC)     delete-all-cards --controller $(CONTROLLER)
+	$(ASYNC_TCP) delete-all-cards --controller $(CONTROLLER)
 
 get-event: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-event --controller $(CONTROLLER) --index $(EVENT)
-	export UHPPOTED_ENV=DEV && $(TCP) get-event --controller $(CONTROLLER) --index $(EVENT)
+	$(CMD) get-event --controller $(CONTROLLER) --index $(EVENT)
+	$(TCP) get-event --controller $(CONTROLLER) --index $(EVENT)
 
 get-event-record: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-event-record --controller $(CONTROLLER) --index $(EVENT)
+	$(CMD) get-event-record --controller $(CONTROLLER) --index $(EVENT)
 
 get-event-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     get-event --controller $(CONTROLLER) --index $(EVENT)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-event --controller $(CONTROLLER) --index $(EVENT)
+	$(ASYNC)     get-event --controller $(CONTROLLER) --index $(EVENT)
+	$(ASYNC_TCP) get-event --controller $(CONTROLLER) --index $(EVENT)
 
 get-event-record-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-event-record --controller $(CONTROLLER) --index $(EVENT)
+	$(ASYNC) get-event-record --controller $(CONTROLLER) --index $(EVENT)
 
 get-event-index: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-event-index --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) get-event-index --controller $(CONTROLLER)
+	$(CMD) get-event-index --controller $(CONTROLLER)
+	$(TCP) get-event-index --controller $(CONTROLLER)
 
 get-event-index-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     get-event-index --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-event-index --controller $(CONTROLLER)
+	$(ASYNC)     get-event-index --controller $(CONTROLLER)
+	$(ASYNC_TCP) get-event-index --controller $(CONTROLLER)
 
 set-event-index: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-event-index --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) set-event-index --controller $(CONTROLLER)
+	$(CMD) set-event-index --controller $(CONTROLLER)
+	$(TCP) set-event-index --controller $(CONTROLLER)
 
 set-event-index-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     set-event-index --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-event-index --controller $(CONTROLLER)
+	$(ASYNC)     set-event-index --controller $(CONTROLLER)
+	$(ASYNC_TCP) set-event-index --controller $(CONTROLLER)
 
 record-special-events: build
-	export UHPPOTED_ENV=DEV && $(CMD) record-special-events --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) record-special-events --controller $(CONTROLLER)
+	$(CMD) record-special-events --controller $(CONTROLLER)
+	$(TCP) record-special-events --controller $(CONTROLLER)
 
 record-special-events-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     record-special-events --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) record-special-events --controller $(CONTROLLER)
+	$(ASYNC)     record-special-events --controller $(CONTROLLER)
+	$(ASYNC_TCP) record-special-events --controller $(CONTROLLER)
 
 get-time-profile: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
-	export UHPPOTED_ENV=DEV && $(TCP) get-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
+	$(CMD) get-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
+	$(TCP) get-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
 
 get-time-profile-record: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-time-profile-record --controller $(CONTROLLER) --profile $(PROFILE)
+	$(CMD) get-time-profile-record --controller $(CONTROLLER) --profile $(PROFILE)
 
 get-time-profile-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     get-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
+	$(ASYNC)     get-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
+	$(ASYNC_TCP) get-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
 
 get-time-profile-record-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-time-profile-record --controller $(CONTROLLER) --profile $(PROFILE)
+	$(ASYNC) get-time-profile-record --controller $(CONTROLLER) --profile $(PROFILE)
 
 set-time-profile: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
-	export UHPPOTED_ENV=DEV && $(TCP) set-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
+	$(CMD) set-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
+	$(TCP) set-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
 
 set-time-profile-record: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-time-profile-record --controller $(CONTROLLER) --profile $(PROFILE)
+	$(CMD) set-time-profile-record --controller $(CONTROLLER) --profile $(PROFILE)
 
 set-time-profile-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     set-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
+	$(ASYNC)     set-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
+	$(ASYNC_TCP) set-time-profile --controller $(CONTROLLER) --profile $(PROFILE)
 
 set-time-profile-record-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC) set-time-profile-record --controller $(CONTROLLER) --profile $(PROFILE)
+	$(ASYNC) set-time-profile-record --controller $(CONTROLLER) --profile $(PROFILE)
 
 clear-time-profiles: build
-	export UHPPOTED_ENV=DEV && $(CMD) clear-time-profiles --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) clear-time-profiles --controller $(CONTROLLER)
+	$(CMD) clear-time-profiles --controller $(CONTROLLER)
+	$(TCP) clear-time-profiles --controller $(CONTROLLER)
 
 clear-time-profiles-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     clear-time-profiles --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) clear-time-profiles --controller $(CONTROLLER)
+	$(ASYNC)     clear-time-profiles --controller $(CONTROLLER)
+	$(ASYNC_TCP) clear-time-profiles --controller $(CONTROLLER)
 
 add-task: build
-	export UHPPOTED_ENV=DEV && $(CMD) add-task --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) add-task --controller $(CONTROLLER)
+	$(CMD) add-task --controller $(CONTROLLER)
+	$(TCP) add-task --controller $(CONTROLLER)
 
 add-task-record: build
-	export UHPPOTED_ENV=DEV && $(CMD) add-task-record --controller $(CONTROLLER)
+	$(CMD) add-task-record --controller $(CONTROLLER)
 
 add-task-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     add-task --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) add-task --controller $(CONTROLLER)
+	$(ASYNC)     add-task --controller $(CONTROLLER)
+	$(ASYNC_TCP) add-task --controller $(CONTROLLER)
 
 add-task-record-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC) add-task-record --controller $(CONTROLLER)
+	$(ASYNC) add-task-record --controller $(CONTROLLER)
 
 refresh-tasklist: build
-	export UHPPOTED_ENV=DEV && $(CMD) refresh-tasklist --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) refresh-tasklist --controller $(CONTROLLER)
+	$(CMD) refresh-tasklist --controller $(CONTROLLER)
+	$(TCP) refresh-tasklist --controller $(CONTROLLER)
 
 refresh-tasklist-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     refresh-tasklist --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) refresh-tasklist --controller $(CONTROLLER)
+	$(ASYNC)     refresh-tasklist --controller $(CONTROLLER)
+	$(ASYNC_TCP) refresh-tasklist --controller $(CONTROLLER)
 
 clear-tasklist: build
-	export UHPPOTED_ENV=DEV && $(CMD) clear-tasklist --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) clear-tasklist --controller $(CONTROLLER)
+	$(CMD) clear-tasklist --controller $(CONTROLLER)
+	$(TCP) clear-tasklist --controller $(CONTROLLER)
 
 clear-tasklist-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     clear-tasklist --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) clear-tasklist --controller $(CONTROLLER)
+	$(ASYNC)     clear-tasklist --controller $(CONTROLLER)
+	$(ASYNC_TCP) clear-tasklist --controller $(CONTROLLER)
 
 set-pc-control: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-pc-control --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) set-pc-control --controller $(CONTROLLER)
+	$(CMD) set-pc-control --controller $(CONTROLLER)
+	$(TCP) set-pc-control --controller $(CONTROLLER)
 
 set-pc-control-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     set-pc-control --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-pc-control --controller $(CONTROLLER)
+	$(ASYNC)     set-pc-control --controller $(CONTROLLER)
+	$(ASYNC_TCP) set-pc-control --controller $(CONTROLLER)
 
 set-interlock: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-interlock --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) set-interlock --controller $(CONTROLLER)
+	$(CMD) set-interlock --controller $(CONTROLLER)
+	$(TCP) set-interlock --controller $(CONTROLLER)
 
 set-interlock-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     set-interlock --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-interlock --controller $(CONTROLLER)
+	$(ASYNC)     set-interlock --controller $(CONTROLLER)
+	$(ASYNC_TCP) set-interlock --controller $(CONTROLLER)
 
 activate-keypads: build
-	export UHPPOTED_ENV=DEV && $(CMD) activate-keypads --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) activate-keypads --controller $(CONTROLLER)
+	$(CMD) activate-keypads --controller $(CONTROLLER)
+	$(TCP) activate-keypads --controller $(CONTROLLER)
 
 activate-keypads-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     activate-keypads --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) activate-keypads --controller $(CONTROLLER)
+	$(ASYNC)     activate-keypads --controller $(CONTROLLER)
+	$(ASYNC_TCP) activate-keypads --controller $(CONTROLLER)
 
 set-door-passcodes: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-door-passcodes --controller $(CONTROLLER) --door 2 --passcodes 7531,54321,999999
-	export UHPPOTED_ENV=DEV && $(TCP) set-door-passcodes --controller $(CONTROLLER) --door 2 --passcodes 7531,54321,999999
+	$(CMD) set-door-passcodes --controller $(CONTROLLER) --door 2 --passcodes 7531,54321,999999
+	$(TCP) set-door-passcodes --controller $(CONTROLLER) --door 2 --passcodes 7531,54321,999999
 
 set-door-passcodes-record: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-door-passcodes-record --controller $(CONTROLLER) --door 2 --passcodes 7531,54321,999999
+	$(CMD) set-door-passcodes-record --controller $(CONTROLLER) --door 2 --passcodes 7531,54321,999999
 
 set-door-passcodes-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     set-door-passcodes --controller $(CONTROLLER) --door 2 --passcodes 7531,54321,999999
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-door-passcodes --controller $(CONTROLLER) --door 2 --passcodes 7531,54321,999999
+	$(ASYNC)     set-door-passcodes --controller $(CONTROLLER) --door 2 --passcodes 7531,54321,999999
+	$(ASYNC_TCP) set-door-passcodes --controller $(CONTROLLER) --door 2 --passcodes 7531,54321,999999
 
 set-door-passcodes-record-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC) set-door-passcodes-record --controller $(CONTROLLER) --door 2 --passcodes 7531,54321,999999
+	$(ASYNC) set-door-passcodes-record --controller $(CONTROLLER) --door 2 --passcodes 7531,54321,999999
 
 get-antipassback: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-antipassback --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) get-antipassback --controller $(CONTROLLER)
+	$(CMD) get-antipassback --controller $(CONTROLLER)
+	$(TCP) get-antipassback --controller $(CONTROLLER)
 
 get-antipassback-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     get-antipassback --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) get-antipassback --controller $(CONTROLLER)
+	$(ASYNC)     get-antipassback --controller $(CONTROLLER)
+	$(ASYNC_TCP) get-antipassback --controller $(CONTROLLER)
 
 set-antipassback: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-antipassback --controller $(CONTROLLER) --antipassback "$(ANTIPASSBACK)"
-	export UHPPOTED_ENV=DEV && $(TCP) set-antipassback --controller $(CONTROLLER) --antipassback "$(ANTIPASSBACK)"
+	$(CMD) set-antipassback --controller $(CONTROLLER) --antipassback "$(ANTIPASSBACK)"
+	$(TCP) set-antipassback --controller $(CONTROLLER) --antipassback "$(ANTIPASSBACK)"
 
 set-antipassback-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     set-antipassback --controller $(CONTROLLER) --antipassback "$(ANTIPASSBACK)"
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-antipassback --controller $(CONTROLLER) --antipassback "$(ANTIPASSBACK)"
+	$(ASYNC)     set-antipassback --controller $(CONTROLLER) --antipassback "$(ANTIPASSBACK)"
+	$(ASYNC_TCP) set-antipassback --controller $(CONTROLLER) --antipassback "$(ANTIPASSBACK)"
 
 set-firstcard: build
-	export UHPPOTED_ENV=DEV && $(CMD) set-firstcard --controller $(CONTROLLER) --door $(DOOR) --firstcard "$(FIRSTCARD)"
-	export UHPPOTED_ENV=DEV && $(TCP) set-firstcard --controller $(CONTROLLER) --door $(DOOR) --firstcard "$(FIRSTCARD)"
+	$(CMD) set-firstcard --controller $(CONTROLLER) --door $(DOOR) --firstcard "$(FIRSTCARD)"
+	$(TCP) set-firstcard --controller $(CONTROLLER) --door $(DOOR) --firstcard "$(FIRSTCARD)"
 
 set-firstcard-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     set-firstcard --controller $(CONTROLLER) --door $(DOOR) --firstcard "$(FIRSTCARD)"
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) set-firstcard --controller $(CONTROLLER) --door $(DOOR) --firstcard "$(FIRSTCARD)"
+	$(ASYNC)     set-firstcard --controller $(CONTROLLER) --door $(DOOR) --firstcard "$(FIRSTCARD)"
+	$(ASYNC_TCP) set-firstcard --controller $(CONTROLLER) --door $(DOOR) --firstcard "$(FIRSTCARD)"
 
 restore-default-parameters: build
-	export UHPPOTED_ENV=DEV && $(CMD) restore-default-parameters --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(TCP) restore-default-parameters --controller $(CONTROLLER)
+	$(CMD) restore-default-parameters --controller $(CONTROLLER)
+	$(TCP) restore-default-parameters --controller $(CONTROLLER)
 
 restore-default-parameters-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC)     restore-default-parameters --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC_TCP) restore-default-parameters --controller $(CONTROLLER)
+	$(ASYNC)     restore-default-parameters --controller $(CONTROLLER)
+	$(ASYNC_TCP) restore-default-parameters --controller $(CONTROLLER)
 
 listen: build
-	export UHPPOTED_ENV=DEV && $(CMD) listen
+	$(CMD) listen
 
 listen-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC) listen
+	$(ASYNC) listen
 
 all: build
-	export UHPPOTED_ENV=DEV && $(CMD) get-all-controllers
-	export UHPPOTED_ENV=DEV && $(CMD) get-controller             --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) set-ip                     --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) get-status                 --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) get-status-record          --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) get-time                   --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) set-time                   --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) get-listener               --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) set-listener               --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) get-door-control           --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) set-door-control           --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) open-door                  --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) get-cards                  --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) put-card                   --controller $(CONTROLLER) --card $(CARD)
-	export UHPPOTED_ENV=DEV && $(CMD) put-card-record            --controller $(CONTROLLER) --card $(CARD)
-	export UHPPOTED_ENV=DEV && $(CMD) get-card                   --controller $(CONTROLLER) --card $(CARD)
-	export UHPPOTED_ENV=DEV && $(CMD) get-card-record            --controller $(CONTROLLER) --card $(CARD)
-	export UHPPOTED_ENV=DEV && $(CMD) get-card-by-index          --controller $(CONTROLLER) --index 3
-	export UHPPOTED_ENV=DEV && $(CMD) get-card-record-by-index   --controller $(CONTROLLER) --index 3
-	export UHPPOTED_ENV=DEV && $(CMD) delete-card                --controller $(CONTROLLER) --card $(CARD)
-	export UHPPOTED_ENV=DEV && $(CMD) delete-all-cards           --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) get-event                  --controller $(CONTROLLER) --index $(EVENT)
-	export UHPPOTED_ENV=DEV && $(CMD) get-event-record           --controller $(CONTROLLER) --index $(EVENT)
-	export UHPPOTED_ENV=DEV && $(CMD) get-event-index            --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) set-event-index            --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) record-special-events      --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) get-time-profile           --controller $(CONTROLLER) --profile $(PROFILE)
-	export UHPPOTED_ENV=DEV && $(CMD) get-time-profile-record    --controller $(CONTROLLER) --profile $(PROFILE)
-	export UHPPOTED_ENV=DEV && $(CMD) set-time-profile           --controller $(CONTROLLER) --profile $(PROFILE)
-	export UHPPOTED_ENV=DEV && $(CMD) set-time-profile-record    --controller $(CONTROLLER) --profile $(PROFILE)
-	export UHPPOTED_ENV=DEV && $(CMD) clear-time-profiles        --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) add-task                   --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) add-task-record            --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) refresh-tasklist           --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) clear-tasklist             --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) set-pc-control             --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) set-interlock              --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) activate-keypads           --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) set-door-passcodes         --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) get-antipassback           --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(CMD) set-antipassback           --controller $(CONTROLLER) --antipassback "$(ANTIPASSBACK)"
-	export UHPPOTED_ENV=DEV && $(CMD) set-firstcard              --controller $(CONTROLLER) --door $(DOOR) --firstcard "$(FIRSTCARD)"
-	export UHPPOTED_ENV=DEV && $(CMD) restore-default-parameters --controller $(CONTROLLER)
+	$(CMD) get-all-controllers
+	$(CMD) get-controller             --controller $(CONTROLLER)
+	$(CMD) set-ip                     --controller $(CONTROLLER)
+	$(CMD) get-status                 --controller $(CONTROLLER)
+	$(CMD) get-status-record          --controller $(CONTROLLER)
+	$(CMD) get-time                   --controller $(CONTROLLER)
+	$(CMD) set-time                   --controller $(CONTROLLER)
+	$(CMD) get-listener               --controller $(CONTROLLER)
+	$(CMD) set-listener               --controller $(CONTROLLER)
+	$(CMD) get-door-control           --controller $(CONTROLLER)
+	$(CMD) set-door-control           --controller $(CONTROLLER)
+	$(CMD) open-door                  --controller $(CONTROLLER)
+	$(CMD) get-cards                  --controller $(CONTROLLER)
+	$(CMD) put-card                   --controller $(CONTROLLER) --card $(CARD)
+	$(CMD) put-card-record            --controller $(CONTROLLER) --card $(CARD)
+	$(CMD) get-card                   --controller $(CONTROLLER) --card $(CARD)
+	$(CMD) get-card-record            --controller $(CONTROLLER) --card $(CARD)
+	$(CMD) get-card-by-index          --controller $(CONTROLLER) --index 3
+	$(CMD) get-card-record-by-index   --controller $(CONTROLLER) --index 3
+	$(CMD) delete-card                --controller $(CONTROLLER) --card $(CARD)
+	$(CMD) delete-all-cards           --controller $(CONTROLLER)
+	$(CMD) get-event                  --controller $(CONTROLLER) --index $(EVENT)
+	$(CMD) get-event-record           --controller $(CONTROLLER) --index $(EVENT)
+	$(CMD) get-event-index            --controller $(CONTROLLER)
+	$(CMD) set-event-index            --controller $(CONTROLLER)
+	$(CMD) record-special-events      --controller $(CONTROLLER)
+	$(CMD) get-time-profile           --controller $(CONTROLLER) --profile $(PROFILE)
+	$(CMD) get-time-profile-record    --controller $(CONTROLLER) --profile $(PROFILE)
+	$(CMD) set-time-profile           --controller $(CONTROLLER) --profile $(PROFILE)
+	$(CMD) set-time-profile-record    --controller $(CONTROLLER) --profile $(PROFILE)
+	$(CMD) clear-time-profiles        --controller $(CONTROLLER)
+	$(CMD) add-task                   --controller $(CONTROLLER)
+	$(CMD) add-task-record            --controller $(CONTROLLER)
+	$(CMD) refresh-tasklist           --controller $(CONTROLLER)
+	$(CMD) clear-tasklist             --controller $(CONTROLLER)
+	$(CMD) set-pc-control             --controller $(CONTROLLER)
+	$(CMD) set-interlock              --controller $(CONTROLLER)
+	$(CMD) activate-keypads           --controller $(CONTROLLER)
+	$(CMD) set-door-passcodes         --controller $(CONTROLLER)
+	$(CMD) get-antipassback           --controller $(CONTROLLER)
+	$(CMD) set-antipassback           --controller $(CONTROLLER) --antipassback "$(ANTIPASSBACK)"
+	$(CMD) set-firstcard              --controller $(CONTROLLER) --door $(DOOR) --firstcard "$(FIRSTCARD)"
+	$(CMD) restore-default-parameters --controller $(CONTROLLER)
 
 all-async: build
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-all-controllers
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-controller             --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) set-ip                     --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-status                 --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-status-record          --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-time                   --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) set-time                   --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-listener               --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) set-listener               --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-door-control           --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) set-door-control           --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) open-door                  --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-cards                  --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) put-card-record            --controller $(CONTROLLER) --card $(CARD)
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-card                   --controller $(CONTROLLER) --card $(CARD)
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-card-record            --controller $(CONTROLLER) --card $(CARD)
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-card-by-index          --controller $(CONTROLLER) --index 3
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-card-record-by-index   --controller $(CONTROLLER) --index 3
-	export UHPPOTED_ENV=DEV && $(ASYNC) delete-card                --controller $(CONTROLLER) --card $(CARD)
-	export UHPPOTED_ENV=DEV && $(ASYNC) delete-all-cards           --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-event                  --controller $(CONTROLLER) --index $(EVENT)
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-event-record           --controller $(CONTROLLER) --index $(EVENT)
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-event-index            --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) set-event-index            --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) record-special-events      --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-time-profile           --controller $(CONTROLLER) --profile $(PROFILE)
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-time-profile-record    --controller $(CONTROLLER) --profile $(PROFILE)
-	export UHPPOTED_ENV=DEV && $(ASYNC) set-time-profile           --controller $(CONTROLLER) --profile $(PROFILE)
-	export UHPPOTED_ENV=DEV && $(ASYNC) set-time-profile-record    --controller $(CONTROLLER) --profile $(PROFILE)
-	export UHPPOTED_ENV=DEV && $(ASYNC) clear-time-profiles        --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) add-task                   --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) add-task-record            --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) refresh-tasklist           --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) clear-tasklist             --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) set-pc-control             --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) set-interlock              --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) activate-keypads           --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) set-door-passcodes         --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-antipassback           --controller $(CONTROLLER)
-	export UHPPOTED_ENV=DEV && $(ASYNC) set-antipassback           --controller $(CONTROLLER) --antipassback "$(ANTIPASSBACK)"
-	export UHPPOTED_ENV=DEV && $(ASYNC) set-firstcard              --controller $(CONTROLLER) --door $(DOOR) --firstcard "$(FIRSTCARD)"
-	export UHPPOTED_ENV=DEV && $(ASYNC) restore-default-parameters --controller $(CONTROLLER)
+	$(ASYNC) get-all-controllers
+	$(ASYNC) get-controller             --controller $(CONTROLLER)
+	$(ASYNC) set-ip                     --controller $(CONTROLLER)
+	$(ASYNC) get-status                 --controller $(CONTROLLER)
+	$(ASYNC) get-status-record          --controller $(CONTROLLER)
+	$(ASYNC) get-time                   --controller $(CONTROLLER)
+	$(ASYNC) set-time                   --controller $(CONTROLLER)
+	$(ASYNC) get-listener               --controller $(CONTROLLER)
+	$(ASYNC) set-listener               --controller $(CONTROLLER)
+	$(ASYNC) get-door-control           --controller $(CONTROLLER)
+	$(ASYNC) set-door-control           --controller $(CONTROLLER)
+	$(ASYNC) open-door                  --controller $(CONTROLLER)
+	$(ASYNC) get-cards                  --controller $(CONTROLLER)
+	$(ASYNC) put-card-record            --controller $(CONTROLLER) --card $(CARD)
+	$(ASYNC) get-card                   --controller $(CONTROLLER) --card $(CARD)
+	$(ASYNC) get-card-record            --controller $(CONTROLLER) --card $(CARD)
+	$(ASYNC) get-card-by-index          --controller $(CONTROLLER) --index 3
+	$(ASYNC) get-card-record-by-index   --controller $(CONTROLLER) --index 3
+	$(ASYNC) delete-card                --controller $(CONTROLLER) --card $(CARD)
+	$(ASYNC) delete-all-cards           --controller $(CONTROLLER)
+	$(ASYNC) get-event                  --controller $(CONTROLLER) --index $(EVENT)
+	$(ASYNC) get-event-record           --controller $(CONTROLLER) --index $(EVENT)
+	$(ASYNC) get-event-index            --controller $(CONTROLLER)
+	$(ASYNC) set-event-index            --controller $(CONTROLLER)
+	$(ASYNC) record-special-events      --controller $(CONTROLLER)
+	$(ASYNC) get-time-profile           --controller $(CONTROLLER) --profile $(PROFILE)
+	$(ASYNC) get-time-profile-record    --controller $(CONTROLLER) --profile $(PROFILE)
+	$(ASYNC) set-time-profile           --controller $(CONTROLLER) --profile $(PROFILE)
+	$(ASYNC) set-time-profile-record    --controller $(CONTROLLER) --profile $(PROFILE)
+	$(ASYNC) clear-time-profiles        --controller $(CONTROLLER)
+	$(ASYNC) add-task                   --controller $(CONTROLLER)
+	$(ASYNC) add-task-record            --controller $(CONTROLLER)
+	$(ASYNC) refresh-tasklist           --controller $(CONTROLLER)
+	$(ASYNC) clear-tasklist             --controller $(CONTROLLER)
+	$(ASYNC) set-pc-control             --controller $(CONTROLLER)
+	$(ASYNC) set-interlock              --controller $(CONTROLLER)
+	$(ASYNC) activate-keypads           --controller $(CONTROLLER)
+	$(ASYNC) set-door-passcodes         --controller $(CONTROLLER)
+	$(ASYNC) get-antipassback           --controller $(CONTROLLER)
+	$(ASYNC) set-antipassback           --controller $(CONTROLLER) --antipassback "$(ANTIPASSBACK)"
+	$(ASYNC) set-firstcard              --controller $(CONTROLLER) --door $(DOOR) --firstcard "$(FIRSTCARD)"
+	$(ASYNC) restore-default-parameters --controller $(CONTROLLER)
 
 event-listener: build
-	export UHPPOTED_ENV=DEV    && \
-	cd examples/event-listener && \
-	python3 main.py --debug --bind 192.168.1.1`25` --broadcast 192.168.1.255 --listen 192.168.1.125:60001
+	python3 -m examples.event_listener.main --debug --bind 192.168.1.125 --broadcast 192.168.1.255 --listen 192.168.1.125:60001
 
 event-listener-async: build
-	export UHPPOTED_ENV=DEV          && \
-	cd examples/async/event-listener && \
-	python3 main.py --bind 192.168.1.125 --broadcast 192.168.1.255 --listen 192.168.1.125:60001 --host 192.168.1.125:60001
+	python3 -m examples.async.event_listener.main --debug --bind 192.168.1.125 --broadcast 192.168.1.255 --listen 192.168.1.125:60001 --host 192.168.1.125:60001
 
 	

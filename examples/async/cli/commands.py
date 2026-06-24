@@ -13,11 +13,11 @@ import re
 from collections import namedtuple
 from contextlib import suppress
 
-import cli_args as Args
-
 from uhppoted import uhppote_async as uhppote
 from uhppoted import structs
 from uhppoted.structs import DoorMode
+
+from . import cli_args as Args
 
 DOOR = 3
 MODE = 2

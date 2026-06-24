@@ -18,7 +18,7 @@ def main():
     Sets the access controller(s) event listener address:port and then listens for received events on a thread.
     """
     controller = 405419896  # controller serial number
-    host_addr = ipaddress.IPv4Address("192.168.1.100")  # IPv4 address of host machine
+    host_addr = ipaddress.IPv4Address("192.168.1.125")  # IPv4 address of host machine
     host_port = 60001  # port on which to listen for events
 
     bind_addr = "0.0.0.0"  # either INADDR_ANY (0.0.0.0) or the host IPv4 address

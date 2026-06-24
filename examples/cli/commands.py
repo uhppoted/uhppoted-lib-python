@@ -9,11 +9,11 @@ import re
 
 from collections import namedtuple
 
-import cli_args as Args
-
 from uhppoted import uhppote
 from uhppoted import structs
 from uhppoted.structs import DoorMode
+
+from . import cli_args as Args
 
 DOOR = 3
 MODE = 2
