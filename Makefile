@@ -68,7 +68,9 @@ publish: release
 	. .venv/bin/activate; python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug: build
-	export UHPPOTED_ENV=DEV && $(ASYNC) get-all-controllers
+	export UHPPOTED_ENV=DEV && $(ASYNC)                                   get-all-controllers
+	export UHPPOTED_ENV=DEV && $(ASYNC) --destination 192.168.1.125 --udp get-controller --controller $(CONTROLLER)
+	export UHPPOTED_ENV=DEV && $(ASYNC)                             --udp get-controller --controller $(CONTROLLER)
 
 usage: build
 	-export UHPPOTED_ENV=DEV && $(CMD)

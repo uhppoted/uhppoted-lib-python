@@ -84,15 +84,26 @@ class SendProtocol(asyncio.Protocol):
     asycnio protocol implementation for UDP connected socket single request/response.
     """
 
-    def __init__(self, request, dest, debug=False):
+    def __init__(self, request, dest, is_broadcast=False, debug=False):
         self._transport = None
         self._request = request
         self._dest = dest
+        self._is_broadcast = is_broadcast
         self._debug = debug
         self._done = asyncio.get_event_loop().create_future()
 
     def connection_made(self, transport):
         self._transport = transport
+
+        # NTS: avoid broadcast-to-self
+        if sock := transport.get_extra_info("socket"):
+            _, src_port = sock.getsockname()
+            _, dest_port = self._dest
+
+            if self._is_broadcast and src_port == dest_port:
+                self._done.set_exception(InvalidBindPort(f"invalid UDP bind address (port {src_port} reserved for broadcast)"))
+                return
+
         self._transport.sendto(self._request, self._dest)
         if self._request[1] == 0x96:
             self._done.set_result(None)
@@ -215,12 +226,12 @@ class UDPAsync:
                     return await protocol.run(timeout)
                 except InvalidBindPort as e:
                     if src_port != 0:
-                        raise RuntimeError(f"Invalid UDP bind address - port {src_port} is reserved for broadcast)") from e
+                        raise RuntimeError(f"invalid UDP bind address - port {src_port} is reserved for broadcast)") from e
 
             raise RuntimeError(f"OS returned UDP bind socket with port {dest_port} (reserved for broadcast)")
         finally:
-            for t in transports:
-                t.close()
+            for transport in transports:
+                transport.close()
 
     async def send(self, request, dest_addr=None, timeout=2.5):
         """
@@ -242,26 +253,42 @@ class UDPAsync:
         self.dump(request)
 
         loop = asyncio.get_running_loop()
-
-        if dest_addr is None:
-            transport, protocol = await loop.create_datagram_endpoint(
-                lambda: SendProtocol(request, self._broadcast, self._debug),
-                local_addr=self._bind,
-                allow_broadcast=True,
-            )
-        else:
-            addr = net.resolve(f"{dest_addr}")
-            transport, protocol = await loop.create_datagram_endpoint(
-                lambda: SendProtocol(request, addr, self._debug),
-                local_addr=self._bind,
-                remote_addr=addr,
-                allow_broadcast=True,
-            )
+        transports = []
 
         try:
-            return await protocol.run(timeout)
+            addr = self._broadcast if dest_addr is None else net.resolve(f"{dest_addr}")
+
+            _, src_port = self._bind
+            _, dest_port = addr
+
+            for _ in range(5):
+                if dest_addr is None:
+                    transport, protocol = await loop.create_datagram_endpoint(
+                        lambda: SendProtocol(request, self._broadcast, True, self._debug),
+                        local_addr=self._bind,
+                        allow_broadcast=True,
+                    )
+
+                else:
+                    transport, protocol = await loop.create_datagram_endpoint(
+                        lambda: SendProtocol(request, addr, False, self._debug),
+                        local_addr=self._bind,
+                        remote_addr=addr,
+                        allow_broadcast=True,
+                    )
+
+                transports.append(transport)
+
+                try:
+                    return await protocol.run(timeout)
+                except InvalidBindPort as e:
+                    if src_port != 0:
+                        raise RuntimeError(f"invalid UDP bind address - port {src_port} is reserved for broadcast)") from e
+
+            raise RuntimeError(f"OS returned UDP bind socket with port {dest_port} (reserved for broadcast)")
         finally:
-            transport.close()
+            for transport in transports:
+                transport.close()
 
     async def listen(self, on_event, close=None):
         """
