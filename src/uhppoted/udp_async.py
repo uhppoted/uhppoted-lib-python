@@ -34,7 +34,7 @@ class BroadcastProtocol(asyncio.Protocol):
         self._dest = dest
         self._replies = []
         self._debug = debug
-        self._done = asyncio.get_event_loop().create_future()
+        self._done = asyncio.get_running_loop().create_future()
 
     def connection_made(self, transport):
         self._transport = transport
@@ -90,7 +90,7 @@ class SendProtocol(asyncio.Protocol):
         self._dest = dest
         self._is_broadcast = is_broadcast
         self._debug = debug
-        self._done = asyncio.get_event_loop().create_future()
+        self._done = asyncio.get_running_loop().create_future()
 
     def connection_made(self, transport):
         self._transport = transport
@@ -274,7 +274,7 @@ class UDPAsync:
                         lambda: SendProtocol(request, addr, False, self._debug),
                         local_addr=self._bind,
                         remote_addr=addr,
-                        allow_broadcast=True,
+                        allow_broadcast=True,  # for when destination address 'happens' to be the broadcast address
                     )
 
                 transports.append(transport)

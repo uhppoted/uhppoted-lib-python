@@ -19,7 +19,7 @@ class SendProtocol(asyncio.Protocol):
         self._transport = None
         self._request = request
         self._debug = debug
-        self._done = asyncio.get_event_loop().create_future()
+        self._done = asyncio.get_running_loop().create_future()
         self._buffer = bytearray()
 
     def connection_made(self, transport):
