@@ -1,8 +1,21 @@
 # TODO
 
 - [x] 'first card' API (cf. https://github.com/uhppoted/uhppoted/issues/82)
-- [x] UDP broadcast fails randomly (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/21)
 - [x] Fix examples to use module syntax, e.g.
+- [ ] event listener examples - get bind/broadcast/listen from command line
+
+- [x] UDP broadcast fails randomly (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/21)
+    - [x] uhppoted-lib-python
+    - [x] uhppoted-lib-go
+    - [ ] uhppoted-lib-dotnet
+    - [ ] uhppoted-lib-ada
+    - [ ] uhppoted-lib-nodejs
+    - [ ] uhppoted-lib-node-red
+    - [ ] uhppoted-lib
+    - [ ] uhppote-core
+    - [ ] uhppoted-tunnel    
+    - [ ] uhppoted-dll
+
 
 - [ ] Put API functions into __init__.py
 
@@ -10,7 +23,6 @@
    - [ ] Fix integration test
    - [ ] encode unit test
    
-- [ ] event listener examples - get bind/broadcast/listen from command line
 - [ ] integration tests in github workflow
 - [ ] Replace `print(exc)` with proper logging
 - [ ] Use site-specific configuration to run examples locally
