@@ -5,11 +5,11 @@
 Python wrapper around the request/response API for the UHPPOTE TCP/IP access controllers. As of _v0.8.11_, the library includes
 both `sync` and `async` implementations of the API functions. 
 
-A set of basic examples illustrating the use of the library can be found in the [examples](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples) folder:
-- [examples/cli](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/cli) is a basic CLI using the `sync` API
-- [examples/event-listener](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/event-listener) is a `sync` event handler with queueing
-- [examples/async/cli](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/async/cli) is a basic CLI using the `async` API
-- [examples/async/event-listener](https://github.com/uhppoted/uhppoted-lib-python/tree/main/examples/async/event-listener) is an `async` event handler with queueing
+A set of basic examples illustrating the use of the library can be found in the [examples](https://codeberg.org/uhppoted/uhppoted-lib-python/tree/main/examples) folder:
+- [examples/cli](https://codeberg.org/uhppoted/uhppoted-lib-python/tree/main/examples/cli) is a basic CLI using the `sync` API
+- [examples/event-listener](https://codeberg.org/uhppoted/uhppoted-lib-python/tree/main/examples/event-listener) is a `sync` event handler with queueing
+- [examples/async/cli](https://codeberg.org/uhppoted/uhppoted-lib-python/tree/main/examples/async/cli) is a basic CLI using the `async` API
+- [examples/async/event-listener](https://codeberg.org/uhppoted/uhppoted-lib-python/tree/main/examples/async/event-listener) is an `async` event handler with queueing
 
 ## Installation
 
@@ -35,7 +35,7 @@ pip install uhppoted
 
 With `make`:
 ```
-git clone https://github.com/uhppoted/uhppoted-lib-python.git
+git clone https://codeberg.org/uhppoted/uhppoted-lib-python.git
 cd uhppoted-lib-python
 pip install -e .
 make build-all
@@ -43,7 +43,7 @@ make build-all
 
 If you prefer building manually:
 ```
-git clone https://github.com/uhppoted/uhppoted-lib-python.git
+git clone https://codeberg.org/uhppoted/uhppoted-lib-python.git
 cd uhppoted-lib-python
 pip install -e .
 python3 -m compileall .

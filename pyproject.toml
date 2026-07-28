@@ -14,8 +14,8 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/uhppoted/uhppoted-lib-python"
-"Bug Tracker" = "https://github.com/uhppoted/uhppoted-lib-python/issues"
+"Homepage" = "https://codeberg.org/uhppoted/uhppoted-lib-python"
+"Bug Tracker" = "https://codeberg.org/uhppoted/uhppoted-lib-python/issues"
 
 [project.optional-dependencies]
 dev = [

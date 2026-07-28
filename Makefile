@@ -19,6 +19,10 @@ FIRSTCARD ?= 08:30,16:45,normally open,firstcard only,[Mon,Tues,Fri]
 
 clean:
 
+push:
+	git push
+	git push bitbucket
+
 update:
 
 update-release:
