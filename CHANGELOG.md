@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+1. Added _first-card_ privileges to the `get-card`, `get-card-at-index` and `put-card` APIs.
+
 ### Updated
 1. Added retry in udp::send, udp_async::broadcast and udp_async::send when ephemeral UDP port collides
    with broadcast port.

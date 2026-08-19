@@ -605,6 +605,7 @@ class UhppoteAsync:
                         4: response.door_4,
                     },
                     response.pin,
+                    response.firstcard,
                 )
 
         return None
@@ -689,12 +690,13 @@ class UhppoteAsync:
                         4: response.door_4,
                     },
                     response.pin,
+                    response.firstcard,
                 )
 
         return None
 
     async def put_card(
-        self, controller, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin, timeout=2.5
+        self, controller, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin, firstcard=None, timeout=2.5
     ):  # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
         """
         Adds (or updates) a card record stored on the access controller.
@@ -716,6 +718,7 @@ class UhppoteAsync:
                door_3      (uint8)   Card access permissions for door 3 (0: none, 1: all, 2-254: time profile ID)
                door_4      (uint8)   Card access permissions for door 4 (0: none, 1: all, 2-254: time profile ID)
                pin         (uint24)  Card access keypad PIN code (0 for none)
+               firstcard   (dict)    First-card privileges (e.g. {1:True, 2:False, 3:True, 4:True})
                timeout     (float)   Optional operation timeout (in seconds). Defaults to 2.5s.
 
             Returns:
@@ -725,7 +728,9 @@ class UhppoteAsync:
                Exception  If the response from the access controller cannot be decoded.
         """
         controller_id, addr, protocol = disambiguate(controller)
-        request = encode.put_card_request(controller_id, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin)
+        request = encode.put_card_request(
+            controller_id, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin, firstcard
+        )
         reply = await self._send(request, addr, timeout, protocol)
 
         if reply is not None:

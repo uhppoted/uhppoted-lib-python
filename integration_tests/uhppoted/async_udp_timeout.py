@@ -308,13 +308,21 @@ class TestAsyncUDPWithTimeout(unittest.IsolatedAsyncioTestCase):
         door3 = 29
         door4 = 1
         pin = 7531
+        firstcard = {
+            1: True,
+            2: True,
+            3: True,
+            4: False,
+        }
 
         start = time.time()
-        await self.u.put_card(controller, card, start_date, end_date, door1, door2, door3, door4, pin)
+        await self.u.put_card(controller, card, start_date, end_date, door1, door2, door3, door4, pin, firstcard=firstcard)
         self.assertTrue(0.5 <= time.time() - start <= 2.5)
 
         with self.assertRaises(TimeoutError):
-            await self.u.put_card(controller, card, start_date, end_date, door1, door2, door3, door4, pin, timeout=TIMEOUT)
+            await self.u.put_card(
+                controller, card, start_date, end_date, door1, door2, door3, door4, pin, firstcard=firstcard, timeout=TIMEOUT
+            )
 
     async def test_delete_card(self):
         """

@@ -307,7 +307,7 @@ def get_card_by_index_request(controller, card_index):
 
 
 def put_card_request(
-    controller, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin
+    controller, card_number, start_date, end_date, door_1, door_2, door_3, door_4, pin, firstcard=None
 ):  # pylint: disable=too-many-arguments, too-many-positional-arguments
     """
     Encodes a put-card request.
@@ -322,6 +322,7 @@ def put_card_request(
             door_3      (uint8)   Card access permissions for door 3 (0: none, 1: all, 2-254: time profile ID)
             door_4      (uint8)   Card access permissions for door 4 (0: none, 1: all, 2-254: time profile ID)
             pin         (uint24)  Card access keypad PIN code
+            firstcard   (dict)    First-card privileges (e.g. {1:True, 2:False, 3:True, 4:True})
 
         Returns:
             64 byte UDP packet.
@@ -340,6 +341,14 @@ def put_card_request(
     pack_uint8(door_3, packet, 22)
     pack_uint8(door_4, packet, 23)
     pack_pin(pin, packet, 24)
+
+    packet[27] = 0
+
+    if firstcard:
+        packet[27] |= 0x01 if firstcard.get(1, False) else 0x00
+        packet[27] |= 0x02 if firstcard.get(2, False) else 0x00
+        packet[27] |= 0x04 if firstcard.get(3, False) else 0x00
+        packet[27] |= 0x08 if firstcard.get(4, False) else 0x00
 
     return packet
 
@@ -369,6 +378,14 @@ def put_card_record_request(controller, card):
     pack_uint8(card.permission(3), packet, 22)
     pack_uint8(card.permission(4), packet, 23)
     pack_pin(card.pin, packet, 24)
+
+    packet[27] = 0
+
+    if card.firstcard:
+        packet[27] |= 0x01 if card.firstcard.get(1, False) else 0x00
+        packet[27] |= 0x02 if card.firstcard.get(2, False) else 0x00
+        packet[27] |= 0x04 if card.firstcard.get(3, False) else 0x00
+        packet[27] |= 0x08 if card.firstcard.get(4, False) else 0x00
 
     return packet
 

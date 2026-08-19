@@ -427,6 +427,13 @@ def get_card_response(packet):
     if packet[1] != codec.GET_CARD:
         raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
+    firstcard = {
+        1: packet[27] & 0x01 == 0x01,
+        2: packet[27] & 0x02 == 0x02,
+        3: packet[27] & 0x04 == 0x04,
+        4: packet[27] & 0x08 == 0x08,
+    }
+
     return GetCardResponse(
         unpack_uint32(packet, 4),
         unpack_uint32(packet, 8),
@@ -437,6 +444,7 @@ def get_card_response(packet):
         unpack_uint8(packet, 22),
         unpack_uint8(packet, 23),
         unpack_pin(packet, 24),
+        firstcard,
     )
 
 
@@ -463,6 +471,13 @@ def get_card_by_index_response(packet):
     if packet[1] != codec.GET_CARD_AT_INDEX:
         raise ValueError(f"invalid reply function code ({packet[1]:02x})")
 
+    firstcard = {
+        1: packet[27] & 0x01 == 0x01,
+        2: packet[27] & 0x02 == 0x02,
+        3: packet[27] & 0x04 == 0x04,
+        4: packet[27] & 0x08 == 0x08,
+    }
+
     return GetCardByIndexResponse(
         unpack_uint32(packet, 4),
         unpack_uint32(packet, 8),
@@ -473,6 +488,7 @@ def get_card_by_index_response(packet):
         unpack_uint8(packet, 22),
         unpack_uint8(packet, 23),
         unpack_pin(packet, 24),
+        firstcard,
     )
 
 

@@ -215,6 +215,35 @@ class TestDecode(unittest.TestCase):
         self.assertEqual(response.controller, 405419896)
         self.assertEqual(response.datetime, None)
 
+    def test_get_card_response(self):
+        """
+        Tests a valid get-card response
+        """
+        # fmt: off
+        packet = bytearray([
+                  0x17, 0x5a, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0xa0, 0x7a, 0x99, 0x00, 0x20, 0x26, 0x01, 0x01,
+                  0x20, 0x26, 0x12, 0x31, 0x01, 0x00, 0x11, 0x01, 0x3f, 0x42, 0x0f, 0x0b, 0x00, 0x00, 0x00, 0x00,
+                  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        ])
+        # fmt: on
+
+        response = decode.get_card_response(packet)
+
+        self.assertEqual(response.controller, 405419896)
+        self.assertEqual(response.card_number, 10058400)
+        self.assertEqual(response.start_date, datetime.datetime.strptime("2026-01-01", "%Y-%m-%d").date())
+        self.assertEqual(response.end_date, datetime.datetime.strptime("2026-12-31", "%Y-%m-%d").date())
+        self.assertEqual(response.door_1, 1)
+        self.assertEqual(response.door_2, 0)
+        self.assertEqual(response.door_3, 17)
+        self.assertEqual(response.door_4, 1)
+        self.assertEqual(response.pin, 999999)
+        self.assertEqual(response.firstcard.get(1), True)
+        self.assertEqual(response.firstcard.get(2), True)
+        self.assertEqual(response.firstcard.get(3), False)
+        self.assertEqual(response.firstcard.get(4), True)
+
     def test_get_card_response_with_invalid_dates(self):
         """
         Tests a get-card response with invalid start/end dates.
@@ -239,6 +268,39 @@ class TestDecode(unittest.TestCase):
         self.assertEqual(response.door_3, 1)
         self.assertEqual(response.door_4, 1)
         self.assertEqual(response.pin, 0)
+        self.assertEqual(response.firstcard.get(1), False)
+        self.assertEqual(response.firstcard.get(2), False)
+        self.assertEqual(response.firstcard.get(3), False)
+        self.assertEqual(response.firstcard.get(4), False)
+
+    def test_get_card_by_index_response(self):
+        """
+        Tests a valid get-card-by-index response.
+        """
+        # fmt: off
+        packet = bytearray([
+                0x17, 0x5c, 0x00, 0x00, 0x78, 0x37, 0x2a, 0x18, 0xa0, 0x7a, 0x99, 0x00, 0x20, 0x26, 0x01, 0x01,
+                0x20, 0x26, 0x12, 0x31, 0x01, 0x00, 0x11, 0x01, 0x3f, 0x42, 0x0f, 0x0b, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        ])
+        # fmt: on
+
+        response = decode.get_card_by_index_response(packet)
+
+        self.assertEqual(response.controller, 405419896)
+        self.assertEqual(response.card_number, 10058400)
+        self.assertEqual(response.start_date, datetime.datetime.strptime("2026-01-01", "%Y-%m-%d").date())
+        self.assertEqual(response.end_date, datetime.datetime.strptime("2026-12-31", "%Y-%m-%d").date())
+        self.assertEqual(response.door_1, 1)
+        self.assertEqual(response.door_2, 0)
+        self.assertEqual(response.door_3, 17)
+        self.assertEqual(response.door_4, 1)
+        self.assertEqual(response.pin, 999999)
+        self.assertEqual(response.firstcard.get(1), True)
+        self.assertEqual(response.firstcard.get(2), True)
+        self.assertEqual(response.firstcard.get(3), False)
+        self.assertEqual(response.firstcard.get(4), True)
 
     def test_get_card_by_index_response_with_invalid_dates(self):
         """
@@ -264,6 +326,10 @@ class TestDecode(unittest.TestCase):
         self.assertEqual(response.door_3, 1)
         self.assertEqual(response.door_4, 1)
         self.assertEqual(response.pin, 0)
+        self.assertEqual(response.firstcard.get(1), False)
+        self.assertEqual(response.firstcard.get(2), False)
+        self.assertEqual(response.firstcard.get(3), False)
+        self.assertEqual(response.firstcard.get(4), False)
 
     def test_get_event_response_with_invalid_timestamp(self):
         """

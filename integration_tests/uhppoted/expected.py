@@ -156,6 +156,12 @@ GetCardResponse = structs.GetCardResponse(
     door_3=29,
     door_4=1,
     pin=7531,
+    firstcard={
+        1: True,
+        2: False,
+        3: True,
+        4: True,
+    },
 )
 
 GetCardRecord = structs.Card(
@@ -169,6 +175,12 @@ GetCardRecord = structs.Card(
         4: 1,
     },
     7531,
+    firstcard={
+        1: True,
+        2: False,
+        3: True,
+        4: True,
+    },
 )
 
 GetCardByIndexResponse = structs.GetCardByIndexResponse(
@@ -181,6 +193,12 @@ GetCardByIndexResponse = structs.GetCardByIndexResponse(
     door_3=29,
     door_4=1,
     pin=7531,
+    firstcard={
+        1: True,
+        2: True,
+        3: False,
+        4: True,
+    },
 )
 
 GetCardRecordByIndex = structs.Card(
@@ -194,6 +212,12 @@ GetCardRecordByIndex = structs.Card(
         4: 1,
     },
     7531,
+    {
+        1: True,
+        2: True,
+        3: False,
+        4: True,
+    },
 )
 
 PutCardResponse = structs.PutCardResponse(controller=405419896, stored=True)

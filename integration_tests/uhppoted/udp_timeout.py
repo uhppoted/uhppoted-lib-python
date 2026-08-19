@@ -246,8 +246,14 @@ class TestUDPWithTimeout(unittest.TestCase):
         door3 = 29
         door4 = 1
         pin = 7531
+        firstcard = {
+            1: True,
+            2: True,
+            3: True,
+            4: False,
+        }
 
-        self.u.put_card(controller, card, start, end, door1, door2, door3, door4, pin)
+        self.u.put_card(controller, card, start, end, door1, door2, door3, door4, pin, firstcard=firstcard)
         self.assertRaises(
             socket.timeout,
             self.u.put_card,
@@ -260,6 +266,7 @@ class TestUDPWithTimeout(unittest.TestCase):
             door3,
             door4,
             pin,
+            firstcard=firstcard,
             timeout=TIMEOUT,
         )
 

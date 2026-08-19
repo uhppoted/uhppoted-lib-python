@@ -371,8 +371,16 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
         door3 = 29
         door4 = 1
         pin = 7531
+        firstcard = {
+            1: True,
+            2: True,
+            3: True,
+            4: False,
+        }
 
-        response = await self.u.put_card(controller, card, start_date, end_date, door1, door2, door3, door4, pin)
+        response = await self.u.put_card(
+            controller, card, start_date, end_date, door1, door2, door3, door4, pin, firstcard=firstcard
+        )
 
         self.assertEqual(response, expected.PutCardResponse)
 
@@ -391,6 +399,12 @@ class TestAsyncUDP(unittest.IsolatedAsyncioTestCase):
                 4: 1,
             },
             7531,
+            {
+                1: True,
+                2: True,
+                3: True,
+                4: False,
+            },
         )
 
         response = await self.u.put_card_record(controller, card)

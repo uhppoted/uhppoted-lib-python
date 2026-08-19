@@ -254,7 +254,7 @@ def get_card(u, dest, timeout, args, protocol="udp"):
     card = args.card
 
     response = u.get_card(controller, card, timeout=timeout)
-    if response.card == 0:
+    if response.card_number == 0:
         raise ValueError(f"card {card} not found")
 
     return response
@@ -326,8 +326,14 @@ def put_card(u, dest, timeout, args, protocol="udp"):
     door3 = 29  # time_profile
     door4 = 0  # no access
     pin = 7531
+    firstcard = {
+        1: True,
+        2: False,
+        3: True,
+        4: True,
+    }
 
-    return u.put_card(controller, card, start, end, door1, door2, door3, door4, pin, timeout=timeout)
+    return u.put_card(controller, card, start, end, door1, door2, door3, door4, pin, firstcard=firstcard, timeout=timeout)
 
 
 def put_card_record(u, dest, timeout, args, protocol="udp"):
@@ -346,6 +352,12 @@ def put_card_record(u, dest, timeout, args, protocol="udp"):
             4: 0,  # no access
         },
         7531,
+        {
+            1: True,
+            2: False,
+            3: True,
+            4: True,
+        },
     )
 
     return u.put_card_record(controller, card, timeout=timeout)

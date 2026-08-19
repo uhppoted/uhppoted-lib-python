@@ -366,8 +366,14 @@ async def put_card(u, dest, timeout, args, protocol="udp"):
     door3 = 29  # time_profile
     door4 = 0  # no access
     pin = 7531
+    firstcard = {
+        1: True,
+        2: False,
+        3: True,
+        4: True,
+    }
 
-    return await u.put_card(controller, card, start, end, door1, door2, door3, door4, pin, timeout=timeout)
+    return await u.put_card(controller, card, start, end, door1, door2, door3, door4, pin, firstcard=firstcard, timeout=timeout)
 
 
 async def put_card_record(u, dest, timeout, args, protocol="udp"):
@@ -386,6 +392,12 @@ async def put_card_record(u, dest, timeout, args, protocol="udp"):
             4: 0,  # no access
         },
         7531,
+        {
+            1: True,
+            2: False,
+            3: True,
+            4: True,
+        },
     )
 
     return await u.put_card_record(controller, card, timeout=timeout)

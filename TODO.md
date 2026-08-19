@@ -4,9 +4,29 @@
 - [x] 'first card' API (cf. https://codeberg.org/uhppoted/uhppoted/issues/2)
 - [x] Fix examples to use module syntax, e.g.
 - [x] UDP broadcast fails randomly (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/21)
+- [x] add first-card privilege to `get-card` and `put-card` (cf. https://codeberg.org/uhppoted/uhppoted/issues/3)
+    - [x] get-card
+    - [x] get-card-by-index
+    - [x] get-card-record
+    - [x] get-card-record-by-index
+    - [x] put-card
+    - [x] put-card-record
+    - [x] unit tests
+    - [x] CLI
+    - [x] integration tests
+    - [x] async::get-card
+    - [x] async::get-card-by-index
+    - [x] async::get-card-record
+    - [x] async::get-card-record-by-index
+    - [x] async::put-card
+    - [x] async::put-card-record
+    - [x] aysnc::CLI
+    - [x] async::integration tests
+    - [x] README
+    - [x] CHANGELOG
+
+
 - [ ] event listener examples - get bind/broadcast/listen from command line
-
-
 - [ ] Put API functions into __init__.py
 
 - [ ] `set-ip`

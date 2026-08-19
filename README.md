@@ -469,7 +469,7 @@ Raises:
 
 ### `put_card`
 ```
-put_card(controller, card, start, end, door1, door2, door3, door4)
+put_card(controller, card, start, end, door1, door2, door3, door4, pin, firstcard=None)
 
 controller  uint32|tuple  controller serial number or (id, address, protocol) tuple
 card        uint32        card number
@@ -479,6 +479,7 @@ door1       uint8         Door 1 access (0: none, 1: all, 2-254: time profile)
 door2       uint8         Door 2 access (0: none, 1: all, 2-254: time profile)
 door3       uint8         Door 3 access (0: none, 1: all, 2-254: time profile)
 door4       uint8         Door 4 access (0: none, 1: all, 2-254: time profile)
+pin         uint32        Card reader keypad PIN [0..999999] (0 if none).
 
 Returns a PutCardResponse dataclass instance with the response from the controller if the call succeeded.
 
@@ -1141,6 +1142,7 @@ Container class for the decoded response from a get-card request.
         door_3      (uint8)   Card access permissions for door 3 (0: none, 1: all, 2-254: time profile ID)
         door_4      (uint8)   Card access permissions for door 4 (0: none, 1: all, 2-254: time profile ID)
         pin         (uint24)  Card access keypad PIN code (0 for none)
+        firstcard   (dict)    First-card privileges for doors 1..4
 ```
 @dataclass
 class GetCardResponse:
@@ -1153,6 +1155,7 @@ class GetCardResponse:
     door_3: int
     door_4: int
     pin: PIN
+    firstcard: dict[int, bool]
 ```
 
 
@@ -1170,6 +1173,7 @@ Container class for the decoded response from a get-card-by-index request.
         door_3      (uint8)   Card access permissions for door 3 (0: none, 1: all, 2-254: time profile ID)
         door_4      (uint8)   Card access permissions for door 4 (0: none, 1: all, 2-254: time profile ID)
         pin         (uint24)  Card access keypad PIN code (0 for none)
+        firstcard   (dict)    First-card privileges for doors 1..4
 ```
 @dataclass
 class GetCardByIndexResponse:
@@ -1182,6 +1186,7 @@ class GetCardByIndexResponse:
     door_3: int
     door_4: int
     pin: PIN
+    firstcard: dict[int, bool]
 ```
 
 
@@ -1588,6 +1593,7 @@ Container class for a controller card record.
                                  - 1 is unrestricted 24/7  access
                                  - 2..255 is the time profile ID used to restrict access
           pin          (uint32)  Keypad PIN code (0 if none).
+          firstcard    (dict)    First-card privileges for doors 1..4 (e.g. {1:True, 2:False, 3:False, 4:True})
 
 ```
 @dataclass(frozen=True)
@@ -1597,6 +1603,7 @@ class Card:
     end_date: datetime.date
     permissions: Mapping[int, int]
     pin: int
+    firstcard: dict[int, bool]
 ```
 
 

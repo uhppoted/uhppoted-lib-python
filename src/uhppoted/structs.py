@@ -7,7 +7,7 @@ import datetime
 from enum import Enum
 
 from ipaddress import IPv4Address
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import NewType
 from types import MappingProxyType
 from collections.abc import Mapping
@@ -248,6 +248,7 @@ class GetCardResponse:  # pylint: disable=too-many-instance-attributes
           door_3      (uint8)   Card access permissions for door 3 (0: none, 1: all, 2-254: time profile ID)
           door_4      (uint8)   Card access permissions for door 4 (0: none, 1: all, 2-254: time profile ID)
           pin         (uint24)  Card access keypad PIN code (0 for none)
+          firstcard   (dict)    First-card privileges for doors 1..4
     """
 
     controller: int
@@ -259,6 +260,7 @@ class GetCardResponse:  # pylint: disable=too-many-instance-attributes
     door_3: int
     door_4: int
     pin: PIN
+    firstcard: dict[int, bool] = field(default_factory=lambda: {1: False, 2: False, 3: False, 4: False})
 
 
 @dataclass
@@ -276,6 +278,7 @@ class GetCardByIndexResponse:  # pylint: disable=too-many-instance-attributes
           door_3      (uint8)   Card access permissions for door 3 (0: none, 1: all, 2-254: time profile ID)
           door_4      (uint8)   Card access permissions for door 4 (0: none, 1: all, 2-254: time profile ID)
           pin         (uint24)  Card access keypad PIN code (0 for none)
+          firstcard   (dict)    First-card privileges for doors 1..4
     """
 
     controller: int
@@ -287,6 +290,7 @@ class GetCardByIndexResponse:  # pylint: disable=too-many-instance-attributes
     door_3: int
     door_4: int
     pin: PIN
+    firstcard: dict[int, bool] = field(default_factory=lambda: {1: False, 2: False, 3: False, 4: False})
 
 
 @dataclass
@@ -706,6 +710,7 @@ class Card:
                                  - 1 is unrestricted 24/7  access
                                  - 2..255 is the time profile ID used to restrict access
           pin          (uint32)  Keypad PIN code (0 if none).
+          firstcard    (dict)    First-card privileges for doors 1..4 (e.g. {1:True, 2:False, 3:False, 4:True})
     """
 
     card: int
@@ -713,6 +718,7 @@ class Card:
     end_date: datetime.date
     permissions: Mapping[int, int]
     pin: int
+    firstcard: dict[int, bool] = field(default_factory=lambda: {1: False, 2: False, 3: False, 4: False})
 
     def __post_init__(self):
         permissions = {

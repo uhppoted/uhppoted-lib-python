@@ -8,7 +8,7 @@ CONTROLLER ?= 405419896
 DOOR ?= 3
 EVENT ?= 37
 LISTENER ?= 192.168.1.125:60001
-CARD ?= 1058400
+CARD ?= 10058400
 PROFILE ?= 29
 ANTIPASSBACK ?= (1,3):(2,4)
 FIRSTCARD ?= 08:30,16:45,normally open,firstcard only,[Mon,Tues,Fri]
@@ -75,7 +75,8 @@ debug:
 # 	$(ASYNC)                                   get-all-controllers
 # 	$(ASYNC) --destination 192.168.1.125 --udp get-controller --controller $(CONTROLLER)
 # 	$(ASYNC)                             --udp get-controller --controller $(CONTROLLER)
-	python3 -m examples.cli.main --debug --broadcast 192.168.1.255 get-all-controllers
+# 	python3 -m examples.cli.main --debug --broadcast 192.168.1.255 get-all-controllers
+	. .venv/bin/activate; python3 -m unittest integration_tests/uhppoted/async_tcp_timeout.py
 
 usage: build
 	-$(CMD)
@@ -208,12 +209,12 @@ get-card-record-by-index: build
 	$(TCP) get-card-record-by-index --controller $(CONTROLLER) --index 3
 
 get-card-by-index-async: build
-	$(ASYNC)     get-card-by-index --controller $(CONTROLLER) --index 3
-	$(ASYNC_TCP) get-card-by-index --controller $(CONTROLLER) --index 3
+	$(ASYNC)     get-card-by-index --controller $(CONTROLLER) --index 6
+	$(ASYNC_TCP) get-card-by-index --controller $(CONTROLLER) --index 6
 
 get-card-record-by-index-async: build
-	$(ASYNC)     get-card-record-by-index --controller $(CONTROLLER) --index 3
-	$(ASYNC_TCP) get-card-record-by-index --controller $(CONTROLLER) --index 3
+	$(ASYNC)     get-card-record-by-index --controller $(CONTROLLER) --index 6
+	$(ASYNC_TCP) get-card-record-by-index --controller $(CONTROLLER) --index 6
 
 put-card: build
 	$(CMD) put-card --controller $(CONTROLLER) --card $(CARD)
