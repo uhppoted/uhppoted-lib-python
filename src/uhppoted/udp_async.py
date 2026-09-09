@@ -46,6 +46,7 @@ class BroadcastProtocol(asyncio.Protocol):
 
             if src_port == dest_port:
                 self._done.set_exception(InvalidBindPort(f"invalid UDP bind address:port {src_port} reserved for broadcast)"))
+
                 # NB: do NOT close here otherwise OS will potentially assign it again and we don't want that
                 # self._transport.close()
                 return

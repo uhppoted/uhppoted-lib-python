@@ -1,4 +1,5 @@
-![build](https://github.com/uhppoted/uhppoted-lib-python/workflows/build/badge.svg)
+![build](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/twystd/2609d9356470acaf904386ce4a74f54e/raw/uhppoted-lib-python.json)
+
 
 # uhppoted-lib-python
 
