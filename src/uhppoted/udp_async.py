@@ -39,14 +39,14 @@ class BroadcastProtocol(asyncio.Protocol):
     def connection_made(self, transport):
         self._transport = transport
 
-        # NTS: avoid broadcast-to-self
+        # broadcast-to-self ?
         if sock := transport.get_extra_info("socket"):
             _, src_port = sock.getsockname()
             _, dest_port = self._dest
 
             if src_port == dest_port:
-                self._done.set_exception(InvalidBindPort(f"invalid UDP bind address (port {src_port} reserved for broadcast)"))
-                # NTS: do NOT close here otherwise OS will potentially assign it again and we don't want that
+                self._done.set_exception(InvalidBindPort(f"invalid UDP bind address:port {src_port} reserved for broadcast)"))
+                # NB: do NOT close here otherwise OS will potentially assign it again and we don't want that
                 # self._transport.close()
                 return
 
@@ -210,7 +210,7 @@ class UDPAsync:
         transports = []
 
         try:
-            _, src_port = self._bind
+            _, bind_port = self._bind
             _, dest_port = self._broadcast
 
             for _ in range(5):
@@ -225,10 +225,10 @@ class UDPAsync:
                 try:
                     return await protocol.run(timeout)
                 except InvalidBindPort as e:
-                    if src_port != 0:
-                        raise RuntimeError(f"invalid UDP bind address - port {src_port} is reserved for broadcast)") from e
+                    if bind_port != 0:
+                        raise RuntimeError(f"UDP bind address:port {bind_port} reserved for broadcast") from e
 
-            raise RuntimeError(f"OS returned UDP bind socket with port {dest_port} (reserved for broadcast)")
+            raise RuntimeError(f"OS bound UDP socket to port {dest_port} reserved for broadcast")
         finally:
             for transport in transports:
                 transport.close()
@@ -283,9 +283,9 @@ class UDPAsync:
                     return await protocol.run(timeout)
                 except InvalidBindPort as e:
                     if src_port != 0:
-                        raise RuntimeError(f"invalid UDP bind address - port {src_port} is reserved for broadcast)") from e
+                        raise RuntimeError(f"UDP bind address:port {src_port} reserved for broadcast") from e
 
-            raise RuntimeError(f"OS returned UDP bind socket with port {dest_port} (reserved for broadcast)")
+            raise RuntimeError(f"OS bound UDP socket to port {dest_port} reserved for broadcast")
         finally:
             for transport in transports:
                 transport.close()

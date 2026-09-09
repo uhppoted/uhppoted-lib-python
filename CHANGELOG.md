@@ -8,9 +8,10 @@
 ### Updated
 1. Added retry in udp::send, udp_async::broadcast and udp_async::send when ephemeral UDP port collides
    with broadcast port.
-2. Replaced `asyncio.get_event_loop(...)` with `asyncio.get_running_loop(...)``, as per notice in
+2. Added retry in tcp::send and tcp_async::send when source and destination ports collides.
+3. Replaced `asyncio.get_event_loop(...)` with `asyncio.get_running_loop(...)``, as per notice in
    [asyncio.get_event_loop()](https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.get_event_loop)).
-3. Migrated from _github.com/uhppoted/uhppoted-lib-python_ to _codeberg.org/uhppoted/uhppoted-lib-python_.
+4. Migrated from _github.com/uhppoted/uhppoted-lib-python_ to _codeberg.org/uhppoted/uhppoted-lib-python_.
 
 
 ## [0.9.1](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.9.1) - 2026-06-18

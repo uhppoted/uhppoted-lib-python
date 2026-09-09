@@ -52,8 +52,13 @@ class TCP:
         """
         self.dump(request)
 
+        sockets = []
         addr = net.resolve(f"{dest_addr}")
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        sockets.append(sock)
+
+        try:
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, net.WRITE_TIMEOUT)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, net.READ_TIMEOUT)
@@ -61,6 +66,39 @@ class TCP:
             if not net.is_inaddr_any(self._bind):
                 sock.bind(self._bind)
 
+            _, bind_port = self._bind
+            _, src_port = sock.getsockname()
+            _, dest_port = addr
+
+            # connect-to-self
+            #
+            # If the bind port is 0, retries (up to 5 times) until the OS binds to a port that is not the
+            # destination port. The interim sockets are retained to prevent the OS from reusing the invalid
+            # port, which it will happily do if the socket is closed immediately.
+            if src_port == dest_port and bind_port != 0:
+                raise RuntimeError(f"TCP bind address:port {src_port} reserved for broadcast")
+
+            if src_port == dest_port:
+                retries = 0
+                while retries < 5:
+                    retries += 1
+                    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
+                    sockets.append(sock)
+
+                    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                    sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, net.WRITE_TIMEOUT)
+                    sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, net.READ_TIMEOUT)
+
+                    if not net.is_inaddr_any(self._bind):
+                        sock.bind(self._bind)
+
+                    _, src_port = sock.getsockname()
+                    if src_port != dest_port:
+                        break
+                else:
+                    raise RuntimeError(f"OS bound TCP socket to port {dest_port} reserved for broadcast")
+
+            # good to go
             sock.connect(addr)
             sock.sendall(request)
 
@@ -68,6 +106,9 @@ class TCP:
                 return None
 
             return _read(sock, timeout=timeout, debug=self._debug)
+        finally:
+            for sock in sockets:
+                sock.close()
 
     def dump(self, packet):
         """

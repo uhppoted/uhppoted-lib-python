@@ -10,6 +10,18 @@ import asyncio
 from . import net
 
 
+class InvalidBindPort(Exception):
+    """Exception raised when the bind port is the same as the broadcast port.
+
+    Attributes:
+        message -- error message
+    """
+
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
+
+
 class SendProtocol(asyncio.Protocol):
     """
     asycnio protocol implementation for TCP single request/response.
@@ -24,6 +36,18 @@ class SendProtocol(asyncio.Protocol):
 
     def connection_made(self, transport):
         self._transport = transport
+
+        # send-to-self?
+        if sock := transport.get_extra_info("socket"):
+            _, src_port = sock.getsockname()
+            _, dest_port = sock.getpeername()
+
+            if src_port == dest_port:
+                self._done.set_exception(InvalidBindPort(f"invalid TCP bind address:port {src_port} reserved for broadcast)"))
+                # NB: do NOT close here otherwise OS will potentially assign it again and we don't want that
+                # self._transport.close()
+                return
+
         self._transport.write(self._request)
         if self._request[1] == 0x96:
             self._done.set_result(None)
@@ -104,18 +128,31 @@ class TCPAsync:
 
         host, port = net.resolve(f"{dest_addr}")
         loop = asyncio.get_running_loop()
-
-        if net.is_inaddr_any(self._bind):
-            transport, protocol = await loop.create_connection(lambda: SendProtocol(request, self._debug), host, port)
-        else:
-            transport, protocol = await loop.create_connection(
-                lambda: SendProtocol(request, self._debug), host, port, local_addr=self._bind
-            )
+        transports = []
 
         try:
-            return await protocol.run(timeout)
+            _, bind_port = self._bind
+
+            for _ in range(5):
+                if net.is_inaddr_any(self._bind):
+                    transport, protocol = await loop.create_connection(lambda: SendProtocol(request, self._debug), host, port)
+                else:
+                    transport, protocol = await loop.create_connection(
+                        lambda: SendProtocol(request, self._debug), host, port, local_addr=self._bind
+                    )
+
+                transports.append(transport)
+
+                try:
+                    return await protocol.run(timeout)
+                except InvalidBindPort as e:
+                    if bind_port != 0:
+                        raise RuntimeError(f"TCP bind address:port {bind_port} reserved for broadcast") from e
+
+            raise RuntimeError(f"OS bound TCP socket to port {port} reserved for broadcast")
         finally:
-            transport.close()
+            for transport in transports:
+                transport.close()
 
     def dump(self, packet):
         """

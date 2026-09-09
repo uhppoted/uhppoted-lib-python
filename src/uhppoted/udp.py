@@ -63,13 +63,17 @@ class UDP:
         try:
             sock.bind(self._bind)
 
-            # NTS: avoid broadcast-to-self
+            # broadcast-to-self
+            #
+            # If the bind port is 0, retries (up to 5 times) until the OS binds to a port that is not the
+            # destination port. The interim sockets are retained to prevent the OS from reusing the invalid
+            # port, which it will happily do if the socket is closed immediately (hence the defer())
             _, bind_port = self._bind
             _, src_port = sock.getsockname()
             _, dest_port = self._broadcast
 
             if src_port == dest_port and bind_port != 0:
-                raise RuntimeError(f"invalid UDP bind address (port {src_port} reserved for broadcast)")
+                raise RuntimeError(f"UDP bind address:port {src_port} reserved for broadcast")
 
             if src_port == dest_port:
                 retries = 0
@@ -83,7 +87,7 @@ class UDP:
                     if src_port != dest_port:
                         break
                 else:
-                    raise RuntimeError(f"OS returned UDP bind socket with port {dest_port} reserved for broadcast)")
+                    raise RuntimeError(f"OS bound UDP socket to port {dest_port} reserved for broadcast")
 
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, net.WRITE_TIMEOUT)
@@ -122,14 +126,18 @@ class UDP:
         try:
             sock.bind(self._bind)
 
-            # NTS: avoid broadcast-to-self
+            # send-to-self
+            #
+            # If the bind port is 0, retries (up to 5 times) until the OS binds to a port that is not the
+            # destination port. The interim sockets are retained to prevent the OS from reusing the invalid
+            # port, which it will happily do if the socket is closed immediately (hence the defer())
             if dest_addr is None:
                 _, bind_port = self._bind
                 _, src_port = sock.getsockname()
                 _, dest_port = self._broadcast
 
                 if src_port == dest_port and bind_port != 0:
-                    raise RuntimeError(f"invalid UDP bind address (port {src_port} reserved for broadcast)")
+                    raise RuntimeError(f"invalid UDP bind address:port {src_port} reserved for broadcast)")
 
                 if src_port == dest_port:
                     retries = 0
