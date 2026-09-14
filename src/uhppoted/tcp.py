@@ -79,7 +79,7 @@ class TCP:
             # destination port. The interim sockets are retained to prevent the OS from reusing the invalid
             # port, which it will happily do if the socket is closed immediately.
             #
-            # It should check both address and port but multiple network cards, etc make that complicated
+            # It should really match on both address and port but multiple network cards, etc make it complicated
             # and fragile.
             if src_port == dest_port and bind_port != 0:
                 raise RuntimeError(f"TCP bind address:port {src_port} reserved for broadcast")

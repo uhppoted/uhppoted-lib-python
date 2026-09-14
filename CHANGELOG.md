@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## [0.9.1.1](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.9.1.1) - 2026-09-14
 
 ### Added
 1. Added _first-card_ privileges to the `get-card`, `get-card-at-index` and `put-card` APIs.
