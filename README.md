@@ -28,7 +28,7 @@ pip install uhppoted
 2. Added _first-card_ privileges to the `get-card`, `get-card-at-index` and `put-card` APIs.
 3. Added retry in udp::send, udp_async::broadcast and udp_async::send when ephemeral UDP port collides
    with broadcast port.
-4. Added retry in tcp::send and tcp_async::send when source and destination ports collides.
+4. Added retry in tcp::send and tcp_async::send when source and destination ports collide.
 5. Replaced `asyncio.get_event_loop(...)` with `asyncio.get_running_loop(...)``, as per notice in
    [asyncio.get_event_loop()](https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.get_event_loop)).
 
