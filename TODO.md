@@ -1,12 +1,5 @@
 # TODO
 
-- [x] Migrate to codeberg.org (cf. https://codeberg.org/uhppoted/uhppoted/issues/1)
-- [x] 'first card' API (cf. https://codeberg.org/uhppoted/uhppoted/issues/2)
-- [x] Fix examples to use module syntax, e.g.
-- [x] UDP broadcast fails randomly (cf. https://github.com/uhppoted/uhppoted-lib-python/issues/21)
-- [x] add first-card privilege to `get-card` and `put-card` (cf. https://codeberg.org/uhppoted/uhppoted/issues/3)
-- [x] Implement retry on UDP/TCP connect-to-self (cf. https://codeberg.org/uhppoted/uhppoted/issues/4)
-
 - [ ] event listener examples - get bind/broadcast/listen from command line
 - [ ] Put API functions into __init__.py
 
