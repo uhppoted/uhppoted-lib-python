@@ -54,25 +54,8 @@ class TCP:
 
         sockets = []
         addr = net.resolve(f"{dest_addr}")
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-        sockets.append(sock)
 
         try:
-            sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, net.WRITE_TIMEOUT)
-            sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, net.READ_TIMEOUT)
-
-            if not net.is_inaddr_any(self._bind):
-                sock.bind(self._bind)
-
-            # NTS: getsockname() isn't valid until after connect
-            sock.connect(addr)
-
-            _, bind_port = self._bind
-            _, src_port = sock.getsockname()
-            _, dest_port = addr
-
             # connect-to-self
             #
             # If the bind port is 0, retries (up to 5 times) until the OS binds to a port that is not the
@@ -81,33 +64,31 @@ class TCP:
             #
             # It should really match on both address and port but multiple network cards, etc make it complicated
             # and fragile.
-            if src_port == dest_port and bind_port != 0:
-                raise RuntimeError(f"TCP bind address:port {src_port} reserved for broadcast")
+            for _ in range(5):
+                sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
+                sockets.append(sock)
 
-            if src_port == dest_port:
-                retries = 0
-                while retries < 5:
-                    retries += 1
-                    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
-                    sockets.append(sock)
+                sock.bind(self._bind)
 
-                    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-                    sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, net.WRITE_TIMEOUT)
-                    sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, net.READ_TIMEOUT)
+                _, bind_port = self._bind
+                _, src_port = sock.getsockname()
+                _, dest_port = addr
 
-                    if not net.is_inaddr_any(self._bind):
-                        sock.bind(self._bind)
+                if src_port == dest_port and bind_port != 0:
+                    raise RuntimeError(f"TCP bind address:port {src_port} reserved for broadcast")
 
-                    # NTS: getsockname() isn't valid until after connect
-                    sock.connect(addr)
-
-                    _, src_port = sock.getsockname()
-                    if src_port != dest_port:
-                        break
-                else:
-                    raise RuntimeError(f"OS bound TCP socket to port {dest_port} reserved for broadcast")
+                _, src_port = sock.getsockname()
+                if src_port != dest_port:
+                    break
+            else:
+                raise RuntimeError(f"OS bound TCP socket to port {dest_port} reserved for broadcast")
 
             # good to go
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, net.WRITE_TIMEOUT)
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, net.READ_TIMEOUT)
+
+            sock.connect(addr)
             sock.sendall(request)
 
             if request[1] == 0x96:

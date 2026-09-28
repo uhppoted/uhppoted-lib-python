@@ -76,7 +76,8 @@ debug:
 # 	$(ASYNC) --destination 192.168.1.125 --udp get-controller --controller $(CONTROLLER)
 # 	$(ASYNC)                             --udp get-controller --controller $(CONTROLLER)
 # 	python3 -m examples.cli.main --debug --broadcast 192.168.1.255 get-all-controllers
-	. .venv/bin/activate; python3 -m unittest integration_tests/uhppoted/async_tcp_timeout.py
+# 	. .venv/bin/activate; python3 -m unittest integration_tests/uhppoted/async_tcp_timeout.py
+	$(TCP) get-controller --controller $(CONTROLLER)
 
 usage: build
 	-$(CMD)
