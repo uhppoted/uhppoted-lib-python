@@ -37,13 +37,16 @@ class SendProtocol(asyncio.Protocol):
     def connection_made(self, transport):
         self._transport = transport
 
-        # send-to-self?
+        # send-to-self
+        #
+        # NTS: asyncio unfortunately doesn't separate bind/connect so the bound port is only valid after a connection
+        #      is established.
         if sock := transport.get_extra_info("socket"):
             _, src_port = sock.getsockname()
             _, dest_port = sock.getpeername()
 
             if src_port == dest_port:
-                self._done.set_exception(InvalidBindPort(f"invalid TCP bind address:port {src_port} reserved for broadcast)"))
+                self._done.set_exception(InvalidBindPort(f"invalid TCP bind address:port {src_port} reserved for broadcast"))
 
                 # NTS: close the write side only to signal the other side nothing is coming its way (otherwise you get
                 #      weird timeout issues while it waits for a request that it is never going to get).
@@ -139,6 +142,7 @@ class TCPAsync:
             _, bind_port = self._bind
 
             for _ in range(5):
+                # NTS: let asyncio choose the local address based on the destination/address-family
                 if net.is_inaddr_any(self._bind):
                     transport, protocol = await loop.create_connection(lambda: SendProtocol(request, self._debug), host, port)
                 else:

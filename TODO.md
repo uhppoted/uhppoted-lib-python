@@ -1,22 +1,7 @@
 # TODO
 
 
-- [ ] bind before connect to assign socket port
-```
-import asyncio
-
-async def main():
-    # This binds locally to port 50000 during creation, avoiding a spurious connect
-    reader, writer = await asyncio.open_connection('example.com', 80, local_addr=('127.0.0.1', 50000))
-
-    # You can verify it immediately
-    print(writer.get_extra_info('sockname'))
-
-    writer.close()
-    await writer.wait_closed()
-
-asyncio.run(main())
-```
+- [x] bind before connect to assign socket port
 
 ## To Be Done
 - [ ] event listener examples - get bind/broadcast/listen from command line

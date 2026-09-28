@@ -72,12 +72,11 @@ publish: release
 	. .venv/bin/activate; python3 -m twine upload --repository pypi     -u __token__ --skip-existing --verbose dist/*
 
 debug:
-# 	$(ASYNC)                                   get-all-controllers
-# 	$(ASYNC) --destination 192.168.1.125 --udp get-controller --controller $(CONTROLLER)
-# 	$(ASYNC)                             --udp get-controller --controller $(CONTROLLER)
-# 	python3 -m examples.cli.main --debug --broadcast 192.168.1.255 get-all-controllers
-# 	. .venv/bin/activate; python3 -m unittest integration_tests/uhppoted/async_tcp_timeout.py
-	$(TCP) get-controller --controller $(CONTROLLER)
+# 	$(CMD) get-all-controllers
+# 	$(CMD)  --destination "192.168.1.125" get-controller --controller $(CONTROLLER)
+# 	$(TCP) get-controller --controller $(CONTROLLER)
+# 	$(ASYNC_TCP) get-controller --controller $(CONTROLLER)
+	. .venv/bin/activate; python3 -m unittest integration_tests.uhppoted.io_tcp.TestUhppoteWithTCP.test_set_firstcard
 
 usage: build
 	-$(CMD)

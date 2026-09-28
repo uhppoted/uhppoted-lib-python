@@ -65,9 +65,9 @@ class TCP:
             # It should really match on both address and port but multiple network cards, etc make it complicated
             # and fragile.
             for _ in range(5):
-                sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
-                sockets.append(sock)
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
 
+                sockets.append(sock)
                 sock.bind(self._bind)
 
                 _, bind_port = self._bind
@@ -77,7 +77,6 @@ class TCP:
                 if src_port == dest_port and bind_port != 0:
                     raise RuntimeError(f"TCP bind address:port {src_port} reserved for broadcast")
 
-                _, src_port = sock.getsockname()
                 if src_port != dest_port:
                     break
             else:
