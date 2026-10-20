@@ -1,4 +1,4 @@
-![build](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/twystd/2609d9356470acaf904386ce4a74f54e/raw/uhppoted-lib-python.json)
+![build](https://github.com/uhppoted/uhppoted-lib-python/workflows/build/badge.svg)
 
 
 # uhppoted-lib-python
@@ -22,7 +22,7 @@ pip install uhppoted
 
 #### Current Release
 
-## [0.9.1.1](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.9.1.1) - 2026-09-14
+## [0.9.1.1](https://codeberg.org/uhppoted/uhppoted-lib-python/releases/tag/v0.9.1.1) - 2026-09-14
 
 1. Migrated from _github.com/uhppoted/uhppoted-lib-python_ to _codeberg.org/uhppoted/uhppoted-lib-python_.
 2. Added _first-card_ privileges to the `get-card`, `get-card-at-index` and `put-card` APIs.
@@ -33,7 +33,7 @@ pip install uhppoted
    [asyncio.get_event_loop()](https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.get_event_loop)).
 
 
-**[v0.9.1](https://github.com/uhppoted/uhppoted-lib-python/releases/tag/v0.9.1) - 2026-06-18**
+**[v0.9.1](https://codeberg.org/uhppoted/uhppoted-lib-python/releases/tag/v0.9.1) - 2026-06-18**
 
 1. Added `set-firstcard` API function to configure the _first card_ mode for a controller managed door.
 2. Added automatic retries when an ephemeral UDP port collides with broadcast port (see 

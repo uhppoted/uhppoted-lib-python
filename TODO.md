@@ -1,7 +1,7 @@
 # TODO
 
+## In Progress
 
-- [x] bind before connect to assign socket port
 
 ## To Be Done
 - [ ] event listener examples - get bind/broadcast/listen from command line
